@@ -52,7 +52,7 @@ function App() {
         </span>
       </header>
     </div>
-  )
+  );
 }
 
 export default App;

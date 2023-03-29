@@ -19,12 +19,10 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
-    "eslint": "^8.36.0",
     "eslint-config-airbnb": "^19.0.4",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jsx-a11y": "^6.7.1",
-    "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "prettier": "^2.8.7",
     "react-scripts": "5.0.1"
   },
   "scripts": {
@@ -36,8 +34,20 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
-    ]
+      "react-app/jest",
+      "airbnb",
+      "airbnb/hooks",
+      "airbnb-typescript",
+      "prettier"
+    ],
+    "parserOptions": {
+      "project": "./tsconfig.json"
+    },
+    "rules": {
+      "import/no-cycle": "warn",
+      "no-param-reassign": "off",
+      "import/prefer-default-export": "off"
+    }
   },
   "browserslist": {
     "production": [
