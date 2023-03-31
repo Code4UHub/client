@@ -1,11 +1,8 @@
-import React from "react";
+import React from 'react';
+import Authentication from './routes/authentication/Authentication';
 
 function App() {
-  return (
-    <div>
-      <p style={{ fontSize: "var(--fs-big-title)" }}>Hello World!</p>
-    </div>
-  );
+  return <Authentication />;
 }
 
 export default App;

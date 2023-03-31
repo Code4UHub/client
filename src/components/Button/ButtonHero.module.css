@@ -1,0 +1,16 @@
+.button {
+    border-radius: 18px;
+}
+
+.sidebar {
+    background-color: var(--sec-blue-color);
+    color: var(--white-color);
+    width: 270px;
+}
+
+.authentication {
+    /* background-color: var(--white-color); */
+    color: var(--sec-blue-color);
+    width: 240px;
+}
+

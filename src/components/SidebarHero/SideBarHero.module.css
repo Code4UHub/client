@@ -1,0 +1,15 @@
+.aside {
+  background: linear-gradient(180deg, #02203C 0%, #0060B9 100%, #15314B 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5rem;
+  align-items: center;
+  width: 60rem;
+  height: 100vh;
+}
+
+.aside p {
+  font-size: var(--fs-big-text);
+  color: white;
+}
