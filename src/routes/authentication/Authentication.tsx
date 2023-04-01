@@ -1,14 +1,15 @@
 import React from 'react';
-import { ButtonHero } from '../../components/Button/ButtonHero';
+import ButtonHero from '../../components/ButtonHero/ButtonHero';
+import InputHero from '../../components/InputHero/InputHero';
 import style from './Authentication.module.css';
 
 function Authentication() {
-  const [window, onWindowChange] = React.useState('left');
-  const isLoginActive = window === 'left';
-  const isSignUpActive = window === 'right';
+  const [windowState, onWindowChange] = React.useState('left');
+  const isLoginActive = (windowState === 'left');
+  const isSignUpActive = (windowState === 'right');
 
   function onClick() {
-    if (window === 'left') {
+    if (windowState === 'left') {
       onWindowChange('movingRight');
       setTimeout(onWindowChange, 1800, 'right');
     } else {
@@ -17,36 +18,51 @@ function Authentication() {
     }
   }
   return (
-    <div className="app">
-      <div id="window" className={style[]}>
-        {' '}
-        hola{' '}
-      </div>
+    <div className={style.app}>
+      <div id={style.window} className={style[windowState]} />
 
       {isLoginActive && (
-        <div className={style.login}>
-          <label htmlFor="email">
-            Email
-            <input id="email" type="text" />
-          </label>
-          <ButtonHero
+        <>
+          <div className={style.login}>
+            <ButtonHero
+              location="sidebar"
+              text="Inicia Sesión"
+              onClickHandler={() => onClick()}
+            />
+          </div>
+          <InputHero 
+            label="Email"
+            type="email"
+            id="email"
+          />
+          <ButtonHero 
             location="authentication"
-            text={`Move to the ${window}`}
+            text="Registrate"
             onClickHandler={() => onClick()}
           />
-        </div>
+        </>
       )}
 
       {isSignUpActive && (
-        <div className={style.email}>
-          <label htmlFor="email">
-            Email
-            <input id="email" type="text" />
-          </label>
-          <button type="button" onClick={onClick}>
-            Move to the {window}
-          </button>
-        </div>
+        <>
+          <InputHero 
+            label="Email"
+            type="email"
+            id="email"
+          />
+          <ButtonHero 
+            location="authentication"
+            text="Iniciar Sesión"
+            onClickHandler={() => onClick()}
+          />
+          <div className={style.signUp}>
+            <ButtonHero 
+              location="sidebar"
+              text="Regístrate"
+              onClickHandler={() => onClick()}
+            />
+          </div>
+        </>
       )}
     </div>
   );
