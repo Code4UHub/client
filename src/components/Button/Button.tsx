@@ -1,5 +1,5 @@
 import React from 'react';
-import style from './ButtonHero.module.css';
+import style from './Button.module.css';
 
 type Props = {
   location: string;
@@ -7,7 +7,7 @@ type Props = {
   onClickHandler: () => void;
 };
 
-export default function ButtonHero({ location, text, onClickHandler }: Props) {
+export default function Button({ location, text, onClickHandler }: Props) {
   return (
     <button className={style[location]} type="button" onClick={onClickHandler}>
       {text}
