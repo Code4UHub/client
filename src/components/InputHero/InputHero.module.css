@@ -1,0 +1,14 @@
+input {
+    background-color: var(--light-gray);
+    border-radius: 18px;
+    border: none;
+    height: 75px;
+    padding: 20px;
+    font-size: var(--fs-mid-small-text);
+}
+
+label {
+    margin: 0 0 10px 0;
+    display: block;
+    font-size: var(--fs-mid-small-text);
+}
