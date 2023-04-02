@@ -1,86 +1,13 @@
-.app {
+.container {
   display: flex;
-  flex-direction: row;
-}
-
-.login, .signUp {
-  background: linear-gradient(180deg, #02203C 0%, #0060B9 100%, #15314B 100%);
+  position: relative;
+  left: 0;
+  top: 0;
   height: 100vh;
-  display: flex;
-  flex-direction: column;
-  padding: 100px;
-  width: 300px;
+  z-index: 0;
 }
 
-.signUp {
-  margin-right: 0px;
-  margin-left: 750px;
-}
-
-#window {
-  background: linear-gradient(180deg, #02203C 0%, #0060B9 100%, #15314B 100%);
-  will-change: transform;
-  height: 100vh;
-  width: 20%;
-  position: absolute;
-}
-
-.movingRight {
-  animation-name: moveToRight;
-  animation-duration: 1.8s;
-  animation-timing-function: linear;
-}
-
-.movingLeft {
-  animation-name: moveToRight;
-  animation-duration: 1.8s;
-  animation-timing-function: linear;
-  animation-direction: reverse;
-}
-
-@keyframes moveToRight {
-  0% {
-      left: 0;
-      width: 20%;
-  }
-  15% {
-      width: 30%;
-      left: 0%;
-  }
-  30% {
-      left: 0%;
-      width: 40%;
-  }
-  40% {
-      left: 10%;
-      width: 40%
-  }
-  50% {
-    width: 35%;
-  }
-  60% {
-      left: 50%;
-      width: 40%;
-  }
-  70% {
-      left: 60%;
-      width: 40%;
-  }
-  90% {
-      left: 70%;
-      width: 30%;
-  }
-  100% {
-      left: 80%;
-      width: 20%;
-  }
-}
-
-.left {
-  will-change: transform;
-  left: -20%;
-}
-
-.right {
-  left: 100%;
+.main {
+  height: 100%;
+  flex-grow: 1;
 }

@@ -22,16 +22,18 @@ export function AuthenticationSideBarHero({ screen, screenHandler }: Props) {
           onClickHandler={screenHandler}
         />
       </div>
-      <h2 className={styles.title}>
-        {screen === ScreenTypes.signIn
-          ? '¿Usuario Nuevo?'
-          : '¿Ya tienes una cuenta?'}
-      </h2>
-      {screen === ScreenTypes.signIn && (
-        <p className={styles['hero-content']}>
-          Regístrate y comienza a programar
-        </p>
-      )}
+      <div className={styles['hero-content-container']}>
+        <h2 className={styles.title}>
+          {screen === ScreenTypes.signIn
+            ? '¿Usuario Nuevo?'
+            : '¿Ya tienes una cuenta?'}
+        </h2>
+        {screen === ScreenTypes.signIn && (
+          <p className={styles['hero-content']}>
+            Regístrate y comienza a programar
+          </p>
+        )}
+      </div>
     </aside>
   );
 }
