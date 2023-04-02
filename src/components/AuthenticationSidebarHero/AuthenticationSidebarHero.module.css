@@ -1,7 +1,9 @@
 .authentication-hero {
   width: 48rem;
   height: 100vh;
-  position: relative;
+  padding: 0 5rem;
+  background: var(--blue-gradient);
+  /* position: relative; */
   left: calc(100vw - 48rem);
   display: flex;
   flex-direction: column;
@@ -15,7 +17,7 @@
   top: 0;
 }
 
-.slidebar {
+/* .slidebar {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -26,7 +28,7 @@
   display: flex;
   justify-content: center;
   padding-top: 44rem;
-}
+} */
 
 .slidebar button {
   z-index: 1;
