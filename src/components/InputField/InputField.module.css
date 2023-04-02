@@ -3,6 +3,7 @@ input {
     border-radius: 18px;
     border: none;
     height: 75px;
+    width: 100%;
     padding: 20px;
     font-size: var(--fs-mid-small-text);
 }
@@ -11,4 +12,8 @@ label {
     margin: 0 0 10px 0;
     display: block;
     font-size: var(--fs-mid-small-text);
+}
+
+.inputField {
+    margin: 1rem 0;
 }
