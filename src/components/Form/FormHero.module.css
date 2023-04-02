@@ -1,0 +1,34 @@
+.form {
+    padding: 5rem 20rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    font-size: var(--fs-big-title);
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+.inputs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 16px;
+    width: 100%;
+}
+
+.halfInput {
+    grid-column: span 1;
+}
+
+.singleInput {
+    grid-row: span 2;
+    grid-column: span 2;
+}
+
+button {
+    margin-top: 3rem;
+}
