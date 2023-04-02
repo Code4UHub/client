@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-// import Button from '../../components/Button/Button';
-// import InputField from '../../components/InputField/InputField';
-// import style from './Authentication.module.css';
-
+import FormHero from 'components/Form/FormHero';
 import { AuthenticationSideBarHero } from 'components/AuthenticationSidebarHero/AuthenticationSidebarHero';
+
+import style from './Authentication.module.css';
 
 export enum ScreenTypes {
   signIn = 'signIn',
@@ -73,7 +72,22 @@ function Authentication() {
   };
 
   return (
-    <AuthenticationSideBarHero screen={screen} screenHandler={updateScreen} />
+    <div className={style.app}>
+      {(screen === ScreenTypes.signIn) 
+        ? (
+            <>
+            <FormHero screen={screen} />
+            <AuthenticationSideBarHero screen={screen} screenHandler={updateScreen} />
+            </>
+          )
+        : (
+            <>
+            <AuthenticationSideBarHero screen={screen} screenHandler={updateScreen} />
+            <FormHero screen={screen}/>
+            </>
+          )
+    }
+    </div>
   );
 }
 
