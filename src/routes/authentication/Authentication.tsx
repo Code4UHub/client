@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 // import InputField from '../../components/InputField/InputField';
 // import style from './Authentication.module.css';
 
-import { AuthenticationSideBarHero } from '../../components/AuthenticationSidebarHero/AuthenticationSidebarHero';
+import { AuthenticationSideBarHero } from 'components/AuthenticationSidebarHero/AuthenticationSidebarHero';
 
 export enum ScreenTypes {
   signIn = 'signIn',

@@ -1,8 +1,7 @@
 import React from 'react';
+import { ScreenTypes } from 'routes/authentication/Authentication';
+import Button from 'components/Button/Button';
 import styles from './AuthenticationSidebarHero.module.css';
-
-import Button from '../Button/Button';
-import { ScreenTypes } from '../../routes/authentication/Authentication';
 
 type Props = {
   screen: ScreenTypes;
