@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import FormHero from 'components/Form/FormHero';
+import FormHero from 'components/Form/Form';
 import { AuthenticationSideBarHero } from 'components/AuthenticationSidebarHero/AuthenticationSidebarHero';
 import style from './Authentication.module.css';
 

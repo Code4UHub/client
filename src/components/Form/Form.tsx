@@ -1,7 +1,7 @@
 import React from 'react';
 import InputField from 'components/InputField/InputField';
 import Button from 'components/Button/Button';
-import style from './FormHero.module.css';
+import style from './Form.module.css';
 
 type InputData = {
   label: string;

@@ -1,5 +1,5 @@
 .authentication-hero {
-  width: 48rem;
+  flex-basis: 48rem;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -16,7 +16,7 @@
   width: 48rem;
   height: 100vh;
   position: absolute;
-  left: calc(100vw - 48rem);
+  left: calc(100% - 48rem);
   transition: left 1s;
   background: var(--blue-gradient);
   display: flex;
