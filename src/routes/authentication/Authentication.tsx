@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-// import Button from '../../components/Button/Button';
-// import InputField from '../../components/InputField/InputField';
+import FormHero from 'components/Form/FormHero';
 import { AuthenticationSideBarHero } from 'components/AuthenticationSidebarHero/AuthenticationSidebarHero';
 import style from './Authentication.module.css';
 
@@ -72,9 +71,9 @@ function Authentication() {
   };
 
   return (
-    <div className={style.container}>
-      <div className={style.main} />
+    <div className={style['authentication-container']}>
       <AuthenticationSideBarHero screen={screen} screenHandler={updateScreen} />
+      <FormHero screen={screen} />
     </div>
   );
 }

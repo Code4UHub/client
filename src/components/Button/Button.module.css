@@ -3,7 +3,14 @@ button {
     padding: 18px 50px;
     border: none;
     height: 65px;
-    font-size: var(--fs-mid-small-text)
+    font-size: var(--fs-mid-small-text);
+    transition: 0.5s;
+}
+
+button:hover {
+    cursor: pointer;
+    filter: brightness(0.75);
+    transform: scale(1.02);
 }
 
 .sidebar {

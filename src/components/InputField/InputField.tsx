@@ -5,11 +5,12 @@ type Props = {
   label: string;
   type: string;
   id: string;
+  className: string;
 };
 
-export default function InputField({ label, type, id }: Props) {
+export default function InputField({ label, type, id, className }: Props) {
   return (
-    <div className="inputHero">
+    <div className={`${className} ${style.inputField}`}>
       <label htmlFor={id}>{label}</label>
       <input id={id} type={type} className={style.inputHero} />
     </div>
