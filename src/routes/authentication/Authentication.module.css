@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: row;
 }
-
+/* 
 .login, .signUp {
   background: linear-gradient(180deg, #02203C 0%, #0060B9 100%, #15314B 100%);
   height: 100vh;
@@ -83,4 +83,4 @@
 
 .right {
   left: 100%;
-}
+} */
