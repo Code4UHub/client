@@ -9,11 +9,18 @@ input {
 }
 
 label {
-    margin: 0 0 10px 0;
-    display: block;
+    margin: 0 10px 10px 0;
+    display: inline-block;
     font-size: var(--fs-mid-small-text);
 }
 
 .inputField {
     margin: 1rem 0;
+}
+
+.error {
+    background-color: #FED6D7;
+    color: #822727;
+    border-radius: 15px;
+    padding: 0.5rem 1rem;
 }

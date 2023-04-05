@@ -1,11 +1,12 @@
 .authentication-hero {
-  flex-basis: 48rem;
+  width: 48rem;
   height: 100vh;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
-  order: 1; 
+  order: 1;
+   
 }
 
 .sign-up {
@@ -16,34 +17,79 @@
   width: 48rem;
   height: 100vh;
   position: absolute;
-  left: calc(100% - 48rem);
-  transition: left 1s;
+  right: 0;
+  transform: translateX(0);
+  transition: right 1s, transform 1s;
   background: var(--blue-gradient);
   display: flex;
   justify-content: center;
-  padding-top: 44rem;
+}
+
+.slidebar button {
+  margin-top: calc(46vh);
 }
 
 .sign-up .slidebar {
-  left: 0;
+  right: 100%;
+  transform: translateX(100%);
 }
 
 .hero-content-container {
   position: relative;
+  margin-top: calc(35vh);
 }
 
 .title {
   text-align: center;
   font-size: var(--fs-sub-title);
-  font-weight: 700;
   color: var(--white-color);
-  margin-top: 32rem;
-  margin-bottom: 2rem;
+  font-weight: 700;
 }
 
 .hero-content {
   text-align: center;
   font-size: var(--fs-mid-text);
-  font-weight: 500;
   color: var(--white-color);
+  font-weight: 500;
+}
+
+@media (max-width: 75em) {
+  .authentication-hero {
+    width: 100%;
+    height: auto;
+  }
+  
+  .sign-up {
+    order: 1
+  }
+
+  .slidebar  {
+    height: auto;
+    position: static;
+    background: transparent;
+    transition: none;
+    order: 1
+  }
+
+  .slidebar button {
+    margin-top: 2rem;
+  }
+
+  .sign-up .slidebar {
+    transform: translateX(0);
+  }
+
+  .hero-content-container {
+    margin-top: 0;
+  }
+
+  .title {
+    font-size: var(--fs-mid-text);
+    color: var(--black-color);
+  }
+
+  .hero-content {
+    display: none;
+  }
+
 }

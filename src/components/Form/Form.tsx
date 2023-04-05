@@ -56,32 +56,40 @@ type Props = {
 };
 
 export default function FormHero({ screen }: Props) {
-  const onMainClick = () => console.log('OnMainClick');
+  const onMainClick = () => console.log('Holi');
+
   return (
-    <div className={style.form}>
-      <h1>
-        {screen === 'signUp' ? 'Crea tu cuenta' : 'Inicia sesión con tu cuenta'}
-      </h1>
-      <div className={style.inputs}>
-        {inputData[screen].map((field, index: number) => (
-          <InputField
-            key={field.id}
-            label={field.label}
-            type={field.type}
-            id={field.id}
-            className={
-              screen === 'signUp' && index < 2
-                ? style.halfInput
-                : style.singleInput
-            }
-          />
-        ))}
-      </div>
-      <Button
-        location="authentication"
-        text={screen === 'signUp' ? 'Crear cuenta' : 'Iniciar sesión'}
-        onClickHandler={onMainClick}
-      />
-    </div>
+    <main className={style.form}>
+      <form>
+        <h1>
+          {screen === 'signUp'
+            ? 'Crea tu cuenta'
+            : 'Inicia sesión con tu cuenta'}
+        </h1>
+        <div className={style.inputs}>
+          {inputData[screen].map((field, index: number) => (
+            <InputField
+              key={field.id}
+              label={field.label}
+              type={field.type}
+              id={field.id}
+              error="Utiliza tu correo institucional"
+              required
+              className={
+                screen === 'signUp' && index < 2
+                  ? style.halfInput
+                  : style.singleInput
+              }
+            />
+          ))}
+        </div>
+        <Button
+          type="submit"
+          location="authentication"
+          text={screen === 'signUp' ? 'Crear cuenta' : 'Iniciar sesión'}
+          onClickHandler={onMainClick}
+        />
+      </form>
+    </main>
   );
 }
