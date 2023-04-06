@@ -24,3 +24,14 @@ label {
     border-radius: 15px;
     padding: 0.5rem 1rem;
 }
+
+.correct {
+    background-color: #C6F6D4;
+    color: #21543D;
+    border-radius: 15px;
+    padding: 0.5rem 1rem;
+}
+
+.hidden {
+    display: none;
+}
