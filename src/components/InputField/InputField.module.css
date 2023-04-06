@@ -18,20 +18,54 @@ label {
     margin: 1rem 0;
 }
 
+span {
+  font-size: var(--fs-small-small-text);
+  transition: 0.7s;
+}
+
 .error {
     background-color: #FED6D7;
     color: #822727;
     border-radius: 15px;
     padding: 0.5rem 1rem;
+    transition: 1s;
+    animation-name: showFeedback;
+    animation-duration: 0.7s;
+    animation-timing-function: ease-out;
 }
 
 .correct {
     background-color: #C6F6D4;
+    transition: 1s;
     color: #21543D;
     border-radius: 15px;
     padding: 0.5rem 1rem;
+    animation-name: showFeedback;
+    animation-duration: 0.7s;
+    animation-timing-function: ease-out;
 }
 
 .hidden {
-    display: none;
+  transform: translateY(10px);
+}
+
+
+@keyframes showFeedback {
+  0% {
+    display: inline-block;
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px var(--light-gray) inset;
+  -webkit-text-fill-color: inherit ;
+  background-color: var(--light-gray);
 }
