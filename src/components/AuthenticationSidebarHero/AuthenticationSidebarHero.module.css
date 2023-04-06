@@ -6,7 +6,6 @@
   flex-direction: column;
   align-items: center;
   order: 1;
-   
 }
 
 .sign-up {
@@ -26,7 +25,7 @@
 }
 
 .slidebar button {
-  margin-top: calc(46vh);
+  margin-top: calc(50vh);
 }
 
 .sign-up .slidebar {
@@ -44,6 +43,7 @@
   font-size: var(--fs-sub-title);
   color: var(--white-color);
   font-weight: 700;
+  padding: 0 2rem;
 }
 
 .hero-content {
