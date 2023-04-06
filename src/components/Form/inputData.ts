@@ -14,7 +14,7 @@ export const inputData: { [key: string]: InputData } = {
     {
       label: 'Contraseña',
       type: 'password',
-      id: 'password',
+      id: 'passwordLogin',
     },
   ],
   signUp: [
