@@ -15,8 +15,12 @@ type Props = {
 };
 
 function decideSpanClass(error: string) {
-  if (error === correctState) return style.correct;
-  if (error !== "") return style.error;
+  if (error === correctState) {
+    return style.correct;
+  } 
+  if (error !== "") {
+    return style.error;
+  } 
   return style.hidden;
 }
 
