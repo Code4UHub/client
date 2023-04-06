@@ -20,20 +20,44 @@ function isValidEmail(inputEmail : string) {
 	return correctState;
 }
 
+// Just asked for a password (won't share the content of a valid password)
 function isValidLoginPassword(password: string) {
   if (password.length < 1) return "Ingrese una contraseña"
   return correctState;
 }
 
-function isValidName(name : string) {
-  const alphaAndAccents = '[a-zA-ZáéíóúÁÉÍÓÚ]';
-  // Allows accents. And spaces. Spaces should be between names (not starting on ending positions)
-  const nameRegex = new RegExp(`^(${alphaAndAccents}+)(\s)$`);
-  if (name.length < 1) return "Ingrese un nombre";
-  if (name.length > 30) return "Excede el tamaño permitido"
-  if (!nameRegex.test(name)) return "Recuerda usar solo valores alfabéticos"
+// Follows security rules? Ask for them
+function isValidSignUpPassword(password: string) {
+  const hasUpperCaseRegex = /[A-Z]/;
+  const hasLowerCaseRegex = /[a-z]/;
+  const hasDigitRegex = /[1-9]/;
+  const hasSpecialCharRegex = /[@$!%*?&]/
+  if (!hasUpperCaseRegex.test(password)) return "Incluya una mayúscula";
+  if (!hasLowerCaseRegex.test(password)) return "Incluya una minúscula";
+  if (!hasDigitRegex.test(password)) return "Incluya un número";
+  if (!hasSpecialCharRegex.test(password)) return "Incluya un símbolo especial @$!%*?&";
+  if (password.length < 8) return "Incluya mínimo 8 caracteres";
   return correctState;
 }
+
+function isValidName(name : string) {
+  // Allow many Upper and lower case, with and without accents
+  const alphaAndAccents = '[a-zA-ZáéíóúÁÉÍÓÚ]+';
+  // There should be a name, and optional, a space followed by a name
+  const nameRegex = new RegExp(`^(${alphaAndAccents})(\\s+${alphaAndAccents})*$`);
+  if (name.length < 1) return "Ingrese un nombre";
+  if (name.length > 30) return "Excede el tamaño permitido"
+  if (!nameRegex.test(name)) {
+    if (name.startsWith(" ")) return "Elimina el espacio inicial"
+    if (name.endsWith(" ")) return "Elimina el espacio al final"
+    return "Usa solo valores alfabéticos"}
+  return correctState;
+}
+
+// function isSamePassword(repeatedPassword: string, password: string) {
+//   if (repeatedPassword !== password) return "Las contraseñas no coinciden";
+//   return correctState
+// }
 
 export const inputRules : InputRule[] = [
   {
@@ -47,5 +71,17 @@ export const inputRules : InputRule[] = [
   {
     id: "firstName",
     validate: isValidName
-  }
+  },
+  {
+    id: "lastName",
+    validate: isValidName
+  },
+  {
+    id: "password",
+    validate: isValidSignUpPassword
+  },
+  // {
+  //   id: "passwordConfirmation",
+  //   validate: isSamePassword
+  // }
 ];
