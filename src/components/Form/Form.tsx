@@ -15,6 +15,8 @@ export default function Form({ screen }: Props) {
   });
   const [inputValues, setInputValues] = useState<{ [key: string]: string }>({
   });
+
+  // Update values of inputs and errors, according to the screen
   useEffect(() => {
     setInputErrors({});
     inputData[screen].forEach(({id}) => {
@@ -26,15 +28,18 @@ export default function Form({ screen }: Props) {
     });
   }, [screen]);
   
+  // Keep record of values and restart errors as a value changes
   function onChangeHandler(id : string, value : string) {
-    setInputValues((storedValues) => ({...storedValues, [id]: value}))
+    setInputValues((storedValues) => ({...storedValues, [id]: value}));
+    setInputErrors((previousErrors) => ({ ...previousErrors, [id]: "" }));
   }
 
+  // Update errors according to rules
   function onCheckRules(id : string, value : string) {
     const rule = inputRules.find((r) => r.id === id);
     if (rule) {
       const validationResult = rule.validate(value);
-      setInputErrors((prevErrors) => ({ ...prevErrors, [id]: validationResult }));
+      setInputErrors((previousErrors) => ({ ...previousErrors, [id]: validationResult }));
     }
   }
 
@@ -51,7 +56,7 @@ export default function Form({ screen }: Props) {
         <div className={style.inputs}>
           {inputData[screen].map((field, index: number) => (
             <InputField
-              key={field.id}
+              key={`${screen}${field.id}`}
               value={inputValues[field.id]}
               label={field.label}
               type={field.type}
