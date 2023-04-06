@@ -47,6 +47,7 @@ span {
 
 .hidden {
   transform: translateY(10px);
+  opacity: 0;
 }
 
 
