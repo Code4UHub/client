@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import FormHero from 'components/Form/Form';
+import Form from 'components/Form/Form';
 import { AuthenticationSideBarHero } from 'components/AuthenticationSidebarHero/AuthenticationSidebarHero';
 import style from './Authentication.module.css';
 
@@ -19,7 +19,7 @@ function Authentication() {
   return (
     <div className={style['authentication-container']}>
       <AuthenticationSideBarHero screen={screen} screenHandler={updateScreen} />
-      <FormHero screen={screen} />
+      <Form screen={screen} />
     </div>
   );
 }
