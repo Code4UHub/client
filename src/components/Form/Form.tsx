@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import InputField from 'components/InputField/InputField';
 import Button from 'components/Button/Button';
 import { inputData } from './inputData';
-import { inputRules } from './inputRules';
+import { inputRules, correctState } from './inputRules';
 import style from './Form.module.css';
 
 
@@ -15,6 +15,8 @@ export default function Form({ screen }: Props) {
   });
   const [inputValues, setInputValues] = useState<{ [key: string]: string }>({
   });
+  // Checks every inputError and if one has an error message, you can't signin/signup
+  const isMainButtonDisable = !(Object.values(inputErrors)).every((value: string) => (value === correctState));
 
   // Update values of inputs and errors, according to the screen
   useEffect(() => {
@@ -32,13 +34,23 @@ export default function Form({ screen }: Props) {
   function onChangeHandler(id : string, value : string) {
     setInputValues((storedValues) => ({...storedValues, [id]: value}));
     setInputErrors((previousErrors) => ({ ...previousErrors, [id]: "" }));
+    // If password changes, passwordConfirmation validation status will change. Restart it
+    if (id === "password") setInputErrors((previousErrors) => ({...previousErrors, "passwordConfirmation": ""}));
   }
 
   // Update errors according to rules
   function onCheckRules(id : string, value : string) {
     const rule = inputRules.find((r) => r.id === id);
+    let validationResult = "";
     if (rule) {
-      const validationResult = rule.validate(value);
+      switch (id) {
+        case 'passwordConfirmation':
+          validationResult = rule.validate(value, inputValues.password);
+          break;
+        default:
+          validationResult = rule.validate(value);
+          break;
+      }
       setInputErrors((previousErrors) => ({ ...previousErrors, [id]: validationResult }));
     }
   }
@@ -76,6 +88,7 @@ export default function Form({ screen }: Props) {
         <Button
           type="submit"
           location="authentication"
+          isDisable={isMainButtonDisable}
           text={screen === 'signUp' ? 'Crear cuenta' : 'Iniciar sesión'}
           onClickHandler={onMainClick}
         />

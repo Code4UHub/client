@@ -6,6 +6,7 @@ type Props = {
   text: string;
   onClickHandler: () => void;
   type?: string;
+  isDisable?: boolean;
 };
 
 export default function Button({
@@ -13,12 +14,14 @@ export default function Button({
   text,
   onClickHandler,
   type,
+  isDisable,
 }: Props) {
   const isSubmit: boolean = type === 'submit';
   return (
     <button
       className={style[location]}
       onClick={onClickHandler}
+      disabled={isDisable}
       type={isSubmit ? 'submit' : 'button'}
     >
       {text}
@@ -28,4 +31,5 @@ export default function Button({
 
 Button.defaultProps = {
   type: 'button',
+  isDisable: false,
 };

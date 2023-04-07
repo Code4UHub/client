@@ -3,7 +3,7 @@ export const correctState = "Excelente";
 
 type InputRule = {
   id: string;
-  validate: (value: string) => string;
+  validate: (value: string, passwordConfirmation? : string) => string;
 };
 
 function isValidEmail(inputEmail : string) {
@@ -40,6 +40,16 @@ function isValidSignUpPassword(password: string) {
   return correctState;
 }
 
+// Is the user sure about the password? Check they can write it twice
+function arePasswordsEqual(password: string, passwordConfirmation: string) {
+  return password === passwordConfirmation;
+}
+function isValidConfirmationPassword(password: string, passwordConfirmation?: string) {
+  const isPasswordConfirmed = arePasswordsEqual(password, passwordConfirmation || "");
+  if (!isPasswordConfirmed) return "Las contraseñas no coinciden";
+  return correctState;
+}
+
 function isValidName(name : string) {
   // Allow many Upper and lower case, with and without accents
   const alphaAndAccents = '[a-zA-ZáéíóúÁÉÍÓÚ]+';
@@ -54,10 +64,6 @@ function isValidName(name : string) {
   return correctState;
 }
 
-// function isSamePassword(repeatedPassword: string, password: string) {
-//   if (repeatedPassword !== password) return "Las contraseñas no coinciden";
-//   return correctState
-// }
 
 export const inputRules : InputRule[] = [
   {
@@ -80,8 +86,8 @@ export const inputRules : InputRule[] = [
     id: "password",
     validate: isValidSignUpPassword
   },
-  // {
-  //   id: "passwordConfirmation",
-  //   validate: isSamePassword
-  // }
+  {
+    id: "passwordConfirmation",
+    validate: (value, password) => isValidConfirmationPassword(password || "", value),
+  }
 ];
