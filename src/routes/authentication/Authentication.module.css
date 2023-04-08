@@ -4,7 +4,7 @@
   position: relative;
 }
 
-@media (max-width: 75em ) {
+@media (max-width: 60em ) {
   .authentication-container {
     height: 100vh;
     flex-direction: column;

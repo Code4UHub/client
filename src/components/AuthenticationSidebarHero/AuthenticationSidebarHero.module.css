@@ -53,7 +53,7 @@
   font-weight: 500;
 }
 
-@media (max-width: 75em) {
+@media (max-width: 60em) {
   .authentication-hero {
     width: 100%;
     height: auto;
