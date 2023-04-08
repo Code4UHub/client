@@ -1,8 +1,8 @@
 button {
-    border-radius: 18px;
-    padding: 18px 50px;
+    border-radius: 2rem;
+    padding: 2rem 4.5rem;
+    height: 7rem;
     border: none;
-    height: 65px;
     font-size: var(--fs-mid-small-text);
     transition: transform 0.5s, opacity 0.5s;
 }
@@ -30,4 +30,3 @@ button[disabled]{
     color: var(--white-color);
     max-width: 270px;
 }
-
