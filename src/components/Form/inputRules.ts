@@ -1,5 +1,5 @@
 
-export const correctState = "Excelente";
+export const correctState = "Hecho";
 
 type InputRule = {
   id: string;
