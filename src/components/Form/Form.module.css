@@ -4,7 +4,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 5rem 10rem 0;
+    padding: 5rem 10rem;
 }
 
 .form form {
@@ -18,14 +18,14 @@
 h1 {
     font-size: var(--fs-big-title);
     text-align: center;
-    margin-bottom: 5rem;
+    margin-bottom: 1rem;
 }
 
 .inputs {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: 16px;
+    grid-column-gap: 4rem;
 }
 
 .halfInput {
@@ -41,8 +41,12 @@ button {
     margin-top: 2rem;
 }
 
-@media (max-width: 75em ) {
+@media (max-width: 60em ) {
     .form {
         flex-grow: 0;
+        padding: 0 2rem;
+    }
+    .inputs {
+        width: 80%;
     }
 }

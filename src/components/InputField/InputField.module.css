@@ -1,8 +1,8 @@
 input {
     background-color: var(--light-gray);
-    border-radius: 18px;
+    border-radius: 2rem;
     border: none;
-    height: 75px;
+    height: 8rem;
     width: 100%;
     padding: 20px;
     font-size: var(--fs-mid-small-text);
@@ -21,6 +21,7 @@ label {
 span {
   font-size: var(--fs-small-small-text);
   transition: 0.7s;
+  will-change: auto;
 }
 
 .error {
@@ -28,7 +29,7 @@ span {
     color: #822727;
     border-radius: 15px;
     padding: 0.5rem 1rem;
-    transition: 1s;
+    transition: 0.7s;
     animation-name: showFeedback;
     animation-duration: 0.7s;
     animation-timing-function: ease-out;
@@ -36,7 +37,7 @@ span {
 
 .correct {
     background-color: #C6F6D4;
-    transition: 1s;
+    transition: 0.7s;
     color: #21543D;
     border-radius: 15px;
     padding: 0.5rem 1rem;
@@ -69,4 +70,10 @@ input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px var(--light-gray) inset;
   -webkit-text-fill-color: inherit ;
   background-color: var(--light-gray);
+}
+
+@media (max-width: 60em ) {
+  input {
+    height: 6rem;
+  }
 }
