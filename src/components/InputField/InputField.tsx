@@ -15,13 +15,11 @@ type Props = {
 };
 
 function decideSpanClass(error: string) {
-  if (error === correctState) {
-    return style.correct;
+  if (error) {
+    return error === correctState ? style.correct : style.error;
   } 
-  if (error !== "") {
-    return style.error;
-  } 
-  return style.hidden;
+
+  return undefined;
 }
 
 export default function InputField({
@@ -37,8 +35,10 @@ export default function InputField({
 }: Props) {
   return (
     <div className={`${className} ${style.inputField}`}>
-      <label htmlFor={id}>{label}</label>
-      <span className={decideSpanClass(error)}>{error}</span>
+      <div>
+        <label htmlFor={id}>{label}</label>
+        <span className={decideSpanClass(error)}>{error}</span>
+      </div>
       <input
         id={id}
         type={type}

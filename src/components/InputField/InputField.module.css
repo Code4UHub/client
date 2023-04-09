@@ -1,60 +1,48 @@
 input {
-    background-color: var(--light-gray);
-    border-radius: 2rem;
-    border: none;
-    height: 8rem;
-    width: 100%;
-    padding: 20px;
-    font-size: var(--fs-mid-small-text);
+  background-color: var(--light-gray);
+  border-radius: 2rem;
+  border: none;
+  height: 8rem;
+  width: 100%;
+  padding: 20px;
+  font-size: var(--fs-mid-small-text);
 }
 
 label {
-    margin: 0 10px 10px 0;
-    display: inline-block;
-    font-size: var(--fs-mid-small-text);
+  margin: 0 10px 10px 0;
+  display: inline-block;
+  font-size: var(--fs-mid-small-text);
 }
 
 .inputField {
-    margin: 1rem 0;
+  margin: 1rem 0;
 }
 
 span {
   font-size: var(--fs-small-small-text);
-  transition: 0.7s;
-  will-change: auto;
+  transition: all 0.7s ease-out;
+}
+
+.error, .correct {
+  border-radius: 15px;
+  padding: 0.5rem 1rem;
+  animation-name: showFeedback;
+  animation-duration: 0.7s;
+  animation-timing-function: ease-out;
 }
 
 .error {
-    background-color: #FED6D7;
-    color: #822727;
-    border-radius: 15px;
-    padding: 0.5rem 1rem;
-    transition: 0.7s;
-    animation-name: showFeedback;
-    animation-duration: 0.7s;
-    animation-timing-function: ease-out;
+  background-color: #FED6D7;
+  color: #822727;
 }
 
 .correct {
-    background-color: #C6F6D4;
-    transition: 0.7s;
-    color: #21543D;
-    border-radius: 15px;
-    padding: 0.5rem 1rem;
-    animation-name: showFeedback;
-    animation-duration: 0.7s;
-    animation-timing-function: ease-out;
+  background-color: #C6F6D4;
+  color: #21543D;
 }
-
-.hidden {
-  transform: translateY(10px);
-  opacity: 0;
-}
-
 
 @keyframes showFeedback {
   0% {
-    display: inline-block;
     opacity: 0;
     transform: translateX(-10px);
   }
