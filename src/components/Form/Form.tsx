@@ -31,7 +31,7 @@ export default function Form({ screen }: Props) {
   }, [screen]);
   
   // Keep record of values and restart errors as a value changes
-  function onChangeHandler(id : string, value : string) {
+  const onChangeHandler = (id : string, value : string)  => {
     setInputValues((storedValues) => ({...storedValues, [id]: value}));
     setInputErrors((previousErrors) => ({ ...previousErrors, [id]: "" }));
     // If password changes, passwordConfirmation validation status will change. Restart it
@@ -39,7 +39,7 @@ export default function Form({ screen }: Props) {
   }
 
   // Update errors according to rules
-  function onCheckRules(id : string, value : string) {
+  const onCheckRules = (id : string, value : string) => {
     const rule = inputRules.find((r) => r.id === id);
     let validationResult = "";
     if (rule) {
