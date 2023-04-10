@@ -41,6 +41,13 @@ button {
     margin-top: 2rem;
 }
 
+@media (max-width: 80em) {
+    .halfInput {
+        grid-row: span 2;
+        grid-column: span 2;
+    }
+}
+
 @media (max-width: 60em ) {
     .form {
         flex-grow: 0;
@@ -48,5 +55,5 @@ button {
     }
     .inputs {
         width: 80%;
-    }
+    }    
 }
