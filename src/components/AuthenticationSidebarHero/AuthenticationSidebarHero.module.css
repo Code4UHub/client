@@ -1,6 +1,5 @@
 .authentication-hero {
   width: 48rem;
-  height: 100vh;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -14,7 +13,7 @@
 
 .slidebar {
   width: 48rem;
-  height: 100vh;
+  height: 100%;
   position: absolute;
   right: 0;
   transform: translateX(0);
@@ -25,7 +24,7 @@
 }
 
 .slidebar button {
-  margin-top: calc(50vh);
+  margin-top: 50vh;
 }
 
 .sign-up .slidebar {
@@ -35,7 +34,7 @@
 
 .hero-content-container {
   position: relative;
-  margin-top: calc(35vh);
+  margin-top: 35vh;
 }
 
 .title {
@@ -51,6 +50,24 @@
   font-size: var(--fs-mid-text);
   color: var(--white-color);
   font-weight: 500;
+}
+
+@media (max-height: 20em) {
+  .slidebar button {
+    margin-top: 110vh;
+  }
+}
+
+@media (max-height: 32em) and (min-height: 20em) {
+  .slidebar button {
+    margin-top: 65vh;
+  }
+}
+
+@media (max-height: 42em) and (min-height: 32em) {
+  .slidebar button {
+    margin-top: 55vh;
+  }
 }
 
 @media (max-width: 60em) {

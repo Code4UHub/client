@@ -8,6 +8,12 @@ input {
   font-size: var(--fs-mid-small-text);
 }
 
+.label-container {
+  margin-bottom: 5px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 label {
   margin: 0 10px 10px 0;
   display: inline-block;
@@ -19,6 +25,7 @@ label {
 }
 
 span {
+  text-align: center;
   font-size: var(--fs-small-small-text);
   transition: all 0.7s ease-out;
 }

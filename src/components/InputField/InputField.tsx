@@ -35,7 +35,7 @@ export default function InputField({
 }: Props) {
   return (
     <div className={`${className} ${style.inputField}`}>
-      <div>
+      <div className={style['label-container']}>
         <label htmlFor={id}>{label}</label>
         <span className={decideSpanClass(error)}>{error}</span>
       </div>
