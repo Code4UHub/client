@@ -1,8 +1,7 @@
 import React from 'react';
-import Authentication from 'routes/authentication/Authentication';
 
 function App() {
-  return <Authentication />;
+  return <h1>Aquí va el Dashboard</h1>;
 }
 
 export default App;
