@@ -46,6 +46,7 @@ function arePasswordsEqual(password: string, passwordConfirmation: string) {
 }
 function isValidConfirmationPassword(password: string, passwordConfirmation?: string) {
   const isPasswordConfirmed = arePasswordsEqual(password, passwordConfirmation || "");
+  if (password === "") return "Ingrese una contraseña"
   if (!isPasswordConfirmed) return "Las contraseñas no coinciden";
   return correctState;
 }
