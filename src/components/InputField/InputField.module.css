@@ -15,7 +15,7 @@ input {
 }
 
 label {
-  margin: 0 1.5rem;
+  margin: 0.5rem 1.5rem;
   display: inline-block;
   font-size: var(--fs-mid-small-text);
 }
@@ -26,6 +26,7 @@ label {
 
 span {
   text-align: center;
+  align-self: center;
   font-size: var(--fs-small-small-text);
   transition: all 0.7s ease-out;
 }
