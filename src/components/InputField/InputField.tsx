@@ -1,6 +1,6 @@
-import React from 'react';
-import { correctState } from 'components/Form/inputRules';
-import style from './InputField.module.css';
+import React from "react";
+import { correctState } from "components/AuthenticationForm/inputRules";
+import style from "./InputField.module.css";
 
 type Props = {
   label: string;
@@ -17,7 +17,7 @@ type Props = {
 function decideSpanClass(error: string) {
   if (error) {
     return error === correctState ? style.correct : style.error;
-  } 
+  }
 
   return undefined;
 }
@@ -35,7 +35,7 @@ export default function InputField({
 }: Props) {
   return (
     <div className={`${className} ${style.inputField}`}>
-      <div className={style['label-container']}>
+      <div className={style["label-container"]}>
         <label htmlFor={id}>{label}</label>
         <span className={decideSpanClass(error)}>{error}</span>
       </div>

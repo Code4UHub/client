@@ -1,5 +1,5 @@
-import React from 'react';
-import style from './Button.module.css';
+import React from "react";
+import style from "./Button.module.css";
 
 type Props = {
   location: string;
@@ -16,13 +16,13 @@ export default function Button({
   type,
   isDisable,
 }: Props) {
-  const isSubmit: boolean = type === 'submit';
+  const isSubmit: boolean = type === "submit";
   return (
     <button
-      className={style[location]}
+      className={`${style.button} ${style[location]}`}
       onClick={onClickHandler}
       disabled={isDisable}
-      type={isSubmit ? 'submit' : 'button'}
+      type={isSubmit ? "submit" : "button"}
     >
       {text}
     </button>
@@ -30,6 +30,6 @@ export default function Button({
 }
 
 Button.defaultProps = {
-  type: 'button',
+  type: "button",
   isDisable: false,
 };

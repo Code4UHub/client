@@ -1,4 +1,5 @@
-input {
+.inputField input {
+  font-family: "Montserrat", sans-serif;
   background-color: var(--light-gray);
   border-radius: 2rem;
   border: none;
@@ -14,7 +15,7 @@ input {
   flex-wrap: wrap;
 }
 
-label {
+.inputField label {
   margin: 0.5rem 1.5rem;
   display: inline-block;
   font-size: var(--fs-mid-small-text);
@@ -24,14 +25,15 @@ label {
   margin: 1rem 0;
 }
 
-span {
+.label-container span {
   text-align: center;
   align-self: center;
   font-size: var(--fs-small-small-text);
   transition: all 0.7s ease-out;
 }
 
-.error, .correct {
+.error,
+.correct {
   border-radius: 2rem;
   padding: 0.5rem 1rem;
   animation-name: showFeedback;
@@ -40,13 +42,13 @@ span {
 }
 
 .error {
-  background-color: #FED6D7;
+  background-color: #fed6d7;
   color: #822727;
 }
 
 .correct {
-  background-color: #C6F6D4;
-  color: #21543D;
+  background-color: #c6f6d4;
+  color: #21543d;
 }
 
 @keyframes showFeedback {
@@ -61,21 +63,21 @@ span {
 }
 
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
+input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px var(--light-gray) inset;
-  -webkit-text-fill-color: inherit ;
+  -webkit-text-fill-color: inherit;
   background-color: var(--light-gray);
 }
 
-@media (max-width: 80em ) {
-  input {
+@media (max-width: 80em) {
+  .inputField input {
     height: 7rem;
   }
 }
 
-@media (max-width: 60em ) {
-  input {
+@media (max-width: 60em) {
+  .inputField input {
     height: 6rem;
   }
 }
