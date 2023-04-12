@@ -1,4 +1,5 @@
 .inputField input {
+  font-family: "Montserrat", sans-serif;
   background-color: var(--light-gray);
   border-radius: 2rem;
   border: none;
