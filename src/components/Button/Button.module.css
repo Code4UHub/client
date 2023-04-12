@@ -1,32 +1,32 @@
-button {
-    border-radius: 2rem;
-    padding: 2rem 4.5rem;
-    height: 7rem;
-    border: none;
-    font-size: var(--fs-mid-small-text);
-    transition: transform 0.5s, opacity 0.5s;
+.button {
+  border-radius: 2rem;
+  padding: 2rem 4.5rem;
+  height: 7rem;
+  border: none;
+  font-size: var(--fs-mid-small-text);
+  transition: transform 0.5s, opacity 0.5s;
 }
 
-button:hover:not(:disabled) {
-    cursor: pointer;
-    filter: brightness(0.75);
-    transform: scale(1.05);
+.button:hover:not(:disabled) {
+  cursor: pointer;
+  filter: brightness(0.75);
+  transform: scale(1.05);
 }
 
-button:disabled,
-button[disabled]{
-    opacity: 0.5;
-    transform: scale(0.90)
+.button:disabled,
+.button[disabled] {
+  opacity: 0.5;
+  transform: scale(0.9);
 }
 
 .sidebar {
-    background-color: var(--white-color);
-    color: var(--sec-blue-color);
-    width: 240px;
+  background-color: var(--white-color);
+  color: var(--sec-blue-color);
+  width: 240px;
 }
 
 .authentication {
-    background-color: var(--sec-blue-color);
-    color: var(--white-color);
-    max-width: 270px;
+  background-color: var(--sec-blue-color);
+  color: var(--white-color);
+  max-width: 270px;
 }

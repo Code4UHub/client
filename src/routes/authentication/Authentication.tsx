@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import Form from 'components/Form/Form';
-import { AuthenticationSideBarHero } from 'components/AuthenticationSidebarHero/AuthenticationSidebarHero';
-import style from './Authentication.module.css';
+import React, { useState } from "react";
+import AuthenticationForm from "components/AuthenticationForm/AuthenticationForm";
+import { AuthenticationSideBar } from "components/AuthenticationSidebar/AuthenticationSidebar";
+import style from "./Authentication.module.css";
 
 export enum ScreenTypes {
-  signIn = 'signIn',
-  signUp = 'signUp',
+  signIn = "signIn",
+  signUp = "signUp",
 }
 
 function Authentication() {
@@ -17,9 +17,9 @@ function Authentication() {
   };
 
   return (
-    <div className={style['authentication-container']}>
-      <AuthenticationSideBarHero screen={screen} screenHandler={updateScreen} />
-      <Form screen={screen} />
+    <div className={style["authentication-container"]}>
+      <AuthenticationSideBar screen={screen} screenHandler={updateScreen} />
+      <AuthenticationForm screen={screen} />
     </div>
   );
 }

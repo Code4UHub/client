@@ -1,4 +1,4 @@
-.authentication-hero {
+.authentication-container {
   width: 48rem;
   flex-shrink: 0;
   display: flex;
@@ -32,7 +32,7 @@
   transform: translateX(100%);
 }
 
-.hero-content-container {
+.content-container {
   position: relative;
   margin-top: 35vh;
 }
@@ -45,7 +45,7 @@
   padding: 0 2rem;
 }
 
-.hero-content {
+.content {
   text-align: center;
   font-size: var(--fs-mid-text);
   color: var(--white-color);
@@ -71,21 +71,21 @@
 }
 
 @media (max-width: 60em) {
-  .authentication-hero {
+  .authentication-container {
     width: 100%;
     height: auto;
   }
-  
+
   .sign-up {
-    order: 1
+    order: 1;
   }
 
-  .slidebar  {
+  .slidebar {
     height: auto;
     position: static;
     background: transparent;
     transition: none;
-    order: 1
+    order: 1;
   }
 
   .slidebar button {
@@ -96,7 +96,7 @@
     transform: translateX(0);
   }
 
-  .hero-content-container {
+  .content-container {
     margin-top: 0;
   }
 
@@ -105,8 +105,7 @@
     color: var(--black-color);
   }
 
-  .hero-content {
+  .content {
     display: none;
   }
-
 }
