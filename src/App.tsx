@@ -1,7 +1,8 @@
-import React from 'react';
+import React from "react";
+import CreateGroupForm from "components/CreateGroupForm/CreateGroupForm";
 
 function App() {
-  return <h1>Aquí va el Dashboard</h1>;
+  return <CreateGroupForm />;
 }
 
 export default App;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import InputField from "components/InputField/InputField";
-import Button from "components/Button/Button";
+import { Button } from "components/Button/Button";
 import { inputData } from "./inputData";
 import { inputRules, correctState } from "./inputRules";
 import style from "./AuthenticationForm.module.css";
