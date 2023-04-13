@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import InputField from 'components/InputField/InputField';
 import Button from 'components/Button/Button';
+import {Toast, toastTime} from 'components/Toast/Toast';
 import { inputData } from './inputData';
 import { inputRules, correctState } from './inputRules';
 import style from './Form.module.css';
@@ -15,6 +16,8 @@ export default function Form({ screen }: Props) {
   });
   const [inputValues, setInputValues] = useState<{ [key: string]: string }>({
   });
+  const [backendError, setBackendError] = useState<{ [key: string]: string }>({
+  });
   // Checks every inputError and if one has an error message, you can't signin/signup
   const isMainButtonDisable = !(Object.values(inputErrors)).every((value: string) => (value === correctState));
 
@@ -27,6 +30,10 @@ export default function Form({ screen }: Props) {
     setInputValues({});
     inputData[screen].forEach(({id}) => {
       setInputValues((value) => ({...value, [id]: ""}))
+    });
+    setBackendError({
+      title: "",
+      message: ""
     });
   }, [screen]);
   
@@ -55,10 +62,21 @@ export default function Form({ screen }: Props) {
     }
   }
 
-  const onMainClick = () => console.log('Holi');
+  const onMainClick = () => {
+    setBackendError({title: "Error", message: "El usuario ya existe"});
+    setTimeout(() => {
+      setBackendError({
+        title: "",
+        message: ""
+      });
+    }, toastTime);
+  }
 
   return (
     <main className={style.form}>
+      {backendError.title !== ""  && 
+        <Toast title={backendError.title} message={backendError.message} type="error"/>
+      }
       <form>
         <h1>
           {screen === 'signUp'
@@ -86,7 +104,7 @@ export default function Form({ screen }: Props) {
           ))}
         </div>
         <Button
-          type="submit"
+          type="button"
           location="authentication"
           isDisable={isMainButtonDisable}
           text={screen === 'signUp' ? 'Crear cuenta' : 'Iniciar sesión'}
