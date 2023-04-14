@@ -30,3 +30,8 @@
   color: var(--white-color);
   max-width: 270px;
 }
+
+.createGroup {
+  background-color: #0060b9;
+  color: var(--white-color);
+}

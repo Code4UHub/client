@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { correctState } from "components/AuthenticationForm/inputRules";
 import style from "./InputField.module.css";
 
@@ -10,8 +10,11 @@ type Props = {
   required: boolean;
   error: string;
   value: string;
+  placeholder: string;
   handleBlur: (id: string, value: string) => void;
   handleChange: (id: string, value: string) => void;
+  handleFocus?: () => void;
+  handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 };
 
 function decideSpanClass(error: string) {
@@ -22,31 +25,28 @@ function decideSpanClass(error: string) {
   return undefined;
 }
 
-export default function InputField({
-  label,
-  type,
-  id,
-  className,
-  required,
-  error,
-  value,
-  handleChange,
-  handleBlur,
-}: Props) {
-  return (
-    <div className={`${className} ${style.inputField}`}>
-      <div className={style["label-container"]}>
-        <label htmlFor={id}>{label}</label>
-        <span className={decideSpanClass(error)}>{error}</span>
-      </div>
-      <input
-        id={id}
-        type={type}
-        className={style.inputHero}
-        required={required}
-        onBlur={() => handleBlur(id, value)}
-        onChange={(e) => handleChange(id, e.target.value)}
-      />
+export const InputField = forwardRef<HTMLInputElement, Props>((props, ref) => (
+  <div className={`${props.className} ${style.inputField}`}>
+    <div className={style["label-container"]}>
+      <label htmlFor={props.id}>{props.label}</label>
+      <span className={decideSpanClass(props.error)}>{props.error}</span>
     </div>
-  );
-}
+    <input
+      id={props.id}
+      ref={ref}
+      type={props.type}
+      placeholder={props.placeholder}
+      className={style.inputHero}
+      required={props.required}
+      onBlur={() => props.handleBlur(props.id, props.value)}
+      onChange={(e) => props.handleChange(props.id, e.target.value)}
+      onFocus={props.handleFocus}
+      onKeyDown={props.handleKeyDown}
+    />
+  </div>
+));
+
+InputField.defaultProps = {
+  handleFocus: () => {},
+  handleKeyDown: () => {},
+};

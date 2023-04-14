@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import AuthenticationForm from "components/AuthenticationForm/AuthenticationForm";
 import { AuthenticationSideBar } from "components/AuthenticationSidebar/AuthenticationSidebar";
-import CreateGroupForm from "components/CreateGroupForm/CreateGroupForm";
 import style from "./Authentication.module.css";
 
 export enum ScreenTypes {

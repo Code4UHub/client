@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import InputField from "components/InputField/InputField";
+import { InputField } from "components/InputField/InputField";
 import { Button } from "components/Button/Button";
 import { inputData } from "./inputData";
 import { inputRules, correctState } from "./inputRules";
@@ -74,6 +74,7 @@ export default function AuthenticationForm({ screen }: Props) {
         <div className={style.inputs}>
           {inputData[screen].map((field, index: number) => (
             <InputField
+              placeholder={field.placeholder}
               key={`${screen}${field.id}`}
               value={inputValues[field.id]}
               label={field.label}

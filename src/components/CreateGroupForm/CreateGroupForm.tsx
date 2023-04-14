@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect, useReducer } from "react";
-import InputField from "components/InputField/InputField";
+import { InputField } from "components/InputField/InputField";
 import { Button } from "components/Button/Button";
-import { createGroupInputData } from "./createGroupData";
+// eslint-disable-next-line
+import { createGroupInputData, days } from "./createGroupData";
 import styles from "./CreateGroupFom.module.css";
 import { ReactComponent as IconClose } from "./x-mark.svg";
 
@@ -52,7 +53,13 @@ const inputErrorsReducer = (
 
 const INPUT_VALUES_INITIAL = createGroupInputData.reduce(
   (acc: { [key: string]: string }, { id }) => {
-    acc[id] = "";
+    if (id === "days") {
+      days.forEach((day) => {
+        acc[day] = "off";
+      });
+    } else {
+      acc[id] = "";
+    }
     return acc;
   },
   {}
@@ -75,7 +82,13 @@ const inputValuesReducer = (
 
 export default function CreateGroupForm() {
   const [classes, setClasses] = useState<typeof query>([]);
+  // eslint-disable-next-line
   const [filteredClasses, setFilteredClasses] = useState<typeof query>([]);
+
+  const [isListOpen, setIsListOpen] = useState(false);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+
+  // eslint-disable-next-line
   const [inputValues, dispatch] = useReducer(
     inputValuesReducer,
     INPUT_VALUES_INITIAL
@@ -88,34 +101,51 @@ export default function CreateGroupForm() {
 
   const firstFocusableEl = useRef<HTMLButtonElement>(null);
   const lastFocusableEl = useRef<HTMLButtonElement>(null);
+  const autoComplete = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setClasses(query);
     setFilteredClasses(query);
   }, []);
 
-  useEffect(() => {
-    console.log(inputValues);
-  }, [inputValues]);
-
+  // filters autocomplete results based on user inputz
   const filterClass = (value: string) => {
     const newClass = classes.filter(({ name }) => name.includes(value));
 
     setFilteredClasses(newClass);
   };
 
+  // Updates input values every time a field changes
   const onChangeHandler = (id: string, value: string) => {
-    switch (id) {
-      case "subject":
-        filterClass(value);
-        break;
-      default:
-        break;
+    if (id === "subject") {
+      filterClass(value);
     }
-    dispatch({ type: "UPDATE_VALUES", payload: { [id]: value } });
-    dispatchError({ type: "UPDATE_ERRORS", payload: { [id]: "Error" } });
+    if (days.includes(id)) {
+      const newState = inputValues[id] === "off" ? "on" : "off";
+      dispatch({ type: "UPDATE_VALUES", payload: { [id]: newState } });
+    } else {
+      dispatch({ type: "UPDATE_VALUES", payload: { [id]: value } });
+    }
   };
 
+  // Updates class on item click
+  const selectClass = (id: string, name: string) => {
+    if (autoComplete.current) autoComplete.current.value = name;
+
+    dispatch({
+      type: "UPDATE_VALUES",
+      payload: { subject: name },
+    });
+
+    setIsListOpen(false);
+  };
+
+  // Closes autocomplete list on tab press
+  const skipAutocomplete = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Tab") setIsListOpen(false);
+  };
+
+  // Traps tab focus on modal
   const trapFocus = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === "Tab") {
       if (e.shiftKey) {
@@ -132,6 +162,79 @@ export default function CreateGroupForm() {
     }
   };
 
+  // Renders inputfield based on inputData
+  const inputFields = createGroupInputData.map((inputData) => {
+    switch (inputData.id) {
+      case "subject":
+        return (
+          <div key={inputData.id} className={`${styles.autocomplete}`}>
+            <InputField
+              placeholder={inputData.placeholder}
+              ref={autoComplete}
+              className={`${styles.button}`}
+              value=""
+              label={inputData.label}
+              type={inputData.type}
+              id={inputData.id}
+              error={inputErrors[inputData.id]}
+              required
+              handleFocus={() => setIsListOpen(true)}
+              handleChange={onChangeHandler}
+              handleKeyDown={skipAutocomplete}
+              handleBlur={() => {}}
+            />
+            {isListOpen && (
+              <ul className={styles["autocomplete-list"]}>
+                {filteredClasses.map(({ id, name }) => (
+                  <li key={id} onClick={() => selectClass(inputData.id, name)}>
+                    {name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        );
+      case "days":
+        return (
+          <div key={inputData.id} className={styles.singleInput}>
+            <legend>{inputData.label}</legend>
+            <div className={styles["day-buttons"]}>
+              {days.map((day) => (
+                <Button
+                  className={inputValues[day] === "on" ? styles.selected : ""}
+                  key={day}
+                  location="createGroup"
+                  text={day}
+                  onClickHandler={() => onChangeHandler(day, "off")}
+                  isDisable={false}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      default:
+        return (
+          <InputField
+            key={inputData.id}
+            className={`${styles.button} ${
+              inputData.id === "startTime" || inputData.id === "endTime"
+                ? styles.halfInput
+                : styles.singleInput
+            }`}
+            value=""
+            placeholder={inputData.placeholder}
+            label={inputData.label}
+            type={inputData.type}
+            id={inputData.id}
+            error={inputErrors[inputData.id]}
+            required
+            handleChange={onChangeHandler}
+            handleBlur={() => {}}
+          />
+        );
+    }
+  });
+
   return (
     <div className={styles["form-wrapper"]}>
       <div className={styles["form-container"]}>
@@ -145,41 +248,16 @@ export default function CreateGroupForm() {
             <IconClose />
           </button>
         </div>
-        <form>
+        <form autoComplete="off">
           <h3>Crear Grupo</h3>
-          <div className={styles["form-inputs"]}>
-            {createGroupInputData.map((inputData) => (
-              <>
-                <InputField
-                  key={inputData.id}
-                  className={styles.button}
-                  value=""
-                  label={inputData.label}
-                  type={inputData.type}
-                  id={inputData.id}
-                  error={inputErrors[inputData.id]}
-                  required
-                  handleChange={onChangeHandler}
-                  handleBlur={() => {}}
-                />
-                {/* {inputData.id === "subject" && (
-                  <div>
-                    <ul>
-                      {filteredClasses.map(({ id, name }) => (
-                        <li key={id}>{name}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )} */}
-              </>
-            ))}
-          </div>
+          <div className={styles["form-inputs"]}>{inputFields}</div>
           <Button
-            location="authentication"
-            text="holi"
-            onClickHandler={() => {}}
+            location=""
+            text="Crear grupo"
             type="submit"
+            isDisable={isSubmitDisabled}
             ref={lastFocusableEl}
+            onClickHandler={() => {}}
             onKeyDownHandler={trapFocus}
           />
         </form>
