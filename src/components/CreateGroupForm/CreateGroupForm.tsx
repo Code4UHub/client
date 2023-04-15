@@ -3,6 +3,7 @@ import { InputField } from "components/InputField/InputField";
 import { Button } from "components/Button/Button";
 // eslint-disable-next-line
 import { createGroupInputData, days } from "./createGroupData";
+import { inputRules } from "./inputRules";
 import styles from "./CreateGroupFom.module.css";
 import { ReactComponent as IconClose } from "./x-mark.svg";
 
@@ -128,6 +129,15 @@ export default function CreateGroupForm() {
     }
   };
 
+  const onCheckRules = (id: string, value: string | undefined) => {
+    const rule = inputRules.find((r) => r.id === id);
+    let validationResult = "";
+    if (rule && value) {
+      validationResult = rule.validate(value);
+      console.log(validationResult);
+    }
+  };
+
   // Updates class on item click
   const selectClass = (id: string, name: string) => {
     if (autoComplete.current) autoComplete.current.value = name;
@@ -167,7 +177,11 @@ export default function CreateGroupForm() {
     switch (inputData.id) {
       case "subject":
         return (
-          <div key={inputData.id} className={`${styles.autocomplete}`}>
+          <div
+            key={inputData.id}
+            className={`${styles.autocomplete}`}
+            onBlur={() => onCheckRules("subject", autoComplete.current?.value)}
+          >
             <InputField
               placeholder={inputData.placeholder}
               ref={autoComplete}
@@ -229,7 +243,7 @@ export default function CreateGroupForm() {
             error={inputErrors[inputData.id]}
             required
             handleChange={onChangeHandler}
-            handleBlur={() => {}}
+            handleBlur={onCheckRules}
           />
         );
     }
