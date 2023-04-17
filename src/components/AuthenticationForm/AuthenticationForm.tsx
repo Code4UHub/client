@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateUser } from 'store/user/userSlice';
 
-import { createUser } from 'utils/db/db.utils';
+import { createUser, logUser } from 'utils/db/db.utils';
 
 import { inputData } from './inputData';
 import { inputRules, correctState } from './inputRules';
@@ -18,6 +18,16 @@ import style from './AuthenticationForm.module.css';
 type Props = {
   screen: 'signIn' | 'signUp';
 };
+
+function toTitleCase(sentence: string) {
+  if (sentence) {
+    const words = sentence.toLowerCase().split(' ');
+    return words.map((word) => 
+      word.replace(word[0], word[0].toUpperCase())
+    ).join(' ');
+  }
+  return "";
+}
 
 export default function AuthenticationForm({ screen }: Props) {
   const [inputErrors, setInputErrors] = useState<{ [key: string]: string }>({});
@@ -81,37 +91,48 @@ export default function AuthenticationForm({ screen }: Props) {
     try {
       let user;
 
+      const studentRegex = /^[aA]0/g;
+      const userName = inputValues.email.split('@')[0];
       if (screen === 'signIn') {
-        console.log('Holi');
+        const { email, passwordLogin } = inputValues;
+        if (studentRegex.test(userName)) {
+          user = await logUser<StudentPromise>({
+            email: email.toLowerCase(),
+            password: passwordLogin,
+          })
+        } else {
+          user = await logUser<TeacherPromise>({
+            email: email.toLowerCase(),
+            password: passwordLogin,
+          })
+        }
       } else {
-        const studentRegex = /^[aA]0/g;
-        const userName = inputValues.email.split('@')[0];
         const { firstName, lastName, email, password } = inputValues;
 
         if (studentRegex.test(userName)) {
           user = await createUser<StudentPromise>({
-            first_name: firstName,
-            last_name: lastName,
-            email,
+            first_name: toTitleCase(firstName),
+            last_name: toTitleCase(lastName),
+            email: email.toLowerCase(),
             password,
             student_id: userName,
           });
         } else {
           user = await createUser<TeacherPromise>({
-            first_name: firstName,
-            last_name: lastName,
-            email,
+            first_name: toTitleCase(firstName),
+            last_name: toTitleCase(lastName),
+            email: email.toLowerCase(),
             password,
             teacher_id: userName,
           });
         }
-
-        if (typeof user.data !== 'string') {
-          dispatch(updateUser(user.data));
-          navigate('/');
-        } else {
-          console.log(user);
-        }
+      }
+      console.log(user.status)
+      if (typeof user.data !== 'string') {
+        dispatch(updateUser(user.data));
+        navigate('/');
+      } else {
+        console.log(user);
       }
     } catch (error) {
       console.log(error);

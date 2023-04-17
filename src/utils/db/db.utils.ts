@@ -31,3 +31,20 @@ export const createUser = async <T>(user: {
 
   return request.json();
 };
+
+export const logUser = async <T>(user: {
+  email: string,
+  password: string,
+}): Promise<T> => {
+  let request;
+  const isStudent = user.email.toLowerCase().startsWith("a");
+
+  if (isStudent) {
+    request = await fetch(encodeURI(`${ENDPOINTS.STUDENT}/email=${user.email}&password=${user.password}`));
+  } else {
+    request = await fetch(encodeURI(`${ENDPOINTS.TEACHER}/email=${user.email}&password=${user.password}`));
+  }
+
+  return request.json();
+
+}
