@@ -42,13 +42,13 @@
 }
 
 .error {
-  background-color: #fed6d7;
-  color: #822727;
+  background-color: var(--light-red);
+  color: var(--dark-red);
 }
 
 .correct {
-  background-color: #c6f6d4;
-  color: #21543d;
+  background-color: var(--light-green);
+  color: var(--dark-green);
 }
 
 @keyframes showFeedback {
