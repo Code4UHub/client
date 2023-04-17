@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import AuthenticationForm from "components/AuthenticationForm/AuthenticationForm";
 import { AuthenticationSideBar } from "components/AuthenticationSidebar/AuthenticationSidebar";
+import { Logo } from 'components/Logo/Logo'
+
 import style from "./Authentication.module.css";
 
 export enum ScreenTypes {
@@ -18,6 +20,7 @@ function Authentication() {
 
   return (
     <div className={style["authentication-container"]}>
+      <Logo position="auth" type={screen === ScreenTypes.signIn ? "blue" : "white"}/>
       <AuthenticationSideBar screen={screen} screenHandler={updateScreen} />
       <AuthenticationForm screen={screen} />
     </div>

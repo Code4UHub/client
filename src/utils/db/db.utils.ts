@@ -46,5 +46,5 @@ export const logUser = async <T>(user: {
   }
 
   return request.json();
-
 }
+
