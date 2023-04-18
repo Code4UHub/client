@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import InputField from 'components/InputField/InputField';
 import Button from 'components/Button/Button';
+import { toastTime, Toast } from 'components/Toast/Toast';
 
 import { StudentPromise, TeacherPromise } from 'types/User/User';
 
@@ -32,6 +33,11 @@ function toTitleCase(sentence: string) {
 export default function AuthenticationForm({ screen }: Props) {
   const [inputErrors, setInputErrors] = useState<{ [key: string]: string }>({});
   const [inputValues, setInputValues] = useState<{ [key: string]: string }>({});
+  const [backendError, setBackendError] = useState<{ [key: string]: string }>({
+    title: "",
+    message: "",
+  });
+  const hasBackendError = backendError.title !== "" && backendError.message !== "";
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -85,9 +91,17 @@ export default function AuthenticationForm({ screen }: Props) {
     }
   };
 
+  const turnOffToast = () => {
+    setTimeout(() => {
+      setBackendError({
+        title: "",
+        message: ""
+      });
+    }, toastTime)
+  }
+
   const submitForm = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
     try {
       let user;
 
@@ -133,14 +147,25 @@ export default function AuthenticationForm({ screen }: Props) {
         navigate('/');
       } else {
         console.log(user);
+        setBackendError({title: user.status, message: user.data});
+        turnOffToast();
       }
     } catch (error) {
       console.log(error);
+      setBackendError({title: "Error", message: "Intente más tarde"});
+      turnOffToast();
     }
   };
 
   return (
     <main className={style.form}>
+      {hasBackendError && 
+        <Toast 
+          title={backendError.title} 
+          message={backendError.message} 
+          type="error"
+        />
+      }
       <form>
         <h1 className={style['form-title']}>
           {screen === 'signUp'
