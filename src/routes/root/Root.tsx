@@ -6,7 +6,7 @@ import styles from './Root.module.css';
 
 export function Root() {
   const outlet = useOutlet();
-  const user = useSelector((state: RootState) => state.user.currentUser);
+  const user = useSelector((state: RootState) => state.currentUser);
 
   if (!user) return <Navigate to="/auth" />;
 

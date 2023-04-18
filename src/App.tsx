@@ -17,7 +17,7 @@ type User = {
 
 function App() {
   const user = useSelector(
-    (state: RootState) => state.user.currentUser as unknown as User
+    (state: RootState) => state.currentUser as unknown as User
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
