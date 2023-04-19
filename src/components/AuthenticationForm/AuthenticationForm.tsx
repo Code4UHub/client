@@ -11,8 +11,9 @@ import { updateUser } from 'store/user/userSlice';
 
 import { createUser, logUser } from 'utils/db/db.utils';
 
-import { inputData } from './inputData';
-import { inputRules, correctState } from './inputRules';
+import { authRules } from 'utils/inputRules/authRules';
+import { correctState } from 'utils/inputRules/generalRules';
+import { authData } from './authData';
 
 import style from './AuthenticationForm.module.css';
 
@@ -50,11 +51,11 @@ export default function AuthenticationForm({ screen }: Props) {
   // Update values of inputs and errors, according to the screen
   useEffect(() => {
     setInputErrors({});
-    inputData[screen].forEach(({ id }) => {
+    authData[screen].forEach(({ id }) => {
       setInputErrors((inputE) => ({ ...inputE, [id]: '' }));
     });
     setInputValues({});
-    inputData[screen].forEach(({ id }) => {
+    authData[screen].forEach(({ id }) => {
       setInputValues((value) => ({ ...value, [id]: '' }));
     });
   }, [screen]);
@@ -73,7 +74,7 @@ export default function AuthenticationForm({ screen }: Props) {
 
   // Update errors according to rules
   const onCheckRules = (id: string, value: string) => {
-    const rule = inputRules.find((r) => r.id === id);
+    const rule = authRules.find((r) => r.id === id);
     let validationResult = '';
     if (rule) {
       switch (id) {
@@ -141,17 +142,14 @@ export default function AuthenticationForm({ screen }: Props) {
           });
         }
       }
-      console.log(user.status)
       if (typeof user.data !== 'string') {
         dispatch(updateUser(user.data));
         navigate('/');
       } else {
-        console.log(user);
         setBackendError({title: user.status, message: user.data});
         turnOffToast();
       }
     } catch (error) {
-      console.log(error);
       setBackendError({title: "Error", message: "Intente más tarde"});
       turnOffToast();
     }
@@ -173,7 +171,7 @@ export default function AuthenticationForm({ screen }: Props) {
             : 'Inicia sesión con tu cuenta'}
         </h1>
         <div className={style.inputs}>
-          {inputData[screen].map((field, index: number) => (
+          {authData[screen].map((field, index: number) => (
             <InputField
               key={`${screen}${field.id}`}
               value={inputValues[field.id]}

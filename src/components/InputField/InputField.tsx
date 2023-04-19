@@ -1,5 +1,5 @@
 import React from "react";
-import { correctState } from "components/AuthenticationForm/inputRules";
+import { correctState } from "utils/inputRules/generalRules";
 import style from "./InputField.module.css";
 
 type Props = {
