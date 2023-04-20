@@ -11,8 +11,9 @@ import style from './Assignment.module.css';
 export default function Assignment() {
   const [questionIndex, setQuestionIndex] = useState<number>(0);
   const [answers, setAnswers] = useState<{ [key: number]: number }>({});
-  const [toastMessage, setToastMessage] = useState<{ [key: string]: string }>({});
   const [time, setTime] = useState<{ [key: string]: number }>({});
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<{ [key: string]: string }>({});
   const allQuestionsAnswered = !Object.values(answers).every((answer) => answer !== -1);
   const hasToastMessage = toastMessage.title !== "" && toastMessage.message !== "";
   const maxIndex = questionData.length - 1;
@@ -35,6 +36,7 @@ export default function Assignment() {
       clearTimeout(timeoutId);
     };
   }, [time]);
+
 
   useEffect(() => {
     questionData.forEach((_question, index) => {
@@ -83,11 +85,22 @@ export default function Assignment() {
       title: "Success",
       message: "Exam completed!"
     })
+    setIsSubmitted(true);
     turnOffToast();
   }
 
+  function defineButtonClass(index: number) {
+    if (index === questionIndex) return "assignmentActive";
+    if (isSubmitted) {
+      if (answers[index] === questionData[index].answer) return "assignmentCorrect";
+      return "assignmentIncorrect"
+    }
+    if (answers[index] !== -1) return "assignmentAnswered"
+    return "assignmentInactive";
+  }
+
   return (
-    <main>
+    <main className={style['assignment-container']}>
       {hasToastMessage && 
         <Toast 
           title={toastMessage.title} 
@@ -96,20 +109,20 @@ export default function Assignment() {
         />
       }
       <div className={style.assignment}>
-        <Title title="Examen final | Condicionales" />
-        <div className={style['timer-container']}>
-          <Timer hr={time.hours} min={time.minutes} s={time.seconds}/>
-        </div>
-        <div className={style['select-question-container']}>
-          {questionData.map((_, index) => (
-            <Button 
-              location={index === questionIndex ? "assignmentActive" : "assignmentInactive"}
-              text={String(index + 1)}
-              onClickHandler={() => onClickHandler("jump", index)}
-              type="button"
-              isDisable={false}
-            />
-          ))}
+        <Title title="Nivel fácil | Condicionales" />
+        <div className={style['assignment-info']}>
+          <div className={style['select-question-container']}>
+            {questionData.map((_, index) => (
+              <Button 
+                location={defineButtonClass(index)}
+                text={String(index + 1)}
+                onClickHandler={() => onClickHandler("jump", index)}
+                type="button"
+                isDisable={false}
+              />
+            ))}
+          </div>
+            <Timer hr={time.hours} min={time.minutes} s={time.seconds}/>
         </div>
         <div className={style['question-container']}>
           <CloseQuestion

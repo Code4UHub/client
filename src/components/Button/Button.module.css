@@ -32,7 +32,8 @@
   max-width: 270px;
 }
 
-.assignmentActive, .assignmentInactive {
+.assignmentActive, .assignmentInactive, .assignmentChange, .assignmentAnswered, .assignmentCorrect, .assignmentIncorrect {
+  font-size: var(--fs-small-text);
   border-radius: 120rem;
   height: 5rem;
   width: 5rem;
@@ -42,20 +43,58 @@
   justify-content: center;
 }
 
+.assignmentCorrect {
+  background-color: var(--light-green);
+  color: var(--dark-green);
+}
+
+.assignmentIncorrect {
+  background-color: var(--light-red);
+  color: var(--dark-red);
+}
+
 .assignmentActive {
   background-color: var(--sec-blue-color);
   color: white;
   font-weight: bold;
 }
 
+.assignmentAnswered {
+  border: 0.8rem solid var(--light-green);
+}
+
 .assignmentChange {
-  height: 5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 10rem;
+  padding: 2rem 8rem;
+  border-radius: 2rem;
+  background-color: var(--sec-blue-color);
+  color: var(--white-color);
+
+}
+
+@media (max-width: 60em) {
+  .assignmentChange {
+    width: 4rem;
+    padding: 2rem 6rem;
+    font-size: var(--fs-small-small-text);
+  }
+}
+
+@media (max-width: 40em) {
+  .assignmentChange {
+    padding: 2rem 5rem;
+    width: 2rem;
+    font-size: var(--fs-small-small-text);
+  }
 }
 
 .assignmentSubmit {
   background-color: #1176D5;
   color: white;
+  height: 5rem;
+  display: flex;
+  padding: 2rem 2rem;
+  align-items: center;
+  justify-content: center;
 }
+

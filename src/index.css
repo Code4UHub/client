@@ -27,7 +27,8 @@ html {
 
   --main-blue-color: #02203c;
   --sec-blue-color: #15314b;
-  --light-gray: #bfbfbf;
+  --dark-gray: #bfbfbf;
+  --light-gray: #EFEFEF;
   --light-blue-color: #e9eef3;
   --light-red: #FED6D7;
   --middle-red: #d9534f;

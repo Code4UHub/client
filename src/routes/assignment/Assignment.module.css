@@ -1,11 +1,20 @@
+.assignment-container {
+    width: 100%;
+}
+
 div .assignment {
     width: 100%;
     height: 100vh;
     padding: 5rem 10rem;
 }
 
-div .select-question-container {
+div .assignment-info {
     margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 8fr 1fr;
+}
+
+div .select-question-container {
     display: flex;
     flex-direction: row;
     gap: 1rem;
@@ -16,6 +25,8 @@ div .question-container {
     margin-top: 2rem;
     border-radius: 1rem;
     padding: 5rem 10rem;
+    display: flex;
+    flex-direction: column;
 }
 
 div .button-container, div .last-button {
@@ -23,6 +34,20 @@ div .button-container, div .last-button {
     justify-content: flex-end;
 }
 
+div .button-container {
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
 div .last-button {
     margin-top: 2rem;
+}
+
+@media (max-width: 60em)  {
+    .assignment-container {
+        width: 100vw;
+    }
+    div .assignment-info {
+        grid-template-columns: 3fr 1fr;
+    }
 }

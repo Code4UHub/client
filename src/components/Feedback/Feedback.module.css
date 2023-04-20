@@ -1,0 +1,10 @@
+
+span .correct {
+    background-color: var(--light-green);
+    color: var(--dark-green);
+}
+
+span .incorrect {
+    background-color: var(--light-red);
+    color: var(--dark-red);
+}

@@ -20,16 +20,16 @@ const router = createBrowserRouter([
         path: '/',
         element: <App />,
       },
+      {
+        path: '/assignment',
+        element: <Assignment />
+      }
     ],
     errorElement: <h1>Error</h1>,
   },
   {
     path: '/auth',
     element: <Authentication />,
-  },
-  {
-    path: '/assignment',
-    element: <Assignment />
   }
 ]);
 

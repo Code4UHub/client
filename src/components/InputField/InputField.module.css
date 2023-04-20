@@ -1,6 +1,6 @@
 .inputField input {
   font-family: "Montserrat", sans-serif;
-  background-color: var(--light-gray);
+  background-color: var(--dark-gray);
   border-radius: 2rem;
   border: none;
   height: 8rem;
@@ -65,9 +65,9 @@
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0px 1000px var(--light-gray) inset;
+  -webkit-box-shadow: 0 0 0px 1000px var(--dark-gray) inset;
   -webkit-text-fill-color: inherit;
-  background-color: var(--light-gray);
+  background-color: var(--dark-gray);
 }
 
 @media (max-width: 80em) {

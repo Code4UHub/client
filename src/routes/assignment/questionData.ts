@@ -36,7 +36,7 @@ export const questionData = [
     "description": "What is the result of the expression (5 + 2) * 3?",
     "topic": "2.3 Arithmetic expressions",
     "difficulty": "Easy",
-    "answer": 21,
+    "answer": 3,
     "hints": true,
     "options": [
       {
@@ -64,7 +64,7 @@ export const questionData = [
     "description": "What is the value of x in the equation x + 8 = 20?",
     "topic": "2.4 Solving equations",
     "difficulty": "Easy",
-    "answer": 12,
+    "answer": 2,
     "hints": true,
     "options": [
       {
@@ -92,7 +92,7 @@ export const questionData = [
     "description": "What is the remainder when 21 is divided by 5 using Python?",
     "topic": "2.5 Modulus operator",
     "difficulty": "Medium",
-    "answer": 1,
+    "answer": 3,
     "hints": true,
     "options": [
       {

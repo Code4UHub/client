@@ -27,6 +27,10 @@ function App() {
     navigate('/');
   };
 
+  const assignment = () => {
+    navigate('/assignment')
+  }
+
   return (
     <div>
       <h1>Aqui va el dashboard</h1>
@@ -35,6 +39,7 @@ function App() {
       <button type="button" onClick={logOut}>
         Cerrar Sesion
       </button>
+      <button type="button" onClick={assignment}>Ir a assignment</button>
     </div>
   );
 }
