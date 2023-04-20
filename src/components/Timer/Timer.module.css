@@ -1,0 +1,17 @@
+
+div .timer {
+    text-align: right;
+}
+
+div .timer :hover {
+    cursor: pointer;
+}
+
+.time {
+    font-size: var(--fs-mid-text);
+}
+
+.timer-action {
+    font-style: italic;
+    text-decoration: underline;
+}

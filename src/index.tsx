@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Authentication from 'routes/authentication/Authentication';
+import Assignment from 'routes/assignment/Assignment';
 import { store, persistor } from 'store/store';
 import { Provider } from 'react-redux';
 import { Root } from 'routes/root/Root';
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
     path: '/auth',
     element: <Authentication />,
   },
+  {
+    path: '/assignment',
+    element: <Assignment />
+  }
 ]);
 
 const container = document.getElementById('root')!;

@@ -4,6 +4,7 @@
   height: 7rem;
   border: none;
   font-size: var(--fs-mid-small-text);
+  font-family: var(--ff-main);
   transition: transform 0.5s, opacity 0.5s;
 }
 
@@ -29,4 +30,32 @@
   background-color: var(--sec-blue-color);
   color: var(--white-color);
   max-width: 270px;
+}
+
+.assignmentActive, .assignmentInactive {
+  border-radius: 120rem;
+  height: 5rem;
+  width: 5rem;
+  padding: 2rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assignmentActive {
+  background-color: var(--sec-blue-color);
+  color: white;
+  font-weight: bold;
+}
+
+.assignmentChange {
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assignmentSubmit {
+  background-color: #1176D5;
+  color: white;
 }
