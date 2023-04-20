@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect, useReducer } from 'react';
+
 import { InputField } from 'components/InputField/InputField';
 import { Button } from 'components/Button/Button';
+import Modal from 'components/Modal/Modal';
+
 import { createGroupInputData, days } from './createGroupData';
 import { inputRules } from './inputRules';
+
 import styles from './CreateGroupFom.module.css';
-import { ReactComponent as IconClose } from './x-mark.svg';
 
 const query = [
   { id: 1, name: 'Mathematics' },
@@ -105,8 +108,8 @@ export default function CreateGroupForm() {
     INPUT_ERRORES_INITIAL
   );
 
-  const firstFocusableEl = useRef<HTMLButtonElement>(null);
-  const lastFocusableEl = useRef<HTMLButtonElement>(null);
+  const lastInputFocusableEl = useRef<HTMLInputElement>(null);
+  const submitFocusableEl = useRef<HTMLButtonElement>(null);
   const autoComplete = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -239,25 +242,8 @@ export default function CreateGroupForm() {
     if (e.key === 'Tab') setIsListOpen(false);
   };
 
-  // Traps tab focus on modal
-  const trapFocus = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === 'Tab') {
-      if (e.shiftKey) {
-        /* shift + tab */ if (
-          document.activeElement === firstFocusableEl.current
-        ) {
-          lastFocusableEl.current?.focus();
-          e.preventDefault();
-        }
-      } else if (document.activeElement === lastFocusableEl.current) {
-        /* tab */ firstFocusableEl.current?.focus();
-        e.preventDefault();
-      }
-    }
-  };
-
   // Renders inputfield based on inputData
-  const inputFields = createGroupInputData.map((inputData) => {
+  const inputFields = createGroupInputData.map((inputData, index) => {
     switch (inputData.id) {
       case 'subject':
         return (
@@ -281,7 +267,7 @@ export default function CreateGroupForm() {
               handleFocus={() => setIsListOpen(true)}
               handleChange={onChangeHandler}
               handleKeyDown={skipAutocomplete}
-              handleBlur={() => {}}
+              handleBlur={() => { }}
             />
             {isListOpen && (
               <ul className={styles['autocomplete-list']}>
@@ -317,16 +303,16 @@ export default function CreateGroupForm() {
         return (
           <InputField
             key={inputData.id}
-            className={`${styles.button} ${
-              inputData.id === 'startTime' || inputData.id === 'endTime'
-                ? styles.halfInput
-                : styles.singleInput
-            }`}
+            className={`${styles.button} ${inputData.id === 'startTime' || inputData.id === 'endTime'
+              ? styles.halfInput
+              : styles.singleInput
+              }`}
             value={inputValues[inputData.id] as string}
             placeholder={inputData.placeholder}
             label={inputData.label}
             type={inputData.type}
             id={inputData.id}
+            ref={index === createGroupInputData.length - 1 ? lastInputFocusableEl : null}
             error={inputErrors[inputData.id]}
             required
             handleChange={onChangeHandler}
@@ -337,32 +323,19 @@ export default function CreateGroupForm() {
   });
 
   return (
-    <div className={styles['form-wrapper']}>
-      <div className={styles['form-container']}>
-        <div className={styles['close-button-container']}>
-          <button
-            className={styles['close-button']}
-            type="button"
-            ref={firstFocusableEl}
-            onKeyDown={trapFocus}
-          >
-            <IconClose />
-          </button>
-        </div>
-        <form autoComplete="off">
-          <h3>Crear Grupo</h3>
-          <div className={styles['form-inputs']}>{inputFields}</div>
-          <Button
-            location=""
-            text="Crear grupo"
-            type="submit"
-            isDisable={isSubmitDisabled}
-            ref={lastFocusableEl}
-            onClickHandler={() => {}}
-            onKeyDownHandler={trapFocus}
-          />
-        </form>
-      </div>
-    </div>
+    <Modal lastFocusableElement={isSubmitDisabled ? lastInputFocusableEl : submitFocusableEl}>
+      <form className={styles['form-container']} autoComplete="off">
+        <h3>Crear Grupo</h3>
+        <div className={styles['form-inputs']}>{inputFields}</div>
+        <Button
+          location=""
+          text="Crear grupo"
+          type="submit"
+          isDisable={isSubmitDisabled}
+          ref={submitFocusableEl}
+          onClickHandler={() => { }}
+        />
+      </form>
+    </Modal>
   );
 }
