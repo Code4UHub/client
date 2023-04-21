@@ -94,6 +94,7 @@ export default function CreateGroupForm() {
 
   const [isListOpen, setIsListOpen] = useState(false);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   let timeOutId: NodeJS.Timeout;
 
@@ -108,14 +109,19 @@ export default function CreateGroupForm() {
     INPUT_ERRORES_INITIAL
   );
 
-  const lastInputFocusableEl = useRef<HTMLInputElement>(null);
-  const submitFocusableEl = useRef<HTMLButtonElement>(null);
+  const lastInputRef = useRef<HTMLInputElement>(null);
+  const submitRef = useRef<HTMLButtonElement>(null);
   const autoComplete = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setClasses(query);
     setFilteredClasses(query);
   }, []);
+
+  const resetValues = () => {
+    dispatch({ type: 'UPDATE_VALUES', payload: INPUT_VALUES_INITIAL });
+    dispatchError({ type: 'UPDATE_ERRORS', payload: INPUT_ERRORES_INITIAL })
+  };
 
   const checkFormValidation = () => {
     const errors = Object.values(inputErrors);
@@ -312,18 +318,18 @@ export default function CreateGroupForm() {
             label={inputData.label}
             type={inputData.type}
             id={inputData.id}
-            ref={index === createGroupInputData.length - 1 ? lastInputFocusableEl : null}
             error={inputErrors[inputData.id]}
             required
             handleChange={onChangeHandler}
             handleBlur={onCheckRules}
+            ref={index === createGroupInputData.length - 1 ? lastInputRef : null}
           />
         );
     }
   });
 
   return (
-    <Modal lastFocusableElement={isSubmitDisabled ? lastInputFocusableEl : submitFocusableEl}>
+    <Modal title="Crear Grupo" open={isFormSubmitted} onClose={resetValues} lastFocusableElement={isSubmitDisabled ? lastInputRef : submitRef}>
       <form className={styles['form-container']} autoComplete="off">
         <h3>Crear Grupo</h3>
         <div className={styles['form-inputs']}>{inputFields}</div>
@@ -332,8 +338,12 @@ export default function CreateGroupForm() {
           text="Crear grupo"
           type="submit"
           isDisable={isSubmitDisabled}
-          ref={submitFocusableEl}
-          onClickHandler={() => { }}
+          onClickHandler={(e: React.MouseEvent<HTMLButtonElement>) => {
+            e.preventDefault();
+            setIsFormSubmitted(true);
+            setTimeout(() => { setIsFormSubmitted(false) }, 1000);
+          }}
+          ref={submitRef}
         />
       </form>
     </Modal>

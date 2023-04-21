@@ -5,7 +5,7 @@ type Props = {
   className?: string;
   location: string;
   text: string;
-  onClickHandler: () => void;
+  onClickHandler: (event: React.MouseEvent<HTMLButtonElement>) => void;
   type?: string;
   isDisable?: boolean;
   onKeyDownHandler?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
@@ -17,9 +17,8 @@ export const Button = React.forwardRef<HTMLButtonElement, Props>(
 
     return (
       <button
-        className={`${props.className} ${style.button} ${
-          style[props.location]
-        }`}
+        className={`${props.className} ${style.button} ${style[props.location]
+          }`}
         onClick={props.onClickHandler}
         disabled={props.isDisable}
         type={isSubmit ? "submit" : "button"}
@@ -36,5 +35,5 @@ Button.defaultProps = {
   className: "",
   type: "button",
   isDisable: false,
-  onKeyDownHandler: () => {},
+  onKeyDownHandler: () => { },
 };
