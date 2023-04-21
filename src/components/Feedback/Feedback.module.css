@@ -1,10 +1,16 @@
 
-span .correct {
+.correct, .incorrect {
+    padding: 1rem 2rem;
+    border-radius: 2rem;
+    font-size: var(--fs-small);
+}
+
+.correct {
     background-color: var(--light-green);
     color: var(--dark-green);
 }
 
-span .incorrect {
+.incorrect {
     background-color: var(--light-red);
     color: var(--dark-red);
 }

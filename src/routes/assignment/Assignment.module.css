@@ -17,6 +17,7 @@ div .assignment-info {
 div .select-question-container {
     display: flex;
     flex-direction: row;
+    overflow-x: scroll;
     gap: 1rem;
 }
 

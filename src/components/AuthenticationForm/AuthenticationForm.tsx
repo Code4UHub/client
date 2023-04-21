@@ -144,7 +144,7 @@ export default function AuthenticationForm({ screen }: Props) {
       }
       if (typeof user.data !== 'string') {
         dispatch(updateUser(user.data));
-        navigate('/');
+        navigate('/', {state: {title: "Success", message: `Bienvenido ${user.data.first_name}`}});
       } else {
         setBackendError({title: user.status, message: user.data});
         turnOffToast();

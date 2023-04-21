@@ -5,12 +5,14 @@ import style from './CloseQuestion.module.css';
 type Props = {
   questionIndex: number;
   description: string;
-  answer: number;
+  chosenAnswer: number;
+  rightAnswer: number,
   options: {text: string, explanation: string}[];
+  isSubmitted: boolean;
   onChoose: (id: number, option: number) => void;
 }
 
-export default function CloseQuestion({questionIndex, description, options, onChoose, answer}: Props) {
+export default function CloseQuestion({questionIndex, description, options, onChoose, chosenAnswer, rightAnswer, isSubmitted}: Props) {
 
   const onClickHandler = (indexOption: number) => {
     onChoose(questionIndex, indexOption);
@@ -23,11 +25,14 @@ export default function CloseQuestion({questionIndex, description, options, onCh
          {/* eslint-disable */ }
         {options.map((option, index) => (
           <RadioInput
+            isDisable={isSubmitted}
             key={`${questionIndex}option${index}`}
             onClick={onClickHandler}
-            isChecked={answer === index}
+            isChecked={chosenAnswer === index}
+            isCorrect={rightAnswer === chosenAnswer}
             index={index}
-            text={option.text}
+            optionText={option.text}
+            explanationText={option.explanation}
           />
           )
         )}

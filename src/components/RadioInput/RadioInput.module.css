@@ -1,5 +1,9 @@
 .radioInput {
     margin-top: 0.8rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
 }
 
 .radioInput :hover {
@@ -12,7 +16,7 @@
     background-color: var(--white-color);
     font-weight: 400;
     font-size: var(--fs-mid-text);
-    margin-left: 1rem;
+    margin: 0 1rem;
     padding: 0 2rem;
 }
 

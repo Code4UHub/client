@@ -60,7 +60,8 @@
 }
 
 .assignmentAnswered {
-  border: 0.8rem solid var(--light-green);
+  background-color: var(--dark-gray);
+  /* border: 0.3rem solid var(--sec-blue-color); */
 }
 
 .assignmentChange {

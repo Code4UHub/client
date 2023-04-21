@@ -29,13 +29,14 @@ export default function Assignment() {
       }
     }
     const timeoutId = setTimeout(() => {
-      updateTime();
+      if (!isSubmitted) {
+        updateTime();
+      }
     }, 1000);
-  
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [time]);
+  }, [time, isSubmitted]);
 
 
   useEffect(() => {
@@ -91,11 +92,11 @@ export default function Assignment() {
 
   function defineButtonClass(index: number) {
     if (index === questionIndex) return "assignmentActive";
+    if (answers[index] !== -1) return "assignmentAnswered"
     if (isSubmitted) {
       if (answers[index] === questionData[index].answer) return "assignmentCorrect";
       return "assignmentIncorrect"
     }
-    if (answers[index] !== -1) return "assignmentAnswered"
     return "assignmentInactive";
   }
 
@@ -115,7 +116,7 @@ export default function Assignment() {
             {questionData.map((_, index) => (
               <Button 
                 location={defineButtonClass(index)}
-                text={String(index + 1)}
+                text={answers[index] === -1 ? String(index + 1) : '\u2713'}
                 onClickHandler={() => onClickHandler("jump", index)}
                 type="button"
                 isDisable={false}
@@ -126,9 +127,11 @@ export default function Assignment() {
         </div>
         <div className={style['question-container']}>
           <CloseQuestion
+            rightAnswer={isSubmitted ? questionData[questionIndex].answer : -1}
+            isSubmitted={isSubmitted}
             questionIndex={questionIndex}
             onChoose={onChooseAnswer}
-            answer={answers[questionIndex]}
+            chosenAnswer={answers[questionIndex]}
             description = {questionData[questionIndex].description}
             options = {questionData[questionIndex].options}
           />

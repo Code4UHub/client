@@ -1,3 +1,4 @@
+import React from 'react';
 import style from './Feedback.module.css'
 
 type Props = {
@@ -7,6 +8,6 @@ type Props = {
 
 export default function Feedback({text, type}: Props) {
   return (
-    <span className={style.type}>{text}</span>
+    <span className={style[type]}>{text}</span>
   )
 }
