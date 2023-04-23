@@ -25,9 +25,12 @@
   width: 240px;
 }
 
-.authentication {
+.authentication, .joinGroup {
   background-color: var(--sec-blue-color);
   color: var(--white-color);
+}
+
+.authentication { 
   max-width: 270px;
 }
 

@@ -7,7 +7,7 @@
     z-index: 1000;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     background-color: rgba(0, 0, 0, 0.5);
     overflow: auto;
 }
@@ -17,7 +17,16 @@
     border-radius: 1.2rem;
     padding: 2.4rem;
     background-color: var(--white-color);
-    animation: popup 0.4s ease-out forwards;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fadein {
+  animation: popup 0.4s ease-out forwards;
 }
 
 @keyframes popup {
