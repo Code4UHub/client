@@ -1,0 +1,11 @@
+.form-container h3 {
+    font-size: var(--fs-sub-sub-title);
+    font-weight: 300;
+    margin-top: 2.4rem;
+    text-align: center;
+}
+
+.input-container {
+    max-width: 75%;
+    width: 100%;
+}

@@ -15,7 +15,7 @@
 .modal-container {
     width: 75rem;
     border-radius: 1.2rem;
-    padding: 2.4rem 2.4rem 2.4rem 3.6rem;
+    padding: 2.4rem;
     background-color: var(--white-color);
     animation: popup 0.4s ease-out forwards;
 }
