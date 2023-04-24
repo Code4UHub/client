@@ -19,6 +19,7 @@ div .select-question-container {
     flex-direction: row;
     overflow-x: scroll;
     gap: 1rem;
+    scroll-behavior: smooth;
 }
 
 div .question-container {

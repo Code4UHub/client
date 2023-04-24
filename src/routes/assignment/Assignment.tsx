@@ -63,15 +63,15 @@ export default function Assignment() {
     const timeOnQuestion = timeOnAllQuestions();
     setTimeRegistry((registry) => ({...registry, [questionIndex]: registry[questionIndex] + (timeOnQuestion )}));
     if (action === "next" && questionIndex < maxIndex) {
-      if (container) container.scrollLeft += getTranslatedPixels(5.90);
+      if (container) container.scrollLeft += getTranslatedPixels(5);
       setQuestionIndex((index) => index + 1);
     }
     if (action === "previous" && questionIndex > 0) {
-      if (container) container.scrollLeft -= getTranslatedPixels(5.90);
+      if (container) container.scrollLeft -= getTranslatedPixels(5);
       setQuestionIndex((index) => index - 1);
     }
     if (action === "jump") {
-      if (container) container.scrollLeft += getTranslatedPixels(((newIndex || maxIndex) - questionIndex) * 5.90)
+      if (container) container.scrollLeft += getTranslatedPixels(((newIndex || maxIndex) - questionIndex) * 5)
       setQuestionIndex(newIndex || 0);
     }
   }
