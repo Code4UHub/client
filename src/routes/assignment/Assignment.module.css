@@ -44,6 +44,18 @@ div .last-button {
     margin-top: 2rem;
 }
 
+@media (max-width: 40em)  {
+    div .assignment {
+        padding: 3rem 3rem;
+    }
+    .assignment-container {
+        width: 100vw;
+    }
+    div .question-container {
+        padding: 2rem;
+    }
+}
+
 @media (max-width: 60em)  {
     .assignment-container {
         width: 100vw;

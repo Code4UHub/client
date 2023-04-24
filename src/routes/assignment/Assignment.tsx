@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import Title from 'components/Title/Title';
 import CloseQuestion from 'components/CloseQuestion/CloseQuestion';
 import Button from 'components/Button/Button';
@@ -7,6 +7,11 @@ import { Toast, toastTime } from 'components/Toast/Toast';
 import { questionData } from './questionData';
 
 import style from './Assignment.module.css';
+
+function getTranslatedPixels(rems: number) {
+  const fontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+  return rems * fontSize;
+}
 
 
 export default function Assignment() {
@@ -19,6 +24,7 @@ export default function Assignment() {
   const allQuestionsAnswered = !Object.values(answers).every((answer) => answer !== -1);
   const hasToastMessage = toastMessage.title !== "" && toastMessage.message !== "";
   const maxIndex = questionData.length - 1;
+  const containerSelectQuestionRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     questionData.forEach((_question, index) => {
@@ -52,15 +58,20 @@ export default function Assignment() {
   }
 
   function onClickHandler(action: string, newIndex?: number) {
+    
+    const container = containerSelectQuestionRef.current;
     const timeOnQuestion = timeOnAllQuestions();
     setTimeRegistry((registry) => ({...registry, [questionIndex]: registry[questionIndex] + (timeOnQuestion )}));
     if (action === "next" && questionIndex < maxIndex) {
+      if (container) container.scrollLeft += getTranslatedPixels(5.90);
       setQuestionIndex((index) => index + 1);
     }
     if (action === "previous" && questionIndex > 0) {
+      if (container) container.scrollLeft -= getTranslatedPixels(5.90);
       setQuestionIndex((index) => index - 1);
     }
     if (action === "jump") {
+      if (container) container.scrollLeft += getTranslatedPixels(((newIndex || maxIndex) - questionIndex) * 5.90)
       setQuestionIndex(newIndex || 0);
     }
   }
@@ -107,7 +118,7 @@ export default function Assignment() {
       <div className={style.assignment}>
         <Title title="Nivel fácil | Condicionales" />
         <div className={style['assignment-info']}>
-          <div className={style['select-question-container']}>
+          <div ref={containerSelectQuestionRef} className={style['select-question-container']}>
             {questionData.map((_, index) => (
               <Button 
                 location={defineButtonClass(index)}
