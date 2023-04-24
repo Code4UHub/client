@@ -2,15 +2,31 @@ import React, {useState} from 'react'
 import style from './Timer.module.css'
 
 type Props = {
-  s: number;
-  min: number;
-  hr: number;
+  seconds: number;
 }
 
-export default function Timer({s, min, hr}: Props) {
-  const seconds = s > 9 ? String(s) : `0${s}`;
-  const minutes = min > 9 ? String(min) : `0${min}`;
-  const hours = hr > 9 ? String(hr) : `0${hr}`;
+function formatTime(time: number) {
+  if (time >= 1) {
+    if (time <= 9) return `0${time}`;
+    return String(time);
+  }
+  return "00";
+}
+
+function getTime(givenSeconds : number) {
+  let calculatedSeconds = givenSeconds;
+  const calculatedHours = parseInt(String(calculatedSeconds / 3600), 10);
+  const hours = formatTime(calculatedHours);
+  calculatedSeconds -= calculatedHours * 3600;
+  const calculatedMinutes = parseInt(String(calculatedSeconds / 60), 10);
+  const minutes = formatTime(calculatedMinutes);
+  calculatedSeconds -= calculatedMinutes * 60;
+  const seconds = formatTime(calculatedSeconds)
+  return `${hours}:${minutes}:${seconds}`;
+}
+
+export default function Timer({seconds}: Props) {
+  const time = getTime(seconds);
   const [isShown, setIsShown] = useState<boolean>(true);
   if (isShown) {
     return (
@@ -19,7 +35,7 @@ export default function Timer({s, min, hr}: Props) {
           setIsShown(true);
         }
       }}>
-        <p className={style.time}>{`${hours}:${minutes}:${seconds}`}</p>
+        <p className={style.time}>{time}</p>
         <p className={style['timer-action']}> Ocultar tiempo</p>
       </div>
     )

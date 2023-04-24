@@ -8,59 +8,52 @@ import { questionData } from './questionData';
 
 import style from './Assignment.module.css';
 
+
 export default function Assignment() {
   const [questionIndex, setQuestionIndex] = useState<number>(0);
   const [answers, setAnswers] = useState<{ [key: number]: number }>({});
-  const [time, setTime] = useState<{ [key: string]: number }>({});
+  const [generalSeconds, setGeneralSeconds] = useState<number>(0);
+  const [timeRegistry, setTimeRegistry] = useState<{ [key: number] : number}>({});
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<{ [key: string]: string }>({});
   const allQuestionsAnswered = !Object.values(answers).every((answer) => answer !== -1);
   const hasToastMessage = toastMessage.title !== "" && toastMessage.message !== "";
   const maxIndex = questionData.length - 1;
-
-  useEffect(() => {
-    function updateTime() {
-      setTime((currentTime) => ({...currentTime, 'seconds': currentTime.seconds + 1}));
-      if (time.minutes === 59 && time.seconds === 59 ) {
-        setTime((currentTime) => ({'seconds': 0, 'minutes': 0, 'hours': currentTime.hours + 1}));
-      }
-      else if (time.seconds === 59) {
-        setTime((currentTime) => ({...currentTime, 'minutes': currentTime.minutes + 1, 'seconds': 0}));
-      }
-    }
-    const timeoutId = setTimeout(() => {
-      if (!isSubmitted) {
-        updateTime();
-      }
-    }, 1000);
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [time, isSubmitted]);
-
-
+  
   useEffect(() => {
     questionData.forEach((_question, index) => {
-      setAnswers((ans) => ({...ans, [index]: -1}))
-    })
+      setAnswers((ans) => ({...ans, [index]: -1}));
+      setTimeRegistry((times) => ({...times, [index]: 0}))
+    });
     setToastMessage({
       title: "",
       message: ""
-    })
-    setTime({
-      hours: 0,
-      minutes: 0,
-      seconds: 0
-    })
+    });
   }, [])
 
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+        if (!isSubmitted) setGeneralSeconds((seconds) => seconds + 1);
+      }, 1000);
+      return () => {
+        clearTimeout(timeoutId);
+      };
+  }, [isSubmitted, generalSeconds])
 
 
   const onChooseAnswer = (index: number, option: number) => {
     setAnswers((ans) => ({...ans, [index]: option}))
   }
 
+  // The total time - sum of time on registry, gives the time on an untracked question
+  function timeOnAllQuestions(): number {
+    const totalTime = Object.values(timeRegistry).reduce((sum, value) => sum + value, 0);
+    return generalSeconds - totalTime;
+  }
+
   function onClickHandler(action: string, newIndex?: number) {
+    const timeOnQuestion = timeOnAllQuestions();
+    setTimeRegistry((registry) => ({...registry, [questionIndex]: registry[questionIndex] + (timeOnQuestion )}));
     if (action === "next" && questionIndex < maxIndex) {
       setQuestionIndex((index) => index + 1);
     }
@@ -82,6 +75,8 @@ export default function Assignment() {
   }
 
   const onMainClick = () => {
+    const timeOnQuestion = timeOnAllQuestions() ;
+    setTimeRegistry((registry) => ({...registry, [questionIndex]: registry[questionIndex] + (timeOnQuestion )}));
     setToastMessage({
       title: "Success",
       message: "Exam completed!"
@@ -92,11 +87,11 @@ export default function Assignment() {
 
   function defineButtonClass(index: number) {
     if (index === questionIndex) return "assignmentActive";
-    if (answers[index] !== -1) return "assignmentAnswered"
     if (isSubmitted) {
       if (answers[index] === questionData[index].answer) return "assignmentCorrect";
       return "assignmentIncorrect"
     }
+    if (answers[index] !== -1) return "assignmentAnswered"
     return "assignmentInactive";
   }
 
@@ -123,7 +118,9 @@ export default function Assignment() {
               />
             ))}
           </div>
-            <Timer hr={time.hours} min={time.minutes} s={time.seconds}/>
+            <Timer 
+              seconds={generalSeconds}
+            />
         </div>
         <div className={style['question-container']}>
           <CloseQuestion
