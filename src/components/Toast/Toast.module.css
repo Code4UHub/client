@@ -1,0 +1,56 @@
+
+.top {
+    top: 0;
+    left: 35%;
+}
+
+div .error {
+    background-color: var(--middle-red);
+}
+
+.open {
+    animation: toast-in-top 1s;
+}
+
+.closing {
+    animation: toast-out-top 1s;
+}
+
+.toast {
+    position: fixed;
+    padding: 1.5rem 4rem;
+    border-radius: 0 0 2rem 2rem;
+    box-shadow: 0 0 2rem #999;
+    color: var(--white-color);
+    text-align: left;
+}
+
+.toast-title {
+	font-weight: bold;
+	font-size: var(--fs-small-text);
+}
+
+.toast-message {
+    font-size: var(--fs-small-small-text);
+    white-space: nowrap;
+}
+
+
+@keyframes toast-in-top {
+	from {
+	transform: translateY(-100%);
+	}
+	to {
+    transform: translateX(0);
+	}
+}
+
+@keyframes toast-out-top {
+	from {
+	transform: translateY(0);
+	}
+	to {
+    transform: translateY(-100%);
+	}
+}
+
