@@ -1,0 +1,14 @@
+.authentication-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  position: relative;
+}
+
+@media (max-width: 60em ) {
+  .authentication-container {
+    flex-direction: column;
+    justify-content: center;
+    row-gap: 2rem;
+  }
+}
