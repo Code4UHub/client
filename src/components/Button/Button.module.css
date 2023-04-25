@@ -32,6 +32,33 @@
   max-width: 270px;
 }
 
+.createGroup-submit {
+  margin-top: 2.4rem;
+  margin-bottom: 1.2rem;
+  width: fit-content;
+  height: auto;
+  align-self: flex-end;
+  color: var(--white-color);
+  background: var(--sec-blue-color);
+}
+
+.createGroup-active, .createGroup-noactive {
+  flex: 1 1 0px;
+  padding: 0;
+  margin-top: 1.2rem;
+  height: 3.6rem;
+}
+
+.createGroup-active {
+  background-color: var(--sec-blue-color);
+  color: var(--white-color);
+}
+
+.createGroup-noactive {
+  background-color: var(--light-gray);
+  color: var(--main-blue-color);
+}
+
 .assignmentActive, .assignmentInactive, .assignmentChange, .assignmentAnswered, .assignmentCorrect, .assignmentIncorrect {
   font-size: var(--fs-small-text);
   border-radius: 120rem;
@@ -98,4 +125,3 @@
   align-items: center;
   justify-content: center;
 }
-

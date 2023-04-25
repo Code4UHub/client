@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import InputField from 'components/InputField/InputField';
-import Button from 'components/Button/Button';
+import { InputField } from 'components/InputField/InputField';
+import { Button } from 'components/Button/Button';
 import { toastTime, Toast } from 'components/Toast/Toast';
 
 import { useNavigate } from 'react-router-dom';

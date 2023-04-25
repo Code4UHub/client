@@ -6,33 +6,27 @@ import { Toast, toastTime } from 'components/Toast/Toast';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { updateUser } from 'store/user/userSlice';
 
-type User = {
-  student_id?: string;
-  teacher_id?: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-};
+import CreateGroupForm from 'components/CreateGroupForm/CreateGroupForm';
+
 
 function App() {
   const user = useSelector(
-    (state: RootState) => state.currentUser as unknown as User
+    (state: RootState) => state.currentUser
   );
   const [toastValue, setToastValue] = useState<{ [key: string]: string }>({
     title: "",
     message: "",
-  }); 
+  });
   const hasToastValue = toastValue.title !== "" && toastValue.message !== "";
   const dispatch = useDispatch();
-  const {state} = useLocation();
+  const { state } = useLocation();
 
   useEffect(() => {
     if (state) {
-      const {title, message} = state;
-      setToastValue({title, message})
+      const { title, message } = state;
+      setToastValue({ title, message })
       setTimeout(() => {
-        setToastValue({title: "", message: ""});
+        setToastValue({ title: "", message: "" });
       }, toastTime)
     }
   }, [state])
@@ -52,8 +46,12 @@ function App() {
     <div>
       {hasToastValue && <Toast type="success" title={toastValue.title} message={toastValue.message} />}
       <h1>Aqui va el dashboard</h1>
+      <CreateGroupForm />
       <p>User:</p>
-      <p>{user.email}</p>
+      <p>{user?.first_name}</p>
+      <p>{user?.role}</p>
+      <p>{user?.email}</p>
+      <p>{user?.authToken}</p>
       <button type="button" onClick={logOut}>
         Cerrar Sesion
       </button>
