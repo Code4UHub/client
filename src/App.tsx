@@ -6,6 +6,8 @@ import { Toast, toastTime } from 'components/Toast/Toast';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { updateUser } from 'store/user/userSlice';
 
+import CreateGroupForm from 'components/CreateGroupForm/CreateGroupForm';
+
 
 function App() {
   const user = useSelector(
@@ -44,6 +46,7 @@ function App() {
     <div>
       {hasToastValue && <Toast type="success" title={toastValue.title} message={toastValue.message} />}
       <h1>Aqui va el dashboard</h1>
+      <CreateGroupForm />
       <p>User:</p>
       <p>{user?.first_name}</p>
       <p>{user?.role}</p>
