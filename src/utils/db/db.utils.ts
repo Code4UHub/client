@@ -1,19 +1,15 @@
+import { UserPromise } from 'types/User/User';
+
 const BASE_URL = 'v1';
 
 const ENDPOINTS = {
-  STUDENT: `${BASE_URL}/student`,
-  TEACHER: `${BASE_URL}/teacher`,
+  STUDENT_REGISTER: `${BASE_URL}/student/register`,
+  TEACHER_REGISTER: `${BASE_URL}/teacher/register`,
+  STUDENT_LOGIN: `${BASE_URL}/student/login`,
+  TEACHER_LOGIN: `${BASE_URL}/teacher/login`,
 };
 
-export const createUser = async <T>(user: {
-  student_id?: string;
-  teacher_id?: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-}): Promise<T> => {
-  let request;
+export const createStudent = async (user: { [key: string]: string }): Promise<UserPromise> => {
 
   const options: RequestInit = {
     method: 'POST',
@@ -23,28 +19,37 @@ export const createUser = async <T>(user: {
     body: JSON.stringify(user),
   };
 
-  if (user.student_id) {
-    request = await fetch(ENDPOINTS.STUDENT, options);
-  } else {
-    request = await fetch(ENDPOINTS.TEACHER, options);
-  }
+  const request = await fetch(ENDPOINTS.STUDENT_REGISTER, options);
 
   return request.json();
 };
 
-export const logUser = async <T>(user: {
-  email: string,
-  password: string,
-}): Promise<T> => {
-  let request;
-  const isStudent = user.email.toLowerCase().startsWith("a");
+export const createTeacher = async (user: { [key: string]: string }): Promise<UserPromise> => {
 
-  if (isStudent) {
-    request = await fetch(encodeURI(`${ENDPOINTS.STUDENT}/email=${user.email}&password=${user.password}`));
-  } else {
-    request = await fetch(encodeURI(`${ENDPOINTS.TEACHER}/email=${user.email}&password=${user.password}`));
-  }
+  const options: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(user),
+  };
+
+  const request = await fetch(ENDPOINTS.TEACHER_REGISTER, options);
 
   return request.json();
-}
+};
+
+export const logStudent = async (email: string, password: string): Promise<UserPromise> => {
+
+  const request = await fetch(`${ENDPOINTS.STUDENT_LOGIN}?email=${email}&password=${password}`);
+
+  return request.json();
+};
+
+export const logTeacher = async (email: string, password: string): Promise<UserPromise> => {
+
+  const request = await fetch(`${ENDPOINTS.TEACHER_LOGIN}?email=${email}&password=${password}`);
+
+  return request.json();
+};
 

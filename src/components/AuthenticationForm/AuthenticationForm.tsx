@@ -3,13 +3,12 @@ import InputField from 'components/InputField/InputField';
 import Button from 'components/Button/Button';
 import { toastTime, Toast } from 'components/Toast/Toast';
 
-import { StudentPromise, TeacherPromise } from 'types/User/User';
-
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateUser } from 'store/user/userSlice';
+import { UserPromise } from 'types/User/User';
 
-import { createUser, logUser } from 'utils/db/db.utils';
+import { createStudent, createTeacher, logStudent, logTeacher } from 'utils/db/db.utils';
 
 import { authRules } from 'utils/inputRules/authRules';
 import { correctState } from 'utils/inputRules/generalRules';
@@ -24,7 +23,7 @@ type Props = {
 function toTitleCase(sentence: string) {
   if (sentence) {
     const words = sentence.toLowerCase().split(' ');
-    return words.map((word) => 
+    return words.map((word) =>
       word.replace(word[0], word[0].toUpperCase())
     ).join(' ');
   }
@@ -104,63 +103,61 @@ export default function AuthenticationForm({ screen }: Props) {
   const submitForm = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      let user;
+      let user: UserPromise | undefined;
 
       const studentRegex = /^[aA]0/g;
       const userName = inputValues.email.split('@')[0];
       if (screen === 'signIn') {
         const { email, passwordLogin } = inputValues;
+
         if (studentRegex.test(userName)) {
-          user = await logUser<StudentPromise>({
-            email: email.toLowerCase(),
-            password: passwordLogin,
-          })
+          user = await logStudent(
+            email.toLowerCase(),
+            passwordLogin,
+          )
         } else {
-          user = await logUser<TeacherPromise>({
-            email: email.toLowerCase(),
-            password: passwordLogin,
-          })
+          user = await logTeacher(
+            email.toLowerCase(),
+            passwordLogin,
+          )
         }
       } else {
         const { firstName, lastName, email, password } = inputValues;
 
+        const userData = {
+          first_name: toTitleCase(firstName),
+          last_name: toTitleCase(lastName),
+          email: email.toLowerCase(),
+          password
+        };
+
         if (studentRegex.test(userName)) {
-          user = await createUser<StudentPromise>({
-            first_name: toTitleCase(firstName),
-            last_name: toTitleCase(lastName),
-            email: email.toLowerCase(),
-            password,
-            student_id: userName,
-          });
+          user = await createStudent({ student_id: userName, ...userData });
         } else {
-          user = await createUser<TeacherPromise>({
-            first_name: toTitleCase(firstName),
-            last_name: toTitleCase(lastName),
-            email: email.toLowerCase(),
-            password,
-            teacher_id: userName,
-          });
+          user = await createTeacher({ teacher_id: userName, ...userData });
         }
       }
-      if (typeof user.data !== 'string') {
-        dispatch(updateUser(user.data));
-        navigate('/', {state: {title: "Success", message: `Bienvenido ${user.data.first_name}`}});
+
+      if (user && user.status === 'success' && typeof user.data !== 'string') {
+        dispatch(updateUser({ authToken: user.auth_token, ...user.data }));
+        navigate('/', { state: { title: "Success", message: `Bienvenido ${user.data.first_name}` } });
       } else {
-        setBackendError({title: user.status, message: user.data});
+        setBackendError({ title: user.status, message: user.data as string });
         turnOffToast();
       }
     } catch (error) {
-      setBackendError({title: "Error", message: "Intente más tarde"});
+      console.log(error);
+      setBackendError({ title: "Error", message: "Intente más tarde" });
       turnOffToast();
     }
   };
 
   return (
     <main className={style.form}>
-      {hasBackendError && 
-        <Toast 
-          title={backendError.title} 
-          message={backendError.message} 
+      {hasBackendError &&
+        <Toast
+          title={backendError.title}
+          message={backendError.message}
           type="error"
         />
       }
