@@ -10,6 +10,7 @@ export function Root() {
 
   if (!user) return <Navigate to="/auth" />;
 
+
   return (
     <div className={styles['root-container']}>
       <div className={styles['nav-bar']} />

@@ -2,7 +2,7 @@
   "name": "code4u",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/",
+  "proxy": "http://10.147.20.218:65534/",
   "dependencies": {
     "@reduxjs/toolkit": "1.9.3",
     "@testing-library/jest-dom": "5.16.5",
