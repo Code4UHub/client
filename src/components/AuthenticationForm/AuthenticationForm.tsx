@@ -170,7 +170,6 @@ export default function AuthenticationForm({ screen }: Props) {
         <div className={style.inputs}>
           {authData[screen].map((field, index: number) => (
             <InputField
-              placeholder={field.placeholder}
               key={`${screen}${field.id}`}
               value={inputValues[field.id]}
               label={field.label}

@@ -10,7 +10,6 @@ type Props = {
   required: boolean;
   error: string;
   value: string;
-  placeholder: string;
   handleBlur: (id: string, value: string) => void;
   handleChange: (id: string, value: string) => void;
   handleFocus?: () => void;
@@ -35,7 +34,6 @@ export const InputField = forwardRef<HTMLInputElement, Props>((props, ref) => (
       id={props.id}
       ref={ref}
       type={props.type}
-      placeholder={props.placeholder}
       className={style.inputHero}
       required={props.required}
       onBlur={() => props.handleBlur(props.id, props.value)}

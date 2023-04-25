@@ -261,7 +261,6 @@ export default function CreateGroupForm() {
             onFocus={onFocusHandler}
           >
             <InputField
-              placeholder={inputData.placeholder}
               ref={autoComplete}
               className={`${styles.button}`}
               value=""
@@ -313,7 +312,6 @@ export default function CreateGroupForm() {
               : styles.singleInput
               }`}
             value={inputValues[inputData.id] as string}
-            placeholder={inputData.placeholder}
             label={inputData.label}
             type={inputData.type}
             id={inputData.id}
