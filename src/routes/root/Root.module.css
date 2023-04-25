@@ -1,0 +1,17 @@
+
+.nav-bar {
+  flex-basis: 20rem;
+  flex-shrink: 0;
+  height: 100vh;
+  background: var(--blue-gradient);
+}
+
+.root-container {
+  display: flex;
+}
+
+@media (max-width: 60em) {
+  .nav-bar {
+    flex-basis: 0;
+  }
+}

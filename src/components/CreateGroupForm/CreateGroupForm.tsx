@@ -261,7 +261,6 @@ export default function CreateGroupForm() {
             onFocus={onFocusHandler}
           >
             <InputField
-              placeholder={inputData.placeholder}
               ref={autoComplete}
               className={`${styles.button}`}
               value=""
@@ -294,9 +293,8 @@ export default function CreateGroupForm() {
             <div className={styles['day-buttons']}>
               {days.map((day) => (
                 <Button
-                  className={inputValues[day] === 'on' ? styles.selected : ''}
                   key={day}
-                  location="createGroup"
+                  location={inputValues[day] === 'on' ? 'createGroup-active' : 'createGroup-noactive'}
                   text={day}
                   onClickHandler={() => onChangeHandler(day, 'off')}
                   isDisable={false}
@@ -314,7 +312,6 @@ export default function CreateGroupForm() {
               : styles.singleInput
               }`}
             value={inputValues[inputData.id] as string}
-            placeholder={inputData.placeholder}
             label={inputData.label}
             type={inputData.type}
             id={inputData.id}
@@ -334,7 +331,7 @@ export default function CreateGroupForm() {
         <h3>Crear Grupo</h3>
         <div className={styles['form-inputs']}>{inputFields}</div>
         <Button
-          location=""
+          location="createGroup-submit"
           text="Crear grupo"
           type="submit"
           isDisable={isSubmitDisabled}

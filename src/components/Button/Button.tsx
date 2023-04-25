@@ -31,5 +31,5 @@ Button.defaultProps = {
   className: '',
   type: 'button',
   isDisable: false,
-  onKeyDownHandler: () => {},
+  onKeyDownHandler: () => { },
 };

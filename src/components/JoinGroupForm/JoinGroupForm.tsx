@@ -97,7 +97,6 @@ export default function JoinGroupForm() {
               required
               error={inputError}
               value=""
-              placeholder="MiClase01"
               handleBlur={checkClasscode}
               handleChange={handleChange}
             />

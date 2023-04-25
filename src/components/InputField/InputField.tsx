@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import { correctState } from "components/AuthenticationForm/inputRules";
+import { correctState } from "utils/inputRules/generalRules";
 import style from "./InputField.module.css";
 
 type Props = {
@@ -10,7 +10,6 @@ type Props = {
   required: boolean;
   error: string;
   value: string;
-  placeholder: string;
   handleBlur: (id: string, value: string) => void;
   handleChange: (id: string, value: string) => void;
   handleFocus?: () => void;
@@ -35,7 +34,6 @@ export const InputField = forwardRef<HTMLInputElement, Props>((props, ref) => (
       id={props.id}
       ref={ref}
       type={props.type}
-      placeholder={props.placeholder}
       className={style.inputHero}
       required={props.required}
       onBlur={() => props.handleBlur(props.id, props.value)}
@@ -47,6 +45,6 @@ export const InputField = forwardRef<HTMLInputElement, Props>((props, ref) => (
 ));
 
 InputField.defaultProps = {
-  handleFocus: () => {},
-  handleKeyDown: () => {},
+  handleFocus: () => { },
+  handleKeyDown: () => { },
 };
