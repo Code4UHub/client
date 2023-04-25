@@ -8,6 +8,10 @@ div .error {
     background-color: var(--middle-red);
 }
 
+div .success {
+    background-color: var(--dark-green);
+}
+
 .open {
     animation: toast-in-top 1s;
 }

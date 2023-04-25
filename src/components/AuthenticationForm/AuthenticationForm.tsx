@@ -140,7 +140,7 @@ export default function AuthenticationForm({ screen }: Props) {
 
       if (user && user.status === 'success' && typeof user.data !== 'string') {
         dispatch(updateUser({ authToken: user.auth_token, ...user.data }));
-        navigate('/');
+        navigate('/', { state: { title: "Success", message: `Bienvenido ${user.data.first_name}` } });
       } else {
         setBackendError({ title: user.status, message: user.data as string });
         turnOffToast();
