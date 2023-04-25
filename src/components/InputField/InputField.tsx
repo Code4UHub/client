@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import { correctState } from "components/AuthenticationForm/inputRules";
+import { correctState } from "utils/inputRules/generalRules";
 import style from "./InputField.module.css";
 
 type Props = {
@@ -47,6 +47,6 @@ export const InputField = forwardRef<HTMLInputElement, Props>((props, ref) => (
 ));
 
 InputField.defaultProps = {
-  handleFocus: () => {},
-  handleKeyDown: () => {},
+  handleFocus: () => { },
+  handleKeyDown: () => { },
 };

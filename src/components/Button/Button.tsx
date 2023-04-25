@@ -1,11 +1,11 @@
-import React from "react";
-import style from "./Button.module.css";
+import React, { MouseEventHandler } from 'react';
+import style from './Button.module.css';
 
 type Props = {
   className?: string;
   location: string;
   text: string;
-  onClickHandler: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClickHandler: MouseEventHandler<HTMLButtonElement>;
   type?: string;
   isDisable?: boolean;
   onKeyDownHandler?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;

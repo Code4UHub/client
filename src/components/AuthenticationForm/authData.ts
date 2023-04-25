@@ -1,11 +1,11 @@
-type InputData = {
+type AuthData = {
   label: string;
   type: string;
   id: string;
   placeholder: string;
 }[];
 
-export const inputData: { [key: string]: InputData } = {
+export const authData: { [key: string]: AuthData } = {
   signIn: [
     {
       label: "Correo",
