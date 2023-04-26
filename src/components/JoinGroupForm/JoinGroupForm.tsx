@@ -48,11 +48,11 @@ export default function JoinGroupForm() {
 		setInputError(validationResult);
 
 		if (validationResult === correctState) {
-			setIsSubmitDisabled(true);
+			setIsSubmitDisabled(false);
 			return;
 		}
 
-		setIsSubmitDisabled(false);
+		setIsSubmitDisabled(true);
 	};
 
 	const handleChange = (id: string, value: string) => {
