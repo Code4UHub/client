@@ -1,36 +1,36 @@
 .radioInput {
-    margin-top: 0.8rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
+	margin-top: 0.8rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
 }
 
 .radioInput :hover {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 .radioInput label {
-    border-radius: 2rem;
-    text-align: center;
-    background-color: var(--white-color);
-    font-weight: 400;
-    font-size: var(--fs-mid-text);
-    margin: 0 1rem;
-    padding: 0 2rem;
+	border-radius: 2rem;
+	text-align: center;
+	background-color: var(--white-color);
+	font-weight: 400;
+	font-size: var(--fs-mid-text);
+	margin: 0 1rem;
+	padding: 0 2rem;
 }
 
 .radioInput input[type="radio"]:checked + label {
-    color: white;
-    font-weight: bold;
-    /* background-color: #0060b9; */
-    background-color: var(--sec-blue-color);
+	color: white;
+	font-weight: bold;
+	/* background-color: #0060b9; */
+	background-color: var(--sec-blue-color);
 }
 
 /* Added for accesibility */
 .radioInput input[type="radio"]:focus + label {
-    color: white;
-    font-weight: bold;
-    background-color: var(--sec-blue-color);
-    /* background-color: #0060b9; */
+	color: white;
+	font-weight: bold;
+	background-color: var(--sec-blue-color);
+	/* background-color: #0060b9; */
 }

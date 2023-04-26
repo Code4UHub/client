@@ -1,97 +1,97 @@
 .form-container {
-  display: flex;
-  flex-direction: column;
-  column-gap: 3.6rem;
-  row-gap: 1.2rem;
+	display: flex;
+	flex-direction: column;
+	column-gap: 3.6rem;
+	row-gap: 1.2rem;
 }
 
 .form-container h3 {
-  font-size: var(--fs-big-text);
-  font-weight: 500;
-  align-self: flex-start;
+	font-size: var(--fs-big-text);
+	font-weight: 500;
+	align-self: flex-start;
 }
 
 .form-inputs {
-  align-self: center;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-column-gap: 4rem;
+	align-self: center;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-column-gap: 4rem;
 }
 
 .halfInput {
-  grid-column: span 1;
+	grid-column: span 1;
 }
 
 .singleInput {
-  grid-row: span 2;
-  grid-column: span 2;
+	grid-row: span 2;
+	grid-column: span 2;
 }
 
 .autocomplete {
-  grid-column: span 2;
-  width: 100%;
-  position: relative;
+	grid-column: span 2;
+	width: 100%;
+	position: relative;
 }
 
 .autocomplete-list {
-  width: 100%;
-  max-height: 35rem;
-  background-color: var(--light-gray);
-  position: absolute;
-  list-style: none;
-  font-size: var(--fs-small-text);
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
+	width: 100%;
+	max-height: 35rem;
+	background-color: var(--light-gray);
+	position: absolute;
+	list-style: none;
+	font-size: var(--fs-small-text);
+	display: flex;
+	flex-direction: column;
+	overflow-y: auto;
 }
 
 .autocomplete-list li {
-  padding-left: 2.4rem;
-  padding-right: 2.4rem;
-  padding-bottom: 0.6rem;
-  padding-top: 0.6rem;
-  cursor: pointer;
+	padding-left: 2.4rem;
+	padding-right: 2.4rem;
+	padding-bottom: 0.6rem;
+	padding-top: 0.6rem;
+	cursor: pointer;
 }
 
 .autocomplete-list li:first-child {
-  padding-top: 1.2rem;
+	padding-top: 1.2rem;
 }
 
 .autocomplete-list li:last-child {
-  padding-bottom: 1.2rem;
+	padding-bottom: 1.2rem;
 }
 
 .autocomplete-list li:hover {
-  color: var(--white-color);
-  background-color: var(--sec-blue-color);
+	color: var(--white-color);
+	background-color: var(--sec-blue-color);
 }
 
 .button {
-  margin-bottom: 0;
+	margin-bottom: 0;
 }
 
 .button input {
-  height: 3.6rem;
-  border-radius: 0.6rem;
-  background-color: #e9e9e9;
+	height: 3.6rem;
+	border-radius: 0.6rem;
+	background-color: #e9e9e9;
 }
 
 .button label {
-  margin-left: 0;
+	margin-left: 0;
 }
 
 .button > div {
-  margin-bottom: 0.4rem;
+	margin-bottom: 0.4rem;
 }
 
 .day-buttons {
-  display: flex;
-  column-gap: 2.4rem;
-  padding-left: 2.4rem;
-  padding-right: 2.4rem;
+	display: flex;
+	column-gap: 2.4rem;
+	padding-left: 2.4rem;
+	padding-right: 2.4rem;
 }
 
 .singleInput legend {
-  margin-top: 1.5rem;
-  font-size: var(--fs-mid-small-text);
+	margin-top: 1.5rem;
+	font-size: var(--fs-mid-small-text);
 }

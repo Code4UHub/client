@@ -1,130 +1,136 @@
 .button {
-  border-radius: 2rem;
-  padding: 2rem 4.5rem;
-  height: 7rem;
-  border: none;
-  font-size: var(--fs-mid-small-text);
-  font-family: var(--ff-main);
-  transition: transform 0.5s, opacity 0.5s;
+	border-radius: 2rem;
+	padding: 2rem 4.5rem;
+	height: 7rem;
+	border: none;
+	font-size: var(--fs-mid-small-text);
+	font-family: var(--ff-main);
+	transition: transform 0.5s, opacity 0.5s;
 }
 
 .button:hover:not(:disabled) {
-  cursor: pointer;
-  filter: brightness(0.75);
-  transform: scale(1.05);
+	cursor: pointer;
+	filter: brightness(0.75);
+	transform: scale(1.05);
 }
 
 .button:disabled,
 .button[disabled] {
-  opacity: 0.5;
-  transform: scale(0.9);
+	opacity: 0.5;
+	transform: scale(0.9);
 }
 
 .sidebar {
-  background-color: var(--white-color);
-  color: var(--sec-blue-color);
-  width: 240px;
+	background-color: var(--white-color);
+	color: var(--sec-blue-color);
+	width: 240px;
 }
 
-.authentication, .joinGroup {
-  background-color: var(--sec-blue-color);
-  color: var(--white-color);
+.authentication,
+.joinGroup {
+	background-color: var(--sec-blue-color);
+	color: var(--white-color);
 }
 
-.authentication { 
-  max-width: 270px;
+.authentication {
+	max-width: 270px;
 }
 
 .createGroup-submit {
-  margin-top: 2.4rem;
-  margin-bottom: 1.2rem;
-  width: fit-content;
-  height: auto;
-  align-self: flex-end;
-  color: var(--white-color);
-  background: var(--sec-blue-color);
+	margin-top: 2.4rem;
+	margin-bottom: 1.2rem;
+	width: fit-content;
+	height: auto;
+	align-self: flex-end;
+	color: var(--white-color);
+	background: var(--sec-blue-color);
 }
 
-.createGroup-active, .createGroup-noactive {
-  flex: 1 1 0px;
-  padding: 0;
-  margin-top: 1.2rem;
-  height: 3.6rem;
+.createGroup-active,
+.createGroup-noactive {
+	flex: 1 1 0px;
+	padding: 0;
+	margin-top: 1.2rem;
+	height: 3.6rem;
 }
 
 .createGroup-active {
-  background-color: var(--sec-blue-color);
-  color: var(--white-color);
+	background-color: var(--sec-blue-color);
+	color: var(--white-color);
 }
 
 .createGroup-noactive {
-  background-color: var(--light-gray);
-  color: var(--main-blue-color);
+	background-color: var(--light-gray);
+	color: var(--main-blue-color);
 }
 
-.assignmentActive, .assignmentInactive, .assignmentChange, .assignmentAnswered, .assignmentCorrect, .assignmentIncorrect {
-  font-size: var(--fs-small-text);
-  border-radius: 120rem;
-  height: 5rem;
-  width: 5rem;
-  padding: 2rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.assignmentActive,
+.assignmentInactive,
+.assignmentChange,
+.assignmentAnswered,
+.assignmentCorrect,
+.assignmentIncorrect {
+	font-size: var(--fs-small-text);
+	border-radius: 120rem;
+	height: 5rem;
+	width: 5rem;
+	padding: 2rem 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .assignmentCorrect {
-  background-color: var(--light-green);
-  color: var(--dark-green);
+	background-color: var(--light-green);
+	color: var(--dark-green);
 }
 
 .assignmentIncorrect {
-  background-color: var(--light-red);
-  color: var(--dark-red);
+	background-color: var(--light-red);
+	color: var(--dark-red);
 }
 
 .assignmentActive {
-  background-color: var(--sec-blue-color);
-  color: white;
-  font-weight: bold;
+	background-color: var(--sec-blue-color);
+	color: white;
+	font-weight: bold;
 }
 
 .assignmentAnswered {
-  background-color: var(--dark-gray);
-  /* border: 0.3rem solid var(--sec-blue-color); */
+	background-color: var(--dark-gray);
+	/* border: 0.3rem solid var(--sec-blue-color); */
 }
 
 .assignmentChange {
-  width: 10rem;
-  padding: 2rem 8rem;
-  border-radius: 2rem;
-  background-color: var(--sec-blue-color);
-  color: var(--white-color);
-
+	width: 10rem;
+	padding: 2rem 8rem;
+	border-radius: 2rem;
+	background-color: var(--sec-blue-color);
+	color: var(--white-color);
 }
 
 @media (max-width: 60em) {
-  .assignmentChange {
-    width: 4rem;
-    padding: 2rem 6rem;
-    font-size: var(--fs-small-small-text);
-  }
+	.assignmentChange {
+		width: 4rem;
+		padding: 2rem 6rem;
+		font-size: var(--fs-small-small-text);
+	}
 }
 
 @media (max-width: 40em) {
-  .assignmentChange {
-    padding: 2rem 5rem;
-    width: 2rem;
-    font-size: var(--fs-small-small-text);
-  }
+	.assignmentChange {
+		padding: 2rem 5rem;
+		width: 2rem;
+		font-size: var(--fs-small-small-text);
+	}
 }
 
 .assignmentSubmit {
-  background-color: #1176D5;
-  color: white;
-  height: 5rem;
-  display: flex;
-  padding: 2rem 2rem;
-  align-items: center;
-  justify-content: center;
+	background-color: #1176d5;
+	color: white;
+	height: 5rem;
+	display: flex;
+	padding: 2rem 2rem;
+	align-items: center;
+	justify-content: center;
 }

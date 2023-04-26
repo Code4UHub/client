@@ -1,9 +1,9 @@
 .title hr {
-    margin-top: 1rem;
-    border: 0.1rem solid black;
+	margin-top: 1rem;
+	border: 0.1rem solid black;
 }
 
 .title h1 {
-    font-weight: 300;
-    font-size: var(--fs-sub-sub-title)
+	font-weight: 300;
+	font-size: var(--fs-sub-sub-title);
 }

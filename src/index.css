@@ -13,59 +13,59 @@
 /* GENERAL */
 /**************************/
 html {
-  /* font-size: 10px; */
-  /* 10px / 16px = 0.625 = 62.5% */
-  /* Percentage of user's browser font-size setting */
-  font-size: 62.5%;
-  overflow-x: hidden;
-  font-family: "Montserrat", sans-serif;
-  color: var(--black-color);
+	/* font-size: 10px; */
+	/* 10px / 16px = 0.625 = 62.5% */
+	/* Percentage of user's browser font-size setting */
+	font-size: 62.5%;
+	overflow-x: hidden;
+	font-family: "Montserrat", sans-serif;
+	color: var(--black-color);
 }
 
 :root {
-  --ff-main: "Montserrat";
+	--ff-main: "Montserrat";
 
-  --main-blue-color: #02203c;
-  --sec-blue-color: #15314b;
-  --dark-gray: #bfbfbf;
-  --light-gray: #f5f2f2;
-  --light-blue-color: #0060b9;
-  --light-red: #FED6D7;
-  --middle-red: #d9534f;
-  --dark-red: #822727;
-  --light-green: #C6F6D4;
-  --dark-green: #21543D;
+	--main-blue-color: #02203c;
+	--sec-blue-color: #15314b;
+	--dark-gray: #bfbfbf;
+	--light-gray: #f5f2f2;
+	--light-blue-color: #0060b9;
+	--light-red: #fed6d7;
+	--middle-red: #d9534f;
+	--dark-red: #822727;
+	--light-green: #c6f6d4;
+	--dark-green: #21543d;
 
-  --black-color: #2d2d2d;
-  --white-color: #ffffff;
+	--black-color: #2d2d2d;
+	--white-color: #ffffff;
 
-  --blue-gradient: linear-gradient(
-    180deg,
-    #02203c 0%,
-    #0060b9 100%,
-    #15314b 100%
-  );
+	--blue-gradient: linear-gradient(
+		180deg,
+		#02203c 0%,
+		#0060b9 100%,
+		#15314b 100%
+	);
 
-  --fs-big-title: 5rem;
-  --fs-title: 4.4rem;
-  --fs-sub-title: 4rem;
-  --fs-sub-sub-title: 2.8rem;
+	--fs-big-title: 5rem;
+	--fs-title: 4.4rem;
+	--fs-sub-title: 4rem;
+	--fs-sub-sub-title: 2.8rem;
 
-  --fs-big-text: 2.4rem;
-  --fs-mid-text: 2rem;
-  --fs-mid-small-text: 1.8rem;
-  --fs-small-text: 1.6rem;
-  --fs-small-small-text: 1.4rem;
+	--fs-big-text: 2.4rem;
+	--fs-mid-text: 2rem;
+	--fs-mid-small-text: 1.8rem;
+	--fs-small-text: 1.6rem;
+	--fs-small-small-text: 1.4rem;
 }
 
 * {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
 }
 
 a {
-  text-decoration: none;
+	text-decoration: none;
 }
 
 /**************************/
@@ -78,20 +78,20 @@ a {
 /* BELOW 1200px /landscape tablets */
 /**************************/
 @media (max-width: 75em) {
-  html {
-    /* 9px / 16px */
-    font-size: 56.25%;
-  }
+	html {
+		/* 9px / 16px */
+		font-size: 56.25%;
+	}
 }
 
 /**************************/
 /* BELOW 940px /  tablets */
 /**************************/
 @media (max-width: 59em) {
-  html {
-    /* 8px / 16px */
-    font-size: 50%;
-  }
+	html {
+		/* 8px / 16px */
+		font-size: 50%;
+	}
 }
 
 /**************************/
