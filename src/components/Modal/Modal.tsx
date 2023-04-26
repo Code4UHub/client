@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 import React, { useRef, useEffect, useState } from 'react';
 import { Button } from 'components/Button/Button';
 import styles from './Modal.module.css';

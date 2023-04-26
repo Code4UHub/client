@@ -52,7 +52,8 @@
     "rules": {
       "import/no-cycle": "warn",
       "no-param-reassign": "off",
-      "import/prefer-default-export": "off"
+      "import/prefer-default-export": "off",
+      "jsx-a11y/no-noninteractive-tabindex": "off"
     }
   },
   "lint-staged": {
