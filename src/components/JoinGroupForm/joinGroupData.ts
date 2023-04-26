@@ -1,13 +1,13 @@
 type InputData = {
-	label: string;
-	type: string;
-	id: string;
+  label: string;
+  type: string;
+  id: string;
 }[];
 
 export const joinGroupInputData: InputData = [
-	{
-		label: "",
-		type: "text",
-		id: "classCode",
-	},
+  {
+    label: '',
+    type: 'text',
+    id: 'classCode',
+  },
 ];

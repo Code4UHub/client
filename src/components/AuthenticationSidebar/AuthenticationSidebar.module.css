@@ -1,111 +1,111 @@
 .authentication-container {
-	width: 48rem;
-	flex-shrink: 0;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	order: 1;
+  width: 48rem;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  order: 1;
 }
 
 .sign-up {
-	order: -1;
+  order: -1;
 }
 
 .slidebar {
-	width: 48rem;
-	height: 100%;
-	position: absolute;
-	right: 0;
-	transform: translateX(0);
-	transition: right 1s, transform 1s;
-	background: var(--blue-gradient);
-	display: flex;
-	justify-content: center;
+  width: 48rem;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  transform: translateX(0);
+  transition: right 1s, transform 1s;
+  background: var(--blue-gradient);
+  display: flex;
+  justify-content: center;
 }
 
 .slidebar button {
-	margin-top: 50vh;
+  margin-top: 50vh;
 }
 
 .sign-up .slidebar {
-	right: 100%;
-	transform: translateX(100%);
+  right: 100%;
+  transform: translateX(100%);
 }
 
 .content-container {
-	position: relative;
-	margin-top: 35vh;
+  position: relative;
+  margin-top: 35vh;
 }
 
 .title {
-	text-align: center;
-	font-size: var(--fs-sub-title);
-	color: var(--white-color);
-	font-weight: 700;
-	padding: 0 2rem;
+  text-align: center;
+  font-size: var(--fs-sub-title);
+  color: var(--white-color);
+  font-weight: 700;
+  padding: 0 2rem;
 }
 
 .content {
-	text-align: center;
-	font-size: var(--fs-mid-text);
-	color: var(--white-color);
-	font-weight: 500;
+  text-align: center;
+  font-size: var(--fs-mid-text);
+  color: var(--white-color);
+  font-weight: 500;
 }
 
 @media (max-height: 20em) {
-	.slidebar button {
-		margin-top: 110vh;
-	}
+  .slidebar button {
+    margin-top: 110vh;
+  }
 }
 
 @media (max-height: 32em) and (min-height: 20em) {
-	.slidebar button {
-		margin-top: 65vh;
-	}
+  .slidebar button {
+    margin-top: 65vh;
+  }
 }
 
 @media (max-height: 42em) and (min-height: 32em) {
-	.slidebar button {
-		margin-top: 55vh;
-	}
+  .slidebar button {
+    margin-top: 55vh;
+  }
 }
 
 @media (max-width: 60em) {
-	.authentication-container {
-		width: 100%;
-		height: auto;
-	}
+  .authentication-container {
+    width: 100%;
+    height: auto;
+  }
 
-	.sign-up {
-		order: 1;
-	}
+  .sign-up {
+    order: 1;
+  }
 
-	.slidebar {
-		height: auto;
-		position: static;
-		background: transparent;
-		transition: none;
-		order: 1;
-	}
+  .slidebar {
+    height: auto;
+    position: static;
+    background: transparent;
+    transition: none;
+    order: 1;
+  }
 
-	.slidebar button {
-		margin-top: 2rem;
-	}
+  .slidebar button {
+    margin-top: 2rem;
+  }
 
-	.sign-up .slidebar {
-		transform: translateX(0);
-	}
+  .sign-up .slidebar {
+    transform: translateX(0);
+  }
 
-	.content-container {
-		margin-top: 0;
-	}
+  .content-container {
+    margin-top: 0;
+  }
 
-	.title {
-		font-size: var(--fs-mid-text);
-		color: var(--black-color);
-	}
+  .title {
+    font-size: var(--fs-mid-text);
+    color: var(--black-color);
+  }
 
-	.content {
-		display: none;
-	}
+  .content {
+    display: none;
+  }
 }
