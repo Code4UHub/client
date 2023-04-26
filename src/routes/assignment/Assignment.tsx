@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Title from 'components/Title/Title';
 import CodeQuestion from 'components/CodeQuestion/CodeQuestion';
+import AssignmentHeader from 'components/AssignmentHeader/AssginmentHeader';
 import CloseQuestion from 'components/CloseQuestion/CloseQuestion';
 import { Button } from 'components/Button/Button';
 import Timer from 'components/Timer/Timer';
@@ -136,8 +136,19 @@ export default function Assignment() {
         />
       )}
       <div className={style.assignment}>
-        <Title title="Nivel fácil | Condicionales" />
+        <AssignmentHeader
+          title="Condicionales"
+          onClickButton={onMainClick}
+          isButtonDisabled={allQuestionsAnswered}
+        />
         <div className={style['assignment-info']}>
+          <Button
+            location="assignmentChange"
+            text="<"
+            onClickHandler={() => onClickHandler('previous')}
+            type="button"
+            isDisable={questionIndex === 0}
+          />
           <div
             ref={containerSelectQuestionRef}
             className={style['select-question-container']}
@@ -152,51 +163,31 @@ export default function Assignment() {
               />
             ))}
           </div>
+          <Button
+            location="assignmentChange"
+            text=">"
+            onClickHandler={() => onClickHandler('next')}
+            type="button"
+            isDisable={questionIndex === maxIndex}
+          />
           <Timer seconds={generalSeconds} />
         </div>
         <div className={style['question-container']}>
           {questionData[questionIndex].type === 'closed' ? (
-            <>
-              <CloseQuestion
-                rightAnswer={
-                  isSubmitted ? questionData[questionIndex].answer : -1
-                }
-                isSubmitted={isSubmitted}
-                questionIndex={questionIndex}
-                onChoose={onChooseAnswer}
-                chosenAnswer={answers[questionIndex]}
-                description={questionData[questionIndex].description}
-                options={questionData[questionIndex].options}
-              />
-              <div className={style['button-container']}>
-                <Button
-                  location="assignmentChange"
-                  text="Atrás"
-                  onClickHandler={() => onClickHandler('previous')}
-                  type="button"
-                  isDisable={questionIndex === 0}
-                />
-                <Button
-                  location="assignmentChange"
-                  text="Siguiente"
-                  onClickHandler={() => onClickHandler('next')}
-                  type="button"
-                  isDisable={questionIndex === maxIndex}
-                />
-              </div>
-            </>
+            <CloseQuestion
+              rightAnswer={
+                isSubmitted ? questionData[questionIndex].answer : -1
+              }
+              isSubmitted={isSubmitted}
+              questionIndex={questionIndex}
+              onChoose={onChooseAnswer}
+              chosenAnswer={answers[questionIndex]}
+              description={questionData[questionIndex].description}
+              options={questionData[questionIndex].options}
+            />
           ) : (
             <CodeQuestion />
           )}
-        </div>
-        <div className={style['last-button']}>
-          <Button
-            location="assignmentSubmit"
-            text="Terminar examen"
-            onClickHandler={onMainClick}
-            type="submit"
-            isDisable={allQuestionsAnswered}
-          />
         </div>
       </div>
     </main>
