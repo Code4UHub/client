@@ -102,27 +102,7 @@
 }
 
 .assignmentChange {
-  width: 10rem;
-  padding: 2rem 8rem;
-  border-radius: 2rem;
-  background-color: var(--sec-blue-color);
-  color: var(--white-color);
-}
-
-@media (max-width: 60em) {
-  .assignmentChange {
-    width: 4rem;
-    padding: 2rem 6rem;
-    font-size: var(--fs-small-small-text);
-  }
-}
-
-@media (max-width: 40em) {
-  .assignmentChange {
-    padding: 2rem 5rem;
-    width: 2rem;
-    font-size: var(--fs-small-small-text);
-  }
+  margin: auto;
 }
 
 .assignmentSubmit {
