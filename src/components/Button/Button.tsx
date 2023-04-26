@@ -14,7 +14,7 @@ type Props = {
 export const Button = React.forwardRef<HTMLButtonElement, Props>(
   (props, ref) => (
     <button
-      className={`${props.className} ${style.button} ${style[props.location]}`}
+      className={`${props.className} ${style[props.location]}`}
       onClick={props.onClickHandler}
       disabled={props.isDisable}
       // eslint-disable-next-line react/button-has-type

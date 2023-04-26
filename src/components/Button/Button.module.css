@@ -1,4 +1,4 @@
-.button {
+button {
   border-radius: 2rem;
   padding: 2rem 4.5rem;
   height: 7rem;
@@ -8,14 +8,14 @@
   transition: transform 0.5s, opacity 0.5s;
 }
 
-.button:hover:not(:disabled) {
+button:hover:not(:disabled) {
   cursor: pointer;
   filter: brightness(0.75);
   transform: scale(1.05);
 }
 
-.button:disabled,
-.button[disabled] {
+button:disabled,
+button[disabled] {
   opacity: 0.5;
   transform: scale(0.9);
 }
