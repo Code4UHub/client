@@ -8,7 +8,12 @@ import { useDispatch } from 'react-redux';
 import { updateUser } from 'store/user/userSlice';
 import { UserPromise } from 'types/User/User';
 
-import { createStudent, createTeacher, logStudent, logTeacher } from 'utils/db/db.utils';
+import {
+  createStudent,
+  createTeacher,
+  logStudent,
+  logTeacher,
+} from 'utils/db/db.utils';
 
 import { authRules } from 'utils/inputRules/authRules';
 import { correctState } from 'utils/inputRules/generalRules';
@@ -23,21 +28,22 @@ type Props = {
 function toTitleCase(sentence: string) {
   if (sentence) {
     const words = sentence.toLowerCase().split(' ');
-    return words.map((word) =>
-      word.replace(word[0], word[0].toUpperCase())
-    ).join(' ');
+    return words
+      .map((word) => word.replace(word[0], word[0].toUpperCase()))
+      .join(' ');
   }
-  return "";
+  return '';
 }
 
 export default function AuthenticationForm({ screen }: Props) {
   const [inputErrors, setInputErrors] = useState<{ [key: string]: string }>({});
   const [inputValues, setInputValues] = useState<{ [key: string]: string }>({});
   const [backendError, setBackendError] = useState<{ [key: string]: string }>({
-    title: "",
-    message: "",
+    title: '',
+    message: '',
   });
-  const hasBackendError = backendError.title !== "" && backendError.message !== "";
+  const hasBackendError =
+    backendError.title !== '' && backendError.message !== '';
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -94,11 +100,11 @@ export default function AuthenticationForm({ screen }: Props) {
   const turnOffToast = () => {
     setTimeout(() => {
       setBackendError({
-        title: "",
-        message: ""
+        title: '',
+        message: '',
       });
-    }, toastTime)
-  }
+    }, toastTime);
+  };
 
   const submitForm = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -111,15 +117,9 @@ export default function AuthenticationForm({ screen }: Props) {
         const { email, passwordLogin } = inputValues;
 
         if (studentRegex.test(userName)) {
-          user = await logStudent(
-            email.toLowerCase(),
-            passwordLogin,
-          )
+          user = await logStudent(email.toLowerCase(), passwordLogin);
         } else {
-          user = await logTeacher(
-            email.toLowerCase(),
-            passwordLogin,
-          )
+          user = await logTeacher(email.toLowerCase(), passwordLogin);
         }
       } else {
         const { firstName, lastName, email, password } = inputValues;
@@ -128,7 +128,7 @@ export default function AuthenticationForm({ screen }: Props) {
           first_name: toTitleCase(firstName),
           last_name: toTitleCase(lastName),
           email: email.toLowerCase(),
-          password
+          password,
         };
 
         if (studentRegex.test(userName)) {
@@ -140,27 +140,32 @@ export default function AuthenticationForm({ screen }: Props) {
 
       if (user && user.status === 'success' && typeof user.data !== 'string') {
         dispatch(updateUser({ authToken: user.auth_token, ...user.data }));
-        navigate('/', { state: { title: "Success", message: `Bienvenido ${user.data.first_name}` } });
+        navigate('/', {
+          state: {
+            title: 'Success',
+            message: `Bienvenido ${user.data.first_name}`,
+          },
+        });
       } else {
         setBackendError({ title: user.status, message: user.data as string });
         turnOffToast();
       }
     } catch (error) {
       console.log(error);
-      setBackendError({ title: "Error", message: "Intente más tarde" });
+      setBackendError({ title: 'Error', message: 'Intente más tarde' });
       turnOffToast();
     }
   };
 
   return (
     <main className={style.form}>
-      {hasBackendError &&
+      {hasBackendError && (
         <Toast
           title={backendError.title}
           message={backendError.message}
           type="error"
         />
-      }
+      )}
       <form>
         <h1 className={style['form-title']}>
           {screen === 'signUp'

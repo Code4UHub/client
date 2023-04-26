@@ -1,28 +1,35 @@
-import React from "react";
-import RadioInput from "components/RadioInput/RadioInput";
+import React from 'react';
+import RadioInput from 'components/RadioInput/RadioInput';
 import style from './CloseQuestion.module.css';
 
 type Props = {
   questionIndex: number;
   description: string;
   chosenAnswer: number;
-  rightAnswer: number,
-  options: {text: string, explanation: string}[];
+  rightAnswer: number;
+  options: { text: string; explanation: string }[];
   isSubmitted: boolean;
   onChoose: (id: number, option: number) => void;
-}
+};
 
-export default function CloseQuestion({questionIndex, description, options, onChoose, chosenAnswer, rightAnswer, isSubmitted}: Props) {
-
+export default function CloseQuestion({
+  questionIndex,
+  description,
+  options,
+  onChoose,
+  chosenAnswer,
+  rightAnswer,
+  isSubmitted,
+}: Props) {
   const onClickHandler = (indexOption: number) => {
     onChoose(questionIndex, indexOption);
-  }
+  };
 
   return (
     <div className={style['close-question']}>
       <h2>{description}</h2>
       <div className={style.options}>
-         {/* eslint-disable */ }
+        {/* eslint-disable */}
         {options.map((option, index) => (
           <RadioInput
             isDisable={isSubmitted}
@@ -34,9 +41,8 @@ export default function CloseQuestion({questionIndex, description, options, onCh
             optionText={option.text}
             explanationText={option.explanation}
           />
-          )
-        )}
+        ))}
       </div>
     </div>
-  )
+  );
 }

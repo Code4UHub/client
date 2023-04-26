@@ -1,0 +1,77 @@
+.form-container {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.form-container h3 {
+  font-size: var(--fs-sub-sub-title);
+  font-weight: 300;
+  margin-top: 2.4rem;
+  margin-bottom: 1.2rem;
+}
+
+.form-buttons {
+  display: flex;
+  margin-top: 2.4rem;
+  margin-bottom: 2.4rem;
+  column-gap: 2.4rem;
+}
+
+.button {
+  width: 100%;
+}
+
+.classCode-input input {
+  height: auto;
+}
+
+.classCode-input div {
+  height: 2.2rem;
+}
+
+.classCode-input label {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.class-info-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 1.2rem;
+  row-gap: 1.2rem;
+}
+
+.class-info-title {
+  font-weight: 200;
+  font-size: var(--fs-small-text);
+  grid-column: 1 / span 2;
+  position: relative;
+  top: 0;
+  left: -1.2rem;
+}
+
+.class-name {
+  grid-column: 1 / span 2;
+  justify-self: center;
+  font-size: var(--fs-sub-sub-title);
+}
+
+.class-label {
+  font-size: var(--fs-mid-small-text);
+}
+
+.class-info {
+  font-size: var(--fs-small-text);
+}
+
+.class-confirm-message {
+  font-size: var(--fs-mid-text);
+  margin-top: 3.6rem;
+  margin-bottom: 3.6rem;
+}
+
+.class-buttons {
+  display: flex;
+  align-self: flex-end;
+  column-gap: 1.2rem;
+}

@@ -1,4 +1,18 @@
-export const correctState = 'Hecho';
+import {
+  SubjectError,
+  ClassCodeError,
+  TimeError,
+  DateError,
+} from 'utils/errorMessage/groupErrorMessage';
+import { correctState, generalRules } from './generalRules';
+
+const inputsMinLength = {
+  classCode: 4,
+};
+
+const inputsMaxLength = {
+  classCode: 8,
+};
 
 type InputRule = {
   id: string;
@@ -8,35 +22,33 @@ type InputRule = {
 function isValidSubject(value: string | { id: number; name: string }) {
   if (typeof value === 'string') {
     const trimmedValue = value.trim();
-    if (trimmedValue.length === 0) return 'Campo Vacío';
+    if (trimmedValue.length === 0) return SubjectError.empty;
 
-    return 'Selecciona una opcion de la lista';
+    return SubjectError.noOption;
   }
 
-  if (value.name === '') return 'Campo Vacío';
+  if (value.name === '') return SubjectError.empty;
 
   return correctState;
 }
 
 function isValidClasscode(value: string) {
   const splittedString = value.split(' ');
-  if (splittedString.length > 1) return 'Sin espacios';
-
-  if (!splittedString[0]) return 'Campo Vacío';
+  if (splittedString.length > 1) return ClassCodeError.whitespace;
 
   return correctState;
 }
 
 function isValidStartTime(value: string) {
-  if (!value) return 'Campo incompleto';
+  if (!value) return TimeError.empty;
 
   return correctState;
 }
 
 function isValidEndTime(value: string, startTime: string) {
-  if (!value) return 'Campo incompleto';
+  if (!value) return TimeError.invalid;
 
-  if (!startTime) return 'Introduce la hora de inicio';
+  if (!startTime) return TimeError.noStartTime;
 
   const [startHour, startMinutes] = startTime.split(':');
   const [endHour, endMinutes] = value.split(':');
@@ -46,13 +58,13 @@ function isValidEndTime(value: string, startTime: string) {
     (Number(startHour) === Number(endHour) &&
       Number(startMinutes) >= Number(endMinutes))
   )
-    return 'Introduce un horario válido';
+    return TimeError.invalid;
 
   return correctState;
 }
 
 function isEndDateValid(value: string) {
-  if (!value) return 'Campo incompleto';
+  if (!value) return DateError.empty;
 
   const timestamp = Date.now();
   const date = new Date(timestamp);
@@ -66,10 +78,24 @@ function isEndDateValid(value: string) {
     Number(selectedDate)
   );
 
-  if (date >= valueDate)
-    return 'La fecha de fin debe ser mayor a la fecha actual';
+  if (date >= valueDate) return DateError.endTimeGreater;
 
   return correctState;
+}
+
+function runGeneralRules(idInput: string, inputValue: string) {
+  const generalResults = generalRules(
+    inputValue,
+    idInput,
+    inputsMinLength,
+    inputsMaxLength
+  );
+  if (generalResults === correctState) {
+    if (idInput === 'classCode') {
+      return isValidClasscode(inputValue);
+    }
+  }
+  return generalResults;
 }
 
 export const inputRules: InputRule[] = [
@@ -79,7 +105,7 @@ export const inputRules: InputRule[] = [
   },
   {
     id: 'classCode',
-    validate: isValidClasscode,
+    validate: (value: string) => runGeneralRules('classCode', value),
   },
   {
     id: 'startTime',

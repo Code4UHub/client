@@ -1,16 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from 'types/User/User';
 
-type UserData = null | (User & { authToken: string })
+type UserData = null | (User & { authToken: string });
 
 type UserSlice = {
-  currentUser: UserData
-}
+  currentUser: UserData;
+};
 
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
-    currentUser: null
+    currentUser: null,
   } as UserSlice,
   reducers: {
     updateUser: (state, action: PayloadAction<UserData>) => {

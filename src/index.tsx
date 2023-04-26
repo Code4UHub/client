@@ -22,15 +22,15 @@ const router = createBrowserRouter([
       },
       {
         path: '/assignment',
-        element: <Assignment />
-      }
+        element: <Assignment />,
+      },
     ],
     errorElement: <h1>Error</h1>,
   },
   {
     path: '/auth',
     element: <Authentication />,
-  }
+  },
 ]);
 
 const container = document.getElementById('root')!;
@@ -39,7 +39,10 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <PersistGate persistor={persistor} loading={null}>
+      <PersistGate
+        persistor={persistor}
+        loading={null}
+      >
         <RouterProvider router={router} />
       </PersistGate>
     </Provider>

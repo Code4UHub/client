@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
 
 /* - Font sizes (px)
 10 / 12 / 14 / 16 / 18 / 20 / 24 / 30 / 36 / 44 / 52 / 62 / 74 / 86 / 98 */
@@ -18,23 +18,23 @@ html {
   /* Percentage of user's browser font-size setting */
   font-size: 62.5%;
   overflow-x: hidden;
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
   color: var(--black-color);
 }
 
 :root {
-  --ff-main: "Montserrat";
+  --ff-main: 'Montserrat';
 
   --main-blue-color: #02203c;
   --sec-blue-color: #15314b;
   --dark-gray: #bfbfbf;
   --light-gray: #f5f2f2;
   --light-blue-color: #0060b9;
-  --light-red: #FED6D7;
+  --light-red: #fed6d7;
   --middle-red: #d9534f;
   --dark-red: #822727;
-  --light-green: #C6F6D4;
-  --dark-green: #21543D;
+  --light-green: #c6f6d4;
+  --dark-green: #21543d;
 
   --black-color: #2d2d2d;
   --white-color: #ffffff;

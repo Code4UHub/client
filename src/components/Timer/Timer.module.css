@@ -1,21 +1,20 @@
-
 div .timer {
-    text-align: right;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+  text-align: right;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 div .timer :hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .time {
-    font-size: var(--fs-mid-text);
+  font-size: var(--fs-mid-text);
 }
 
 .timer-action {
-    font-style: italic;
-    text-decoration: underline;
+  font-style: italic;
+  text-decoration: underline;
 }

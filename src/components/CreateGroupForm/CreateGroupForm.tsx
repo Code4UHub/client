@@ -4,8 +4,9 @@ import { InputField } from 'components/InputField/InputField';
 import { Button } from 'components/Button/Button';
 import Modal from 'components/Modal/Modal';
 
+import { correctState } from 'utils/inputRules/generalRules';
+import { inputRules } from 'utils/inputRules/groupRules';
 import { createGroupInputData, days } from './createGroupData';
-import { inputRules } from './inputRules';
 
 import styles from './CreateGroupFom.module.css';
 
@@ -120,14 +121,14 @@ export default function CreateGroupForm() {
 
   const resetValues = () => {
     dispatch({ type: 'UPDATE_VALUES', payload: INPUT_VALUES_INITIAL });
-    dispatchError({ type: 'UPDATE_ERRORS', payload: INPUT_ERRORES_INITIAL })
+    dispatchError({ type: 'UPDATE_ERRORS', payload: INPUT_ERRORES_INITIAL });
   };
 
   const checkFormValidation = () => {
     const errors = Object.values(inputErrors);
 
     for (let i = 0; i < errors.length; i += 1) {
-      if (errors[i] !== 'Hecho') {
+      if (errors[i] !== correctState) {
         setIsSubmitDisabled(true);
         return;
       }
@@ -207,7 +208,7 @@ export default function CreateGroupForm() {
 
     if (
       id === 'startTime' &&
-      validationResult === 'Hecho' &&
+      validationResult === correctState &&
       inputErrors.endTime
     )
       onCheckRules('endTime', inputValues.endTime);
@@ -272,13 +273,16 @@ export default function CreateGroupForm() {
               handleFocus={() => setIsListOpen(true)}
               handleChange={onChangeHandler}
               handleKeyDown={skipAutocomplete}
-              handleBlur={() => { }}
+              handleBlur={() => {}}
             />
             {isListOpen && (
               <ul className={styles['autocomplete-list']}>
                 {filteredClasses.map(({ id, name }) => (
                   // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
-                  <li key={id} onClick={() => selectClass(id, name)}>
+                  <li
+                    key={id}
+                    onClick={() => selectClass(id, name)}
+                  >
                     {`${id} - ${name}`}
                   </li>
                 ))}
@@ -288,13 +292,20 @@ export default function CreateGroupForm() {
         );
       case 'days':
         return (
-          <div key={inputData.id} className={styles.singleInput}>
+          <div
+            key={inputData.id}
+            className={styles.singleInput}
+          >
             <legend>{inputData.label}</legend>
             <div className={styles['day-buttons']}>
               {days.map((day) => (
                 <Button
                   key={day}
-                  location={inputValues[day] === 'on' ? 'createGroup-active' : 'createGroup-noactive'}
+                  location={
+                    inputValues[day] === 'on'
+                      ? 'createGroup-active'
+                      : 'createGroup-noactive'
+                  }
                   text={day}
                   onClickHandler={() => onChangeHandler(day, 'off')}
                   isDisable={false}
@@ -307,10 +318,11 @@ export default function CreateGroupForm() {
         return (
           <InputField
             key={inputData.id}
-            className={`${styles.button} ${inputData.id === 'startTime' || inputData.id === 'endTime'
-              ? styles.halfInput
-              : styles.singleInput
-              }`}
+            className={`${styles.button} ${
+              inputData.id === 'startTime' || inputData.id === 'endTime'
+                ? styles.halfInput
+                : styles.singleInput
+            }`}
             value={inputValues[inputData.id] as string}
             label={inputData.label}
             type={inputData.type}
@@ -319,15 +331,25 @@ export default function CreateGroupForm() {
             required
             handleChange={onChangeHandler}
             handleBlur={onCheckRules}
-            ref={index === createGroupInputData.length - 1 ? lastInputRef : null}
+            ref={
+              index === createGroupInputData.length - 1 ? lastInputRef : null
+            }
           />
         );
     }
   });
 
   return (
-    <Modal title="Crear Grupo" open={isFormSubmitted} onClose={resetValues} lastFocusableElement={isSubmitDisabled ? lastInputRef : submitRef}>
-      <form className={styles['form-container']} autoComplete="off">
+    <Modal
+      title="Crear Grupo"
+      open={isFormSubmitted}
+      onClose={resetValues}
+      lastFocusableElement={isSubmitDisabled ? lastInputRef : submitRef}
+    >
+      <form
+        className={styles['form-container']}
+        autoComplete="off"
+      >
         <h3>Crear Grupo</h3>
         <div className={styles['form-inputs']}>{inputFields}</div>
         <Button
@@ -338,7 +360,9 @@ export default function CreateGroupForm() {
           onClickHandler={(e: React.MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
             setIsFormSubmitted(true);
-            setTimeout(() => { setIsFormSubmitted(false) }, 1000);
+            setTimeout(() => {
+              setIsFormSubmitted(false);
+            }, 1000);
           }}
           ref={submitRef}
         />

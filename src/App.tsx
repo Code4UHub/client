@@ -7,31 +7,28 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { updateUser } from 'store/user/userSlice';
 
 import CreateGroupForm from 'components/CreateGroupForm/CreateGroupForm';
-
+import JoinGroupForm from 'components/JoinGroupForm/JoinGroupForm';
 
 function App() {
-  const user = useSelector(
-    (state: RootState) => state.currentUser
-  );
+  const user = useSelector((state: RootState) => state.currentUser);
   const [toastValue, setToastValue] = useState<{ [key: string]: string }>({
-    title: "",
-    message: "",
+    title: '',
+    message: '',
   });
-  const hasToastValue = toastValue.title !== "" && toastValue.message !== "";
+  const hasToastValue = toastValue.title !== '' && toastValue.message !== '';
   const dispatch = useDispatch();
   const { state } = useLocation();
 
   useEffect(() => {
     if (state) {
       const { title, message } = state;
-      setToastValue({ title, message })
+      setToastValue({ title, message });
       setTimeout(() => {
-        setToastValue({ title: "", message: "" });
-      }, toastTime)
+        setToastValue({ title: '', message: '' });
+      }, toastTime);
     }
-  }, [state])
+  }, [state]);
   const navigate = useNavigate();
-
 
   const logOut = () => {
     dispatch(updateUser(null));
@@ -39,23 +36,38 @@ function App() {
   };
 
   const assignment = () => {
-    navigate('/assignment')
-  }
+    navigate('/assignment');
+  };
 
   return (
     <div>
-      {hasToastValue && <Toast type="success" title={toastValue.title} message={toastValue.message} />}
+      {hasToastValue && (
+        <Toast
+          type="success"
+          title={toastValue.title}
+          message={toastValue.message}
+        />
+      )}
       <h1>Aqui va el dashboard</h1>
       <CreateGroupForm />
+      <JoinGroupForm />
       <p>User:</p>
       <p>{user?.first_name}</p>
       <p>{user?.role}</p>
       <p>{user?.email}</p>
       <p>{user?.authToken}</p>
-      <button type="button" onClick={logOut}>
+      <button
+        type="button"
+        onClick={logOut}
+      >
         Cerrar Sesion
       </button>
-      <button type="button" onClick={assignment}>Ir a assignment</button>
+      <button
+        type="button"
+        onClick={assignment}
+      >
+        Ir a assignment
+      </button>
     </div>
   );
 }

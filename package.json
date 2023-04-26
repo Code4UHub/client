@@ -25,6 +25,8 @@
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-airbnb-typescript": "17.0.0",
     "eslint-config-prettier": "8.8.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.2.1",
     "prettier": "2.8.7",
     "react-scripts": "5.0.1"
   },
@@ -32,7 +34,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -49,8 +52,15 @@
     "rules": {
       "import/no-cycle": "warn",
       "no-param-reassign": "off",
-      "import/prefer-default-export": "off"
+      "import/prefer-default-export": "off",
+      "jsx-a11y/no-noninteractive-tabindex": "off"
     }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "npx prettier --write",
+      "npx eslint --fix"
+    ]
   },
   "browserslist": {
     "production": [

@@ -1,42 +1,51 @@
 .modal-wrapper {
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    background-color: rgba(0, 0, 0, 0.5);
-    overflow: auto;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow: auto;
 }
 
 .modal-container {
-    width: 75rem;
-    border-radius: 1.2rem;
-    padding: 2.4rem 2.4rem 2.4rem 3.6rem;
-    background-color: var(--white-color);
-    animation: popup 0.4s ease-out forwards;
+  width: 75rem;
+  border-radius: 1.2rem;
+  padding: 2.4rem;
+  background-color: var(--white-color);
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fadein {
+  animation: popup 0.4s ease-out forwards;
 }
 
 @keyframes popup {
-    from {
-      opacity: 0;
-      scale: 0.9;
-    }
-  
-    to {
-      opacity: 1;
-      scale: 1;
-    }
+  from {
+    opacity: 0;
+    scale: 0.9;
   }
-  
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
 .close-button-container {
   display: flex;
   justify-content: flex-end;
 }
-  
+
 .close-button {
   width: 3.6rem;
   padding: 0.8rem;
@@ -49,7 +58,7 @@
   background: none;
   transition: background 0.2s ease-out;
 }
-  
+
 .close-button:hover {
   background: rgba(145, 145, 145, 0.2);
 }

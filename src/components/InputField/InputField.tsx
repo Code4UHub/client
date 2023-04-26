@@ -1,6 +1,6 @@
-import React, { forwardRef } from "react";
-import { correctState } from "utils/inputRules/generalRules";
-import style from "./InputField.module.css";
+import React, { forwardRef } from 'react';
+import { correctState } from 'utils/inputRules/generalRules';
+import style from './InputField.module.css';
 
 type Props = {
   label: string;
@@ -26,7 +26,7 @@ function decideSpanClass(error: string) {
 
 export const InputField = forwardRef<HTMLInputElement, Props>((props, ref) => (
   <div className={`${props.className} ${style.inputField}`}>
-    <div className={style["label-container"]}>
+    <div className={style['label-container']}>
       <label htmlFor={props.id}>{props.label}</label>
       <span className={decideSpanClass(props.error)}>{props.error}</span>
     </div>
@@ -45,6 +45,6 @@ export const InputField = forwardRef<HTMLInputElement, Props>((props, ref) => (
 ));
 
 InputField.defaultProps = {
-  handleFocus: () => { },
-  handleKeyDown: () => { },
+  handleFocus: () => {},
+  handleKeyDown: () => {},
 };
