@@ -1,6 +1,39 @@
 export const questionData = [
   {
     id: 'TC1028_23_OM_8',
+    type: 'closed',
+    author: 'Administrador',
+    title: 'Expresión matemática a resolver de acuerdo a Python',
+    description: '¿Cuál es el resultado de la siguiente expresión? (8 // 3)',
+    topic: '2.3 Expresiones aritméticas.',
+    difficulty: 'Fácil',
+    answer: 3,
+    hints: true,
+    options: [
+      {
+        text: '2.60',
+        explanation:
+          'Incorrecto. Recuerda que es una división entera y no devuelve el resultado con decimales',
+      },
+      {
+        text: '1',
+        explanation:
+          'Incorrecto. Checar que fallo en la division o funcion del código',
+      },
+      {
+        text: '2.66',
+        explanation:
+          'Incorrecto. Recuerda que es una división entera y no devuelve el resultado con decimales',
+      },
+      {
+        text: '2',
+        explanation: 'Correcto. El resultado no va con decimales',
+      },
+    ],
+  },
+  {
+    id: 'TC1028_23_OM_1000',
+    type: 'open',
     author: 'Administrador',
     title: 'Expresión matemática a resolver de acuerdo a Python',
     description: '¿Cuál es el resultado de la siguiente expresión? (8 // 3)',
@@ -32,6 +65,7 @@ export const questionData = [
   },
   {
     id: 'TC4567_12_DM_4',
+    type: 'closed',
     author: 'Teacher',
     title: 'Calculating a simple expression in Python',
     description: 'What is the result of the expression (5 + 2) * 3?',
@@ -60,6 +94,7 @@ export const questionData = [
   },
   {
     id: 'TC7890_56_OM_2',
+    type: 'closed',
     author: 'Instructor',
     title: 'Solving a simple equation with Python',
     description: 'What is the value of x in the equation x + 8 = 20?',
@@ -88,6 +123,7 @@ export const questionData = [
   },
   {
     id: 'TC2345_78_DM_6',
+    type: 'closed',
     author: 'Professor',
     title: 'Calculating the remainder of a division with Python',
     description: 'What is the remainder when 21 is divided by 5 using Python?',
@@ -116,6 +152,7 @@ export const questionData = [
   },
   {
     id: 'TC1028_23_OM_8',
+    type: 'closed',
     author: 'Administrador',
     title: 'Expresión matemática a resolver de acuerdo a Python',
     description: '¿Cuál es el resultado de la siguiente expresión? (8 // 3)',
@@ -147,6 +184,7 @@ export const questionData = [
   },
   {
     id: 'TC4567_12_DM_4',
+    type: 'closed',
     author: 'Teacher',
     title: 'Calculating a simple expression in Python',
     description: 'What is the result of the expression (5 + 2) * 3?',
@@ -175,6 +213,7 @@ export const questionData = [
   },
   {
     id: 'TC7890_56_OM_2',
+    type: 'closed',
     author: 'Instructor',
     title: 'Solving a simple equation with Python',
     description: 'What is the value of x in the equation x + 8 = 20?',
@@ -203,6 +242,7 @@ export const questionData = [
   },
   {
     id: 'TC2345_78_DM_6',
+    type: 'closed',
     author: 'Professor',
     title: 'Calculating the remainder of a division with Python',
     description: 'What is the remainder when 21 is divided by 5 using Python?',
@@ -231,6 +271,7 @@ export const questionData = [
   },
   {
     id: 'TC1028_23_OM_8',
+    type: 'closed',
     author: 'Administrador',
     title: 'Expresión matemática a resolver de acuerdo a Python',
     description: '¿Cuál es el resultado de la siguiente expresión? (8 // 3)',
@@ -262,6 +303,7 @@ export const questionData = [
   },
   {
     id: 'TC4567_12_DM_4',
+    type: 'closed',
     author: 'Teacher',
     title: 'Calculating a simple expression in Python',
     description: 'What is the result of the expression (5 + 2) * 3?',
@@ -290,6 +332,7 @@ export const questionData = [
   },
   {
     id: 'TC7890_56_OM_2',
+    type: 'closed',
     author: 'Instructor',
     title: 'Solving a simple equation with Python',
     description: 'What is the value of x in the equation x + 8 = 20?',
@@ -318,6 +361,7 @@ export const questionData = [
   },
   {
     id: 'TC2345_78_DM_6',
+    type: 'closed',
     author: 'Professor',
     title: 'Calculating the remainder of a division with Python',
     description: 'What is the remainder when 21 is divided by 5 using Python?',
@@ -346,6 +390,7 @@ export const questionData = [
   },
   {
     id: 'TC1028_23_OM_8',
+    type: 'closed',
     author: 'Administrador',
     title: 'Expresión matemática a resolver de acuerdo a Python',
     description: '¿Cuál es el resultado de la siguiente expresión? (8 // 3)',
@@ -377,6 +422,7 @@ export const questionData = [
   },
   {
     id: 'TC4567_12_DM_4',
+    type: 'closed',
     author: 'Teacher',
     title: 'Calculating a simple expression in Python',
     description: 'What is the result of the expression (5 + 2) * 3?',
@@ -405,6 +451,7 @@ export const questionData = [
   },
   {
     id: 'TC7890_56_OM_2',
+    type: 'closed',
     author: 'Instructor',
     title: 'Solving a simple equation with Python',
     description: 'What is the value of x in the equation x + 8 = 20?',
@@ -433,6 +480,7 @@ export const questionData = [
   },
   {
     id: 'TC2345_78_DM_6',
+    type: 'closed',
     author: 'Professor',
     title: 'Calculating the remainder of a division with Python',
     description: 'What is the remainder when 21 is divided by 5 using Python?',
@@ -461,6 +509,7 @@ export const questionData = [
   },
   {
     id: 'TC1028_23_OM_8',
+    type: 'closed',
     author: 'Administrador',
     title: 'Expresión matemática a resolver de acuerdo a Python',
     description: '¿Cuál es el resultado de la siguiente expresión? (8 // 3)',
@@ -492,6 +541,7 @@ export const questionData = [
   },
   {
     id: 'TC4567_12_DM_4',
+    type: 'closed',
     author: 'Teacher',
     title: 'Calculating a simple expression in Python',
     description: 'What is the result of the expression (5 + 2) * 3?',
@@ -520,6 +570,7 @@ export const questionData = [
   },
   {
     id: 'TC7890_56_OM_2',
+    type: 'closed',
     author: 'Instructor',
     title: 'Solving a simple equation with Python',
     description: 'What is the value of x in the equation x + 8 = 20?',
@@ -548,6 +599,7 @@ export const questionData = [
   },
   {
     id: 'TC2345_78_DM_6',
+    type: 'closed',
     author: 'Professor',
     title: 'Calculating the remainder of a division with Python',
     description: 'What is the remainder when 21 is divided by 5 using Python?',

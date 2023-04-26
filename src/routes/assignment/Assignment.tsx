@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Title from 'components/Title/Title';
+import CodeQuestion from 'components/CodeQuestion/CodeQuestion';
 import CloseQuestion from 'components/CloseQuestion/CloseQuestion';
 import { Button } from 'components/Button/Button';
 import Timer from 'components/Timer/Timer';
@@ -154,31 +155,39 @@ export default function Assignment() {
           <Timer seconds={generalSeconds} />
         </div>
         <div className={style['question-container']}>
-          <CloseQuestion
-            rightAnswer={isSubmitted ? questionData[questionIndex].answer : -1}
-            isSubmitted={isSubmitted}
-            questionIndex={questionIndex}
-            onChoose={onChooseAnswer}
-            chosenAnswer={answers[questionIndex]}
-            description={questionData[questionIndex].description}
-            options={questionData[questionIndex].options}
-          />
-          <div className={style['button-container']}>
-            <Button
-              location="assignmentChange"
-              text="Atrás"
-              onClickHandler={() => onClickHandler('previous')}
-              type="button"
-              isDisable={questionIndex === 0}
-            />
-            <Button
-              location="assignmentChange"
-              text="Siguiente"
-              onClickHandler={() => onClickHandler('next')}
-              type="button"
-              isDisable={questionIndex === maxIndex}
-            />
-          </div>
+          {questionData[questionIndex].type === 'closed' ? (
+            <>
+              <CloseQuestion
+                rightAnswer={
+                  isSubmitted ? questionData[questionIndex].answer : -1
+                }
+                isSubmitted={isSubmitted}
+                questionIndex={questionIndex}
+                onChoose={onChooseAnswer}
+                chosenAnswer={answers[questionIndex]}
+                description={questionData[questionIndex].description}
+                options={questionData[questionIndex].options}
+              />
+              <div className={style['button-container']}>
+                <Button
+                  location="assignmentChange"
+                  text="Atrás"
+                  onClickHandler={() => onClickHandler('previous')}
+                  type="button"
+                  isDisable={questionIndex === 0}
+                />
+                <Button
+                  location="assignmentChange"
+                  text="Siguiente"
+                  onClickHandler={() => onClickHandler('next')}
+                  type="button"
+                  isDisable={questionIndex === maxIndex}
+                />
+              </div>
+            </>
+          ) : (
+            <CodeQuestion />
+          )}
         </div>
         <div className={style['last-button']}>
           <Button
