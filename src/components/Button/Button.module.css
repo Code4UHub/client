@@ -98,7 +98,6 @@
 
 .assignmentAnswered {
   background-color: var(--dark-gray);
-  /* border: 0.3rem solid var(--sec-blue-color); */
 }
 
 .assignmentChange {
