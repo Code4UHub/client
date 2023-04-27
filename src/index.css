@@ -46,6 +46,9 @@ html {
     #15314b 100%
   );
 
+  --box-shadow: rgba(0, 0, 0, 0.04) 0px 2px 6px, rgba(0, 0, 0, 0.02) 0px 4px 8px,
+    rgba(0, 0, 0, 0.02) 0px 6px 12px;
+
   --fs-big-title: 5rem;
   --fs-title: 4.4rem;
   --fs-sub-title: 4rem;

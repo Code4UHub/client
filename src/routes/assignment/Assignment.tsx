@@ -172,7 +172,11 @@ export default function Assignment() {
           />
           <Timer seconds={generalSeconds} />
         </div>
-        <div className={style['question-container']}>
+        <div
+          className={`${style['question-container']} ${
+            questionData[questionIndex].type === 'open' ? style.code : ''
+          }`}
+        >
           {questionData[questionIndex].type === 'closed' ? (
             <CloseQuestion
               rightAnswer={

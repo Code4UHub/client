@@ -13,7 +13,7 @@ export function Root() {
   return (
     <div className={styles['root-container']}>
       <div className={styles['nav-bar']} />
-      {outlet}
+      <div className={styles.content}>{outlet}</div>
     </div>
   );
 }

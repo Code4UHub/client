@@ -4,7 +4,6 @@
 
 div .assignment {
   width: 100%;
-  height: 100vh;
   padding: 5rem 10rem;
   display: flex;
   flex-direction: column;
@@ -25,15 +24,18 @@ div .select-question-container {
 }
 
 div .question-container {
+  min-height: 10rem;
   background-color: var(--light-gray);
   margin-top: 2rem;
   border-radius: 1rem;
   padding: 5rem 10rem;
   display: flex;
-  flex: 1 1 auto;
   flex-direction: column;
 }
 
+div .code {
+  padding: 1.2rem;
+}
 
 @media (max-width: 40em) {
   div .assignment {
