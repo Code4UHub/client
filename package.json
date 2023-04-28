@@ -2,7 +2,7 @@
   "name": "code4u",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/",
+  "proxy": "http://10.147.20.218:65534/",
   "dependencies": {
     "@codemirror/autocomplete": "^6.5.1",
     "@codemirror/commands": "^6.2.3",
@@ -22,6 +22,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-redux": "8.0.5",
+    "react-resizable-panels": "^0.0.42",
     "react-router-dom": "6.9.0",
     "redux-persist": "^6.0.0",
     "thememirror": "^2.0.1",
@@ -60,7 +61,8 @@
       "import/no-cycle": "warn",
       "no-param-reassign": "off",
       "import/prefer-default-export": "off",
-      "jsx-a11y/no-noninteractive-tabindex": "off"
+      "jsx-a11y/no-noninteractive-tabindex": "off",
+      "react-hooks/exhaustive-deps": "warn"
     }
   },
   "lint-staged": {

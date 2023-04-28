@@ -1,16 +1,118 @@
 .code-question-container {
   width: 100%;
   height: 50rem;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  column-gap: 1.2rem;
 }
 
 .code-question-info-container {
-  width: 100%;
   height: 100%;
   overflow-y: auto;
   box-shadow: var(--box-shadow);
   background-color: var(--white-color);
+  border-top-left-radius: 1.2rem;
+  border-bottom-left-radius: 1.2rem;
+  padding: 1.2rem 2.4rem;
+}
+
+.code-question-editor-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.resize-handler,
+.resize-handler-vertical {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.resize-handler {
+  width: 1.2rem;
+  flex-direction: column;
+  align-items: center;
+}
+
+.resize-handler-vertical {
+  height: 1.2rem;
+}
+
+.resize-handler-vertical:hover,
+.resize-handler-vertical:active,
+.resize-handler:hover,
+.resize-handler:active {
+  background-color: var(--light-light-blue-color);
+}
+
+.dots {
+  width: 100%;
+}
+
+.resize-handler-vertical .dots {
+  width: auto;
+  height: 100%;
+}
+
+.submit-container {
+  width: 100%;
+  height: 6.4rem;
+  background-color: var(--white-color);
+  border-bottom-right-radius: 1.2rem;
+  display: flex;
+  justify-content: end;
+}
+
+.title {
+  font-size: var(--fs-mid-text);
+  margin: 1.2rem 0;
+  font-weight: 500;
+}
+
+.tags-container {
+  display: flex;
+  column-gap: 2.5%;
+  margin-bottom: 2.4rem;
+}
+
+.topic,
+.level {
+  padding: 0.5rem 1rem;
   border-radius: 1.2rem;
+  font-size: var(--fs-small-small-text);
+  color: var(--white-color);
+}
+
+.topic {
+  background-color: var(--light-blue-color);
+}
+
+.easy {
+  background-color: var(--dark-green);
+}
+
+.medium {
+  background-color: #edc168;
+}
+
+.hard {
+  background-color: var(--middle-red);
+}
+
+.description {
+  font-size: var(--fs-small-text);
+  font-style: italic;
+}
+
+@media (max-width: 50em) {
+  .code-question-container {
+    height: 90rem;
+  }
+
+  .code-question-info-container {
+    border-top-right-radius: 1.2rem;
+    border-bottom-left-radius: 0;
+  }
+
+  .submit-container {
+    border-bottom-left-radius: 1.2rem;
+  }
 }

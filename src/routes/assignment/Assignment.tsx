@@ -16,9 +16,16 @@ function getTranslatedPixels(rems: number) {
   return rems * fontSize;
 }
 
+type CodeAnswer = {
+  isCorrect: boolean;
+  code: string | null;
+};
+
 export default function Assignment() {
   const [questionIndex, setQuestionIndex] = useState<number>(0);
-  const [answers, setAnswers] = useState<{ [key: number]: number }>({});
+  const [answers, setAnswers] = useState<{
+    [key: number]: number | CodeAnswer;
+  }>({});
   const [generalSeconds, setGeneralSeconds] = useState<number>(0);
   const [timeRegistry, setTimeRegistry] = useState<{ [key: number]: number }>(
     {}
@@ -27,17 +34,29 @@ export default function Assignment() {
   const [toastMessage, setToastMessage] = useState<{ [key: string]: string }>(
     {}
   );
-  const allQuestionsAnswered = !Object.values(answers).every(
-    (answer) => answer !== -1
-  );
+  const allQuestionsAnswered = !Object.values(answers).every((answer) => {
+    if (typeof answer === 'number') {
+      return answer !== -1;
+    }
+
+    return (answer as CodeAnswer).isCorrect;
+  });
   const hasToastMessage =
     toastMessage.title !== '' && toastMessage.message !== '';
   const maxIndex = questionData.length - 1;
   const containerSelectQuestionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    questionData.forEach((_question, index) => {
-      setAnswers((ans) => ({ ...ans, [index]: -1 }));
+    questionData.forEach((question, index) => {
+      if (question.type === 'open') {
+        setAnswers((ans) => ({
+          ...ans,
+          [index]: { isCorrect: false, code: null },
+        }));
+      } else {
+        setAnswers((ans) => ({ ...ans, [index]: -1 }));
+      }
+
       setTimeRegistry((times) => ({ ...times, [index]: 0 }));
     });
     setToastMessage({
@@ -92,6 +111,20 @@ export default function Assignment() {
     }
   }
 
+  const updateCode = (newCode: string, index: number) => {
+    setAnswers((ans) => ({
+      ...ans,
+      [index]: { ...(ans[index] as CodeAnswer), code: newCode },
+    }));
+  };
+
+  const updateCodeCorrect = (index: number, value: boolean) => {
+    setAnswers((ans) => ({
+      ...ans,
+      [index]: { ...(ans[index] as CodeAnswer), isCorrect: value },
+    }));
+  };
+
   const turnOffToast = () => {
     setTimeout(() => {
       setToastMessage({
@@ -117,13 +150,26 @@ export default function Assignment() {
 
   function defineButtonClass(index: number) {
     if (index === questionIndex) return 'assignmentActive';
-    if (isSubmitted) {
-      if (answers[index] === questionData[index].answer)
-        return 'assignmentCorrect';
-      return 'assignmentIncorrect';
-    }
-    if (answers[index] !== -1) return 'assignmentAnswered';
+
+    if (typeof answers[index] === 'number') {
+      if (answers[index] !== -1) return 'assignmentAnswered';
+    } else if ((answers[index] as CodeAnswer)?.isCorrect)
+      return 'assignmentAnswered';
+
     return 'assignmentInactive';
+  }
+
+  function defineButtonText(index: number) {
+    const tickString = '\u2713';
+    const numberString = String(index + 1);
+
+    if (typeof answers[index] === 'number') {
+      return answers[index] !== -1 ? tickString : numberString;
+    }
+
+    return (answers[index] as CodeAnswer)?.isCorrect
+      ? tickString
+      : numberString;
   }
 
   return (
@@ -156,7 +202,7 @@ export default function Assignment() {
             {questionData.map((_, index) => (
               <Button
                 location={defineButtonClass(index)}
-                text={answers[index] === -1 ? String(index + 1) : '\u2713'}
+                text={defineButtonText(index)}
                 onClickHandler={() => onClickHandler('jump', index)}
                 type="button"
                 isDisable={false}
@@ -180,17 +226,30 @@ export default function Assignment() {
           {questionData[questionIndex].type === 'closed' ? (
             <CloseQuestion
               rightAnswer={
-                isSubmitted ? questionData[questionIndex].answer : -1
+                isSubmitted
+                  ? (questionData[questionIndex].answer as number)
+                  : -1
               }
               isSubmitted={isSubmitted}
               questionIndex={questionIndex}
               onChoose={onChooseAnswer}
-              chosenAnswer={answers[questionIndex]}
+              chosenAnswer={answers[questionIndex] as number}
               description={questionData[questionIndex].description}
-              options={questionData[questionIndex].options}
+              options={
+                questionData[questionIndex].options as {
+                  text: string;
+                  explanation: string;
+                }[]
+              }
             />
           ) : (
-            <CodeQuestion />
+            <CodeQuestion
+              updateCorrect={updateCodeCorrect}
+              questionIndex={questionIndex}
+              cachedData={answers[questionIndex]}
+              questionData={questionData[questionIndex]}
+              updateCode={updateCode}
+            />
           )}
         </div>
       </div>

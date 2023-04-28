@@ -24,7 +24,6 @@ div .select-question-container {
 }
 
 div .question-container {
-  min-height: 10rem;
   background-color: var(--light-gray);
   margin-top: 2rem;
   border-radius: 1rem;

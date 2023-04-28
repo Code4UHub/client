@@ -35,33 +35,12 @@ export const questionData = [
     id: 'TC1028_23_OM_1000',
     type: 'open',
     author: 'Administrador',
-    title: 'Expresión matemática a resolver de acuerdo a Python',
-    description: '¿Cuál es el resultado de la siguiente expresión? (8 // 3)',
-    topic: '2.3 Expresiones aritméticas.',
+    title: 'Calculating the area of a triangle',
+    description:
+      'Write a function that calculates the area of a triangle given its base and height.',
+    topic: 'Geometry',
     difficulty: 'Fácil',
-    answer: 3,
-    hints: true,
-    options: [
-      {
-        text: '2.60',
-        explanation:
-          'Incorrecto. Recuerda que es una división entera y no devuelve el resultado con decimales',
-      },
-      {
-        text: '1',
-        explanation:
-          'Incorrecto. Checar que fallo en la division o funcion del código',
-      },
-      {
-        text: '2.66',
-        explanation:
-          'Incorrecto. Recuerda que es una división entera y no devuelve el resultado con decimales',
-      },
-      {
-        text: '2',
-        explanation: 'Correcto. El resultado no va con decimales',
-      },
-    ],
+    driver: 'calculate_area(b,h)',
   },
   {
     id: 'TC4567_12_DM_4',

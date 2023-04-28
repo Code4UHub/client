@@ -3,16 +3,17 @@ import { EditorView, keymap, KeyBinding } from '@codemirror/view';
 import { python } from '@codemirror/lang-python';
 import { basicSetup } from 'codemirror';
 import { insertTab } from '@codemirror/commands';
-import { autocompletion, acceptCompletion } from '@codemirror/autocomplete';
+import { acceptCompletion } from '@codemirror/autocomplete';
 import { tomorrow } from 'thememirror';
 import styles from './CodeEditor.module.css';
 
-const disableDefaultTabCompletion = autocompletion({
-  defaultKeymap: false,
-});
-
-const autocompleteKey: KeyBinding = {
+const autocompleteTab: KeyBinding = {
   key: 'Tab',
+  run: acceptCompletion,
+};
+
+const autocompleteEnter: KeyBinding = {
+  key: 'Enter',
   run: acceptCompletion,
 };
 
@@ -22,23 +23,33 @@ const insertTabKey: KeyBinding = {
 };
 
 type EditorPropTypes = {
-  initialCode: string;
+  questionIndex: number;
+  code: string;
+  onChange: Function;
 };
 
-export default function CodeEditor({ initialCode }: EditorPropTypes) {
+export default function CodeEditor({
+  questionIndex,
+  code,
+  onChange,
+}: EditorPropTypes) {
   const parentDivRef = useRef<HTMLDivElement>(null);
   const codeEditorRef = useRef<EditorView>();
 
   useEffect(() => {
     codeEditorRef.current = new EditorView({
-      doc: initialCode,
+      doc: code,
       extensions: [
         basicSetup,
         python(),
         EditorView.lineWrapping,
-        keymap.of([autocompleteKey, insertTabKey]),
+        keymap.of([autocompleteEnter, autocompleteTab, insertTabKey]),
         tomorrow,
-        disableDefaultTabCompletion,
+        EditorView.updateListener.of((e) => {
+          if (e.docChanged) {
+            onChange(e.state.doc.toString(), questionIndex);
+          }
+        }),
       ],
       parent: parentDivRef.current as Element,
     });
@@ -46,7 +57,7 @@ export default function CodeEditor({ initialCode }: EditorPropTypes) {
     return function destroyEditor() {
       codeEditorRef.current?.destroy();
     };
-  }, [initialCode]);
+  }, [code]);
 
   return (
     <div
