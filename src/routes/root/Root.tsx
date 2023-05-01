@@ -2,6 +2,7 @@ import React from 'react';
 import { RootState } from 'store/store';
 import { useSelector } from 'react-redux';
 import { Navigate, useOutlet } from 'react-router-dom';
+import NavBar from 'components/NavBar/NavBar';
 import styles from './Root.module.css';
 
 export function Root() {
@@ -11,9 +12,9 @@ export function Root() {
   if (!user) return <Navigate to="/auth" />;
 
   return (
-    <div className={styles['root-container']}>
-      <div className={styles['nav-bar']} />
-      {outlet}
-    </div>
+    <>
+      <NavBar />
+      <main className={styles['main-content']}>{outlet}</main>
+    </>
   );
 }
