@@ -9,7 +9,7 @@ import { Root } from 'routes/root/Root';
 
 import { PersistGate } from 'redux-persist/integration/react';
 
-import App from './App';
+import Classes from 'routes/classes/Classes';
 import './index.css';
 
 const router = createBrowserRouter([
@@ -18,7 +18,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <App />,
+        element: <Classes />,
       },
       {
         path: '/assignment',
