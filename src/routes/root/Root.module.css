@@ -1,9 +1,25 @@
 .main-content {
+  width: calc(100vw - 8.4rem);
+  min-height: 100vh;
   margin-left: 8.4rem;
+  padding: 5rem 10rem;
+  display: flex;
+  flex-direction: column;
 }
 
-@media (max-width: 48em) {
+@media (max-width: 40em) {
   .main-content {
+    padding: 3rem 3rem;
+  }
+}
+
+@media (max-width: 60em) {
+  .nav-bar {
+    width: 0;
+  }
+
+  .main-content {
+    width: 100vw;
     margin-left: 0;
   }
 }

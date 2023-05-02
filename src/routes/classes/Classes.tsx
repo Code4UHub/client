@@ -9,9 +9,7 @@ export default function Classes() {
     <>
       <SectionHeader title="Mis Clases" />
       <div className={styles['card-container']}>
-        <CardSkeleton />
-        <CardSkeleton />
-        <CardSkeleton />
+        <CardSkeleton items={4} />
       </div>
     </>
   );

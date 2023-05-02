@@ -126,7 +126,7 @@ export default function Assignment() {
   }
 
   return (
-    <main className={style['assignment-container']}>
+    <>
       {hasToastMessage && (
         <Toast
           title={toastMessage.title}
@@ -187,6 +187,6 @@ export default function Assignment() {
           />
         </div>
       </div>
-    </main>
+    </>
   );
 }
