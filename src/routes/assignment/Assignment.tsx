@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import AssignmentHeader from 'components/AssignmentHeader/AssginmentHeader';
+import SectionHeader from 'components/SectionHeader/SectionHeader';
 import CloseQuestion from 'components/CloseQuestion/CloseQuestion';
 import { Button } from 'components/Button/Button';
 import Timer from 'components/Timer/Timer';
@@ -135,11 +135,15 @@ export default function Assignment() {
         />
       )}
       <div className={style.assignment}>
-        <AssignmentHeader 
-          title="Condicionales"
-          onClickButton={onMainClick}
-          isButtonDisabled={allQuestionsAnswered}
-        />
+        <SectionHeader title="Condicionales">
+          <Button
+            location="assignmentSubmit"
+            text="Terminar examen"
+            onClickHandler={onMainClick}
+            type="submit"
+            isDisable={allQuestionsAnswered}
+          />
+        </SectionHeader>
         <div className={style['assignment-info']}>
           <Button
             location="assignmentChange"
@@ -163,12 +167,12 @@ export default function Assignment() {
             ))}
           </div>
           <Button
-              location="assignmentChange"
-              text=">"
-              onClickHandler={() => onClickHandler('next')}
-              type="button"
-              isDisable={questionIndex === maxIndex}
-            />
+            location="assignmentChange"
+            text=">"
+            onClickHandler={() => onClickHandler('next')}
+            type="button"
+            isDisable={questionIndex === maxIndex}
+          />
           <Timer seconds={generalSeconds} />
         </div>
         <div className={style['question-container']}>
