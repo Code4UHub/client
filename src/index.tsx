@@ -24,6 +24,10 @@ const router = createBrowserRouter([
         path: '/assignment',
         element: <Assignment />,
       },
+      {
+        path: '/report',
+        element: <h1>Aqui va los reportes</h1>,
+      },
     ],
     errorElement: <h1>Error</h1>,
   },
