@@ -1,7 +1,11 @@
 import { EmailError } from 'utils/errorMessage/authErrorMessage';
 import { GeneralError } from 'utils/errorMessage/generalErrorMessage';
 import { correctState } from 'utils/inputRules/generalRules';
-import { inputsMinLengthAuth, inputsMaxLengthAuth , runGeneralRules } from '../authRules';
+import {
+  inputsMinLengthAuth,
+  inputsMaxLengthAuth,
+  runGeneralRules,
+} from '../authRules';
 
 const emailMax = inputsMaxLengthAuth.email;
 const maxCharMessage = `${GeneralError.maxCharError} ${emailMax} char`;

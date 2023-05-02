@@ -1,7 +1,11 @@
 import { NameError } from 'utils/errorMessage/authErrorMessage';
 import { GeneralError } from 'utils/errorMessage/generalErrorMessage';
 import { correctState } from 'utils/inputRules/generalRules';
-import { inputsMinLengthAuth, inputsMaxLengthAuth , runGeneralRules } from '../authRules';
+import {
+  inputsMinLengthAuth,
+  inputsMaxLengthAuth,
+  runGeneralRules,
+} from '../authRules';
 
 const nameMin = inputsMinLengthAuth.name;
 const minCharMessage = `${GeneralError.minCharError} ${nameMin} char`;
