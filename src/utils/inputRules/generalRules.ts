@@ -8,6 +8,14 @@ function isEmptyInput(input: string) {
   return input.length < 1;
 }
 
+export function hasForbiddenChars(input: string) {
+  let result = false;
+  input.split('').forEach((letter) => {
+    if (forbidenChars.includes(letter)) result = true;
+  });
+  return result;
+}
+
 export function generalRules(
   input: string,
   id: string,
@@ -19,13 +27,6 @@ export function generalRules(
     return `${GeneralError.minCharError} ${minLength[id]} char`;
   if (input.length > maxLength[id])
     return `${GeneralError.maxCharError} ${maxLength[id]} char`;
+  if (hasForbiddenChars(input)) return GeneralError.noSpecialChar;
   return correctState;
-}
-
-export function hasForbiddenChars(input: string) {
-  let result = false;
-  input.split('').forEach((letter) => {
-    if (forbidenChars.includes(letter)) result = true;
-  });
-  return result;
 }

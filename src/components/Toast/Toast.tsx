@@ -12,14 +12,20 @@ type Props = {
 };
 
 export enum ToastStatus {
+  created = 'created',
   open = 'open',
   closing = 'closing',
 }
 
 export function Toast({ title, message, type }: Props) {
-  const [status, setStatus] = useState(ToastStatus.open);
+  const [status, setStatus] = useState(ToastStatus.created);
 
   useEffect(() => {
+    if (status === ToastStatus.created) {
+      setTimeout(() => {
+        setStatus(ToastStatus.open);
+      }, 1);
+    }
     if (status === ToastStatus.open) {
       setTimeout(() => {
         setStatus(ToastStatus.closing);
