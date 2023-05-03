@@ -1,0 +1,34 @@
+
+.loading-container {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(#E4E4ED, 0.5);
+}
+
+.bar {
+    width: 20rem;
+    height: 100%;
+    background: var(--blue-gradient);
+    border-radius: 0.5rem;
+    animation: barAnimation 1.5s infinite ease-in-out;
+}
+
+@keyframes barAnimation {
+    0% {
+        transform: translateX(-70vw);
+        width: 20rem;
+    }
+    20% {
+        width: 20rem;
+    }
+    50% {
+        width: 25rem;
+    }
+    80% {
+        width: 20rem;
+    }
+    100% {
+        width: 20rem;
+        transform: translateX(100vw);
+    }
+}
