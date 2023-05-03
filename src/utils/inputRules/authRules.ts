@@ -8,8 +8,8 @@ import { generalRules, correctState } from 'utils/inputRules/generalRules';
 export const inputsMinLengthAuth = {
   email: 10,
   password: 8,
-  passwordLogin: 1,
-  passwordConfirmation: 1,
+  passwordLogin: 2,
+  passwordConfirmation: 2,
   name: 3,
 };
 export const inputsMaxLengthAuth = {
