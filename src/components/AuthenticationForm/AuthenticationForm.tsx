@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { InputField } from 'components/InputField/InputField';
 import { Button } from 'components/Button/Button';
 import { toastTime, Toast } from 'components/Toast/Toast';
-import Loading from 'components/Loading/Loading'
+import Loading from 'components/Loading/Loading';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateUser } from 'store/user/userSlice';
