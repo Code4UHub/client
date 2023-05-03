@@ -5,14 +5,14 @@ import {
 } from 'utils/errorMessage/authErrorMessage';
 import { generalRules, correctState } from 'utils/inputRules/generalRules';
 
-const inputsMinLength = {
+export const inputsMinLengthAuth = {
   email: 10,
   password: 8,
-  passwordLogin: 1,
-  passwordConfirmation: 1,
-  name: 2,
+  passwordLogin: 2,
+  passwordConfirmation: 2,
+  name: 3,
 };
-const inputsMaxLength = {
+export const inputsMaxLengthAuth = {
   email: 30,
   password: 16,
   passwordLogin: 16,
@@ -31,6 +31,7 @@ function isValidEmail(inputEmail: string) {
   const studentEmailRegex = /^a0\d{7}@/;
   const startStudentEmailRegex = /^a0/;
   if (startStudentEmailRegex.test(email)) {
+    if (!emailRegex.test(email)) return EmailError.invalidEmailError;
     if (!studentEmailRegex.test(email)) return EmailError.studentIdError;
   } else if (!emailRegex.test(email)) return EmailError.invalidEmailError;
   if (!email.endsWith('@tec.mx')) return EmailError.nonEducationalEmailError;
@@ -75,7 +76,7 @@ function isValidName(name: string) {
   return correctState;
 }
 
-function runGeneralRules(
+export function runGeneralRules(
   idInput: string,
   inputValue: string,
   password: string
@@ -83,8 +84,8 @@ function runGeneralRules(
   const generalResults = generalRules(
     inputValue,
     idInput,
-    inputsMinLength,
-    inputsMaxLength
+    inputsMinLengthAuth,
+    inputsMaxLengthAuth
   );
   if (generalResults === correctState) {
     if (idInput === 'name') {
