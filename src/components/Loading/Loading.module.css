@@ -10,21 +10,12 @@
     height: 100%;
     background: var(--blue-gradient);
     border-radius: 0.5rem;
-    animation: barAnimation 1.5s infinite ease-in-out;
+    animation: barAnimation 2s infinite ease-in-out;
 }
 
 @keyframes barAnimation {
     0% {
-        transform: translateX(-70vw);
-        width: 20rem;
-    }
-    20% {
-        width: 20rem;
-    }
-    50% {
-        width: 25rem;
-    }
-    80% {
+        transform: translateX(-10vw);
         width: 20rem;
     }
     100% {
