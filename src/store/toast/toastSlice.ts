@@ -6,6 +6,14 @@ type ToastSlice = {
   message: string;
 };
 
+export const GENERAL_ERRORS = {
+  SYSTEM: {
+    title: 'Error',
+    message: 'Intente más tarde',
+    type: 'Error',
+  },
+};
+
 export const toastSlice = createSlice({
   name: 'toast',
   initialState: {
