@@ -12,6 +12,7 @@ import { getClass, joinClass } from 'utils/db/db.utils';
 import { updateToast, TOAST_GENERAL_ERRORS } from 'store/toast/toastSlice';
 import { setLoading, removeLoading } from 'store/loading/loadingSlice';
 
+import { formatTime } from 'utils/format/formatTime';
 import { inputRules } from 'utils/inputRules/groupRules';
 
 import { correctState } from 'utils/inputRules/generalRules';
@@ -186,9 +187,9 @@ export default function JoinGroupForm() {
             <span className={styles['class-label']}>Días </span>
             <p className={styles['class-info']}>{classInfo.days.toString()}</p>
             <span className={styles['class-label']}>Horario</span>
-            <p
-              className={styles['class-info']}
-            >{`${classInfo.start_time} - ${classInfo.end_time}`}</p>
+            <p className={styles['class-info']}>{`${formatTime(
+              classInfo.start_time
+            )} - ${formatTime(classInfo.end_time)}`}</p>
           </div>
           <p className={styles['class-confirm-message']}>
             ¿Deseas ingresar a esta clase?
