@@ -1,10 +1,8 @@
-
-
-div .error {
+.error {
   background-color: var(--middle-red);
 }
 
-div .success {
+.success {
   background-color: var(--dark-green);
 }
 
@@ -23,10 +21,6 @@ div .success {
 
 .open {
   top: 0;
-}
-
-.closing {
-  top: -15%;
 }
 
 .toast-title {
