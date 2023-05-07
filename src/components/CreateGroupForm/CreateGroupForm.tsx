@@ -5,15 +5,17 @@ import { useSelector, useDispatch } from 'react-redux';
 import { InputField } from 'components/InputField/InputField';
 import { Button } from 'components/Button/Button';
 import Modal from 'components/Modal/Modal';
+import NoResultsError from 'components/NoResultsError/NoResultsError';
 
 import { correctState } from 'utils/inputRules/generalRules';
 import { inputRules } from 'utils/inputRules/groupRules';
 
 import { Subject } from 'types/Subject/Subject';
-import { createClass, ClassInfo } from 'utils/db/db.utils';
+import { createClass, ClassInfo, getSubjects } from 'utils/db/db.utils';
 
 import { setLoading, removeLoading } from 'store/loading/loadingSlice';
 import { updateToast, TOAST_GENERAL_ERRORS } from 'store/toast/toastSlice';
+import { updateSubjects } from 'store/subject/subjectSlice';
 
 import { createGroupInputData, days } from './createGroupData';
 import styles from './CreateGroupFom.module.css';
@@ -73,18 +75,15 @@ const inputValuesReducer = (
   }
 };
 
-type Props = {
-  classes: Subject[];
-};
-
-export default function CreateGroupForm({ classes }: Props) {
+export default function CreateGroupForm() {
   const [isListOpen, setIsListOpen] = useState(false);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const [filteredClasses, setFilteredClassses] = useState<Subject[]>([]);
+  const [filteredSubjects, setFilteredSubjects] = useState<Subject[]>([]);
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.user.currentUser);
+  const subjects = useSelector((state: RootState) => state.subject.subjects);
 
   let timeOutId: NodeJS.Timeout;
 
@@ -107,11 +106,11 @@ export default function CreateGroupForm({ classes }: Props) {
   }, [isFormSubmitted]);
 
   useEffect(() => {
-    setFilteredClassses(classes);
-  }, [classes, setFilteredClassses]);
+    setFilteredSubjects(subjects);
+  }, [subjects, setFilteredSubjects]);
 
   const resetValues = () => {
-    setFilteredClassses(classes);
+    setFilteredSubjects(subjects);
     dispatchInputValues({
       type: 'UPDATE_VALUES',
       payload: INPUT_VALUES_INITIAL,
@@ -155,15 +154,15 @@ export default function CreateGroupForm({ classes }: Props) {
   ]);
 
   // filters autocomplete results based on user input
-  const filterClass = (value: string) => {
-    const newClass = classes.filter(
+  const filterSubjects = (value: string) => {
+    const newSubjects = subjects.filter(
       ({ subject_id, subject_name }) =>
         `${subject_id} - ${subject_name}`.includes(value.trim()) ||
         subject_name.includes(value.trim()) ||
         `${subject_id}`.includes(value.trim())
     );
 
-    setFilteredClassses(newClass);
+    setFilteredSubjects(newSubjects);
   };
 
   // Updates input values every time a field changes
@@ -173,7 +172,7 @@ export default function CreateGroupForm({ classes }: Props) {
       dispatchError({ type: 'UPDATE_ERRORS', payload: { [id]: '' } });
 
     if (id === 'subject') {
-      filterClass(value);
+      filterSubjects(value);
     }
     if (days.includes(id)) {
       const newState = inputValues[id] === 'off' ? 'on' : 'off';
@@ -211,11 +210,11 @@ export default function CreateGroupForm({ classes }: Props) {
       onCheckRules('end_time', inputValues.end_time);
   };
 
-  // Updates class on item click
-  const selectClass = (id: string, name: string) => {
-    const classValue = `${id} - ${name}`;
+  // Updates subject on item click
+  const selectSubject = (id: string, name: string) => {
+    const subjectValue = `${id} - ${name}`;
 
-    if (autoComplete.current) autoComplete.current.value = classValue;
+    if (autoComplete.current) autoComplete.current.value = subjectValue;
 
     dispatchInputValues({
       type: 'UPDATE_VALUES',
@@ -229,7 +228,7 @@ export default function CreateGroupForm({ classes }: Props) {
       });
     }
 
-    filterClass(classValue);
+    filterSubjects(subjectValue);
     setIsListOpen(false);
   };
 
@@ -286,6 +285,15 @@ export default function CreateGroupForm({ classes }: Props) {
     dispatch(removeLoading());
   };
 
+  const handleRetrySubjects = async () => {
+    const data = await getSubjects(user?.authToken as string);
+
+    if (data.status === 'success') {
+      dispatch(updateSubjects(data.data as Subject[]));
+      autoComplete.current?.focus();
+    }
+  };
+
   // Renders inputfield based on inputData
   const inputFields = createGroupInputData.map((inputData, index) => {
     switch (inputData.id) {
@@ -312,19 +320,22 @@ export default function CreateGroupForm({ classes }: Props) {
               handleKeyDown={skipAutocomplete}
               handleBlur={() => {}}
             />
-            {isListOpen && (
-              <ul className={styles['autocomplete-list']}>
-                {filteredClasses.map(({ subject_id, subject_name }) => (
-                  // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
-                  <li
-                    key={subject_id}
-                    onClick={() => selectClass(subject_id, subject_name)}
-                  >
-                    {`${subject_id} - ${subject_name}`}
-                  </li>
-                ))}
-              </ul>
-            )}
+            {isListOpen &&
+              (subjects.length > 1 ? (
+                <ul className={styles['autocomplete-list']}>
+                  {filteredSubjects.map(({ subject_id, subject_name }) => (
+                    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
+                    <li
+                      key={subject_id}
+                      onClick={() => selectSubject(subject_id, subject_name)}
+                    >
+                      {`${subject_id} - ${subject_name}`}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <NoResultsError retryHandler={handleRetrySubjects} />
+              ))}
           </div>
         );
       case 'days':
