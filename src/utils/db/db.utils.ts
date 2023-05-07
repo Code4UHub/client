@@ -150,7 +150,6 @@ export const createClass = async (
 
   const bodyContent = {
     class_id,
-    is_finished: false,
     finished_date,
     days,
     start_time,
