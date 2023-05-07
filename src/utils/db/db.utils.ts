@@ -139,7 +139,7 @@ export const createClass = async (
   }: ClassInfo,
   teacher_id: string,
   auth_token: string
-) => {
+): Promise<TypePromise<string>> => {
   const days = [];
 
   if (LU === 'on') days.push('LU');

@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect, useReducer } from 'react';
+import { RootState } from 'store/store';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { InputField } from 'components/InputField/InputField';
 import { Button } from 'components/Button/Button';
@@ -6,32 +8,15 @@ import Modal from 'components/Modal/Modal';
 
 import { correctState } from 'utils/inputRules/generalRules';
 import { inputRules } from 'utils/inputRules/groupRules';
+
+import { Subject } from 'types/Subject/Subject';
+import { createClass, ClassInfo } from 'utils/db/db.utils';
+
+import { setLoading, removeLoading } from 'store/loading/loadingSlice';
+import { updateToast, GENERAL_ERRORS } from 'store/toast/toastSlice';
+
 import { createGroupInputData, days } from './createGroupData';
-
 import styles from './CreateGroupFom.module.css';
-
-const query = [
-  { id: 1, name: 'Mathematics' },
-  { id: 2, name: 'Physics' },
-  { id: 3, name: 'Chemistry' },
-  { id: 4, name: 'Biology' },
-  { id: 5, name: 'Computer Science' },
-  { id: 6, name: 'English' },
-  { id: 7, name: 'History' },
-  { id: 8, name: 'Geography' },
-  { id: 9, name: 'Art' },
-  { id: 10, name: 'Music' },
-  { id: 11, name: 'Physical Education' },
-  { id: 12, name: 'Social Studies' },
-  { id: 13, name: 'Environmental Science' },
-  { id: 14, name: 'Foreign Language' },
-  { id: 15, name: 'Health Education' },
-  { id: 16, name: 'Economics' },
-  { id: 17, name: 'Psychology' },
-  { id: 18, name: 'Sociology' },
-  { id: 19, name: 'Political Science' },
-  { id: 20, name: 'Philosophy' },
-];
 
 const INPUT_ERRORES_INITIAL = createGroupInputData.reduce(
   (acc: { [key: string]: string }, { id }) => {
@@ -58,9 +43,9 @@ const inputErrorsReducer = (
 };
 
 const INPUT_VALUES_INITIAL = createGroupInputData.reduce(
-  (acc: { [key: string]: string | { id: number; name: string } }, { id }) => {
+  (acc: { [key: string]: string | { id: string; name: string } }, { id }) => {
     if (id === 'subject') {
-      acc[id] = { id: NaN, name: '' };
+      acc[id] = { id: '', name: '' };
     } else if (id === 'days') {
       days.forEach((day) => {
         acc[day] = 'off';
@@ -88,18 +73,21 @@ const inputValuesReducer = (
   }
 };
 
-export default function CreateGroupForm() {
-  const [classes, setClasses] = useState<typeof query>([]);
-  // eslint-disable-next-line
-  const [filteredClasses, setFilteredClasses] = useState<typeof query>([]);
+type Props = {
+  classes: Subject[];
+};
 
+export default function CreateGroupForm({ classes }: Props) {
   const [isListOpen, setIsListOpen] = useState(false);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [filteredClasses, setFilteredClassses] = useState<Subject[]>([]);
+  const reduxDispatch = useDispatch();
+
+  const user = useSelector((state: RootState) => state.user.currentUser);
 
   let timeOutId: NodeJS.Timeout;
 
-  // eslint-disable-next-line
   const [inputValues, dispatch] = useReducer(
     inputValuesReducer,
     INPUT_VALUES_INITIAL
@@ -115,11 +103,19 @@ export default function CreateGroupForm() {
   const autoComplete = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setClasses(query);
-    setFilteredClasses(query);
-  }, []);
+    if (isFormSubmitted) {
+      setTimeout(() => {
+        setIsFormSubmitted(false);
+      }, 1000);
+    }
+  }, [isFormSubmitted]);
+
+  useEffect(() => {
+    setFilteredClassses(classes);
+  }, [classes, setFilteredClassses]);
 
   const resetValues = () => {
+    setFilteredClassses(classes);
     dispatch({ type: 'UPDATE_VALUES', payload: INPUT_VALUES_INITIAL });
     dispatchError({ type: 'UPDATE_ERRORS', payload: INPUT_ERRORES_INITIAL });
   };
@@ -135,11 +131,11 @@ export default function CreateGroupForm() {
     }
 
     if (
-      inputValues.L === 'off' &&
-      inputValues.M === 'off' &&
-      inputValues.X === 'off' &&
-      inputValues.J === 'off' &&
-      inputValues.V === 'off'
+      inputValues.LU === 'off' &&
+      inputValues.MA === 'off' &&
+      inputValues.MI === 'off' &&
+      inputValues.JU === 'off' &&
+      inputValues.VI === 'off'
     ) {
       setIsSubmitDisabled(true);
       return;
@@ -150,26 +146,25 @@ export default function CreateGroupForm() {
 
   useEffect(() => {
     checkFormValidation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     inputErrors,
-    inputValues.L,
-    inputValues.M,
-    inputValues.X,
-    inputValues.J,
-    inputValues.V,
+    inputValues.LU,
+    inputValues.MA,
+    inputValues.MI,
+    inputValues.JU,
+    inputValues.VI,
   ]);
 
-  // filters autocomplete results based on user inputz
+  // filters autocomplete results based on user input
   const filterClass = (value: string) => {
     const newClass = classes.filter(
-      ({ id, name }) =>
-        `${id} - ${name}`.includes(value.trim()) ||
-        name.includes(value.trim()) ||
-        `${id}`.includes(value.trim())
+      ({ subject_id, subject_name }) =>
+        `${subject_id} - ${subject_name}`.includes(value.trim()) ||
+        subject_name.includes(value.trim()) ||
+        `${subject_id}`.includes(value.trim())
     );
 
-    setFilteredClasses(newClass);
+    setFilteredClassses(newClass);
   };
 
   // Updates input values every time a field changes
@@ -191,13 +186,13 @@ export default function CreateGroupForm() {
 
   const onCheckRules = (
     id: string,
-    value: string | { id: number; name: string }
+    value: string | { id: string; name: string }
   ) => {
     const rule = inputRules.find((r) => r.id === id);
     let validationResult = '';
     if (rule) {
-      if (id === 'endTime')
-        validationResult = rule.validate(value, inputValues.startTime);
+      if (id === 'end_time')
+        validationResult = rule.validate(value, inputValues.start_time);
       else validationResult = rule.validate(value);
     }
 
@@ -207,16 +202,18 @@ export default function CreateGroupForm() {
     });
 
     if (
-      id === 'startTime' &&
+      id === 'start_time' &&
       validationResult === correctState &&
-      inputErrors.endTime
+      inputErrors.end_time
     )
-      onCheckRules('endTime', inputValues.endTime);
+      onCheckRules('end_time', inputValues.end_time);
   };
 
   // Updates class on item click
-  const selectClass = (id: number, name: string) => {
-    if (autoComplete.current) autoComplete.current.value = `${id} - ${name}`;
+  const selectClass = (id: string, name: string) => {
+    const classValue = `${id} - ${name}`;
+
+    if (autoComplete.current) autoComplete.current.value = classValue;
 
     dispatch({
       type: 'UPDATE_VALUES',
@@ -230,6 +227,7 @@ export default function CreateGroupForm() {
       });
     }
 
+    filterClass(classValue);
     setIsListOpen(false);
   };
 
@@ -247,6 +245,43 @@ export default function CreateGroupForm() {
   // Closes autocomplete list on tab press
   const skipAutocomplete = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Tab') setIsListOpen(false);
+  };
+
+  const createClassHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    reduxDispatch(setLoading());
+
+    try {
+      const data = await createClass(
+        inputValues as ClassInfo,
+        user?.id as string,
+        user?.authToken as string
+      );
+
+      if (data.status === 'success') {
+        reduxDispatch(
+          updateToast({
+            title: 'Success',
+            message: 'La clase ha sido creada exitosamente',
+            type: 'success',
+          })
+        );
+        setIsFormSubmitted(true);
+      } else {
+        reduxDispatch(
+          updateToast({
+            title: data.status,
+            message: data.data,
+            type: 'error',
+          })
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      reduxDispatch(updateToast(GENERAL_ERRORS.SYSTEM));
+    }
+
+    reduxDispatch(removeLoading());
   };
 
   // Renders inputfield based on inputData
@@ -277,13 +312,13 @@ export default function CreateGroupForm() {
             />
             {isListOpen && (
               <ul className={styles['autocomplete-list']}>
-                {filteredClasses.map(({ id, name }) => (
+                {filteredClasses.map(({ subject_id, subject_name }) => (
                   // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
                   <li
-                    key={id}
-                    onClick={() => selectClass(id, name)}
+                    key={subject_id}
+                    onClick={() => selectClass(subject_id, subject_name)}
                   >
-                    {`${id} - ${name}`}
+                    {`${subject_id} - ${subject_name}`}
                   </li>
                 ))}
               </ul>
@@ -319,7 +354,7 @@ export default function CreateGroupForm() {
           <InputField
             key={inputData.id}
             className={`${styles.button} ${
-              inputData.id === 'startTime' || inputData.id === 'endTime'
+              inputData.id === 'start_time' || inputData.id === 'end_time'
                 ? styles.halfInput
                 : styles.singleInput
             }`}
@@ -357,13 +392,7 @@ export default function CreateGroupForm() {
           text="Crear grupo"
           type="submit"
           isDisable={isSubmitDisabled}
-          onClickHandler={(e: React.MouseEvent<HTMLButtonElement>) => {
-            e.preventDefault();
-            setIsFormSubmitted(true);
-            setTimeout(() => {
-              setIsFormSubmitted(false);
-            }, 1000);
-          }}
+          onClickHandler={createClassHandler}
           ref={submitRef}
         />
       </form>
