@@ -4,8 +4,6 @@ type InputData = {
   id: string;
 }[];
 
-export const days: string[] = ['LU', 'MA', 'MI', 'JU', 'VI'];
-
 export const createGroupInputData: InputData = [
   {
     label: 'Unidad de Formación (Nombre o clave)',

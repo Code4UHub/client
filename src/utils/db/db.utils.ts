@@ -1,6 +1,6 @@
 import { TypePromise } from 'types/TypePromise/TypePromise';
 import { UserPromise } from 'types/User/User';
-import { ClassPromise } from 'types/Class/Class';
+import { ClassPromise, ClassRequest } from 'types/Class/Class';
 import { SubjectPromise } from 'types/Subject/Subject';
 
 const BASE_URL = 'v1';
@@ -111,51 +111,24 @@ export const joinClass = async (
   return request.json();
 };
 
-export type ClassInfo = {
-  subject: { id: string; name: string };
-  class_id: string;
-  start_time: string;
-  end_time: string;
-  finished_date: string;
-  LU: string;
-  MA: string;
-  MI: string;
-  JU: string;
-  VI: string;
-};
-
 export const createClass = async (
-  {
-    subject,
-    class_id,
-    start_time,
-    end_time,
-    finished_date,
-    LU,
-    MA,
-    MI,
-    JU,
-    VI,
-  }: ClassInfo,
+  class_info: ClassRequest,
   teacher_id: string,
   auth_token: string
 ): Promise<TypePromise<string>> => {
-  const days = [];
+  const { days, subject, ...rest } = class_info;
 
-  if (LU === 'on') days.push('LU');
-  if (MA === 'on') days.push('MA');
-  if (MI === 'on') days.push('MI');
-  if (JU === 'on') days.push('JU');
-  if (VI === 'on') days.push('VI');
+  const apiDays = days.reduce((acc, { dayName, dayVal }) => {
+    if (dayVal === 'on') acc.push(dayName);
+
+    return acc;
+  }, [] as string[]);
 
   const bodyContent = {
-    class_id,
-    finished_date,
-    days,
-    start_time,
-    end_time,
+    days: apiDays,
     subject_id: subject.id,
     teacher_id,
+    ...rest,
   };
 
   const options: RequestInit = {

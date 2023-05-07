@@ -11,13 +11,15 @@ import { correctState } from 'utils/inputRules/generalRules';
 import { inputRules } from 'utils/inputRules/groupRules';
 
 import { Subject } from 'types/Subject/Subject';
-import { createClass, ClassInfo, getSubjects } from 'utils/db/db.utils';
+import { days } from 'types/Days/Days';
+import { ClassRequest } from 'types/Class/Class';
+import { createClass, getSubjects } from 'utils/db/db.utils';
 
 import { setLoading, removeLoading } from 'store/loading/loadingSlice';
 import { updateToast, TOAST_GENERAL_ERRORS } from 'store/toast/toastSlice';
 import { updateSubjects } from 'store/subject/subjectSlice';
 
-import { createGroupInputData, days } from './createGroupData';
+import { createGroupInputData } from './createGroupData';
 import styles from './CreateGroupFom.module.css';
 
 const INPUT_ERRORES_INITIAL = createGroupInputData.reduce(
@@ -45,13 +47,22 @@ const inputErrorsReducer = (
 };
 
 const INPUT_VALUES_INITIAL = createGroupInputData.reduce(
-  (acc: { [key: string]: string | { id: string; name: string } }, { id }) => {
+  (
+    acc: {
+      [key: string]:
+        | string
+        | { id: string; name: string }
+        | { dayName: string; dayVal: string }[];
+    },
+    { id }
+  ) => {
     if (id === 'subject') {
       acc[id] = { id: '', name: '' };
     } else if (id === 'days') {
-      days.forEach((day) => {
-        acc[day] = 'off';
-      });
+      acc.days = days.map((day) => ({
+        dayName: day,
+        dayVal: 'off',
+      }));
     } else {
       acc[id] = '';
     }
@@ -128,13 +139,11 @@ export default function CreateGroupForm() {
       }
     }
 
-    if (
-      inputValues.LU === 'off' &&
-      inputValues.MA === 'off' &&
-      inputValues.MI === 'off' &&
-      inputValues.JU === 'off' &&
-      inputValues.VI === 'off'
-    ) {
+    const checkActiveDays = (
+      inputValues.days as { dayName: string; dayVal: string }[]
+    ).every(({ dayVal }) => dayVal === 'off');
+
+    if (checkActiveDays) {
       setIsSubmitDisabled(true);
       return;
     }
@@ -144,14 +153,7 @@ export default function CreateGroupForm() {
 
   useEffect(() => {
     checkFormValidation();
-  }, [
-    inputErrors,
-    inputValues.LU,
-    inputValues.MA,
-    inputValues.MI,
-    inputValues.JU,
-    inputValues.VI,
-  ]);
+  }, [inputErrors, inputValues]);
 
   // filters autocomplete results based on user input
   const filterSubjects = (value: string) => {
@@ -166,19 +168,29 @@ export default function CreateGroupForm() {
   };
 
   // Updates input values every time a field changes
-  const onChangeHandler = (id: string, value: string) => {
+  const onChangeHandler = (id: string, value: string | number) => {
     setIsSubmitDisabled(true);
     if (inputErrors[id])
       dispatchError({ type: 'UPDATE_ERRORS', payload: { [id]: '' } });
 
     if (id === 'subject') {
-      filterSubjects(value);
+      filterSubjects(value as string);
     }
-    if (days.includes(id)) {
-      const newState = inputValues[id] === 'off' ? 'on' : 'off';
+
+    if (id === 'days') {
+      const newDays = inputValues.days;
+
+      const selectedDayVal = (newDays as { dayName: string; dayVal: string }[])[
+        value as number
+      ].dayVal;
+
+      (newDays as { dayName: string; dayVal: string }[])[
+        value as number
+      ].dayVal = selectedDayVal === 'on' ? 'off' : 'on';
+
       dispatchInputValues({
         type: 'UPDATE_VALUES',
-        payload: { [id]: newState },
+        payload: { [id]: newDays },
       });
     } else {
       dispatchInputValues({ type: 'UPDATE_VALUES', payload: { [id]: value } });
@@ -207,7 +219,7 @@ export default function CreateGroupForm() {
       validationResult === correctState &&
       inputErrors.end_time
     )
-      onCheckRules('end_time', inputValues.end_time);
+      onCheckRules('end_time', inputValues.end_time as string);
   };
 
   // Updates subject on item click
@@ -235,7 +247,10 @@ export default function CreateGroupForm() {
   const onBlurHandler = () => {
     timeOutId = setTimeout(() => {
       setIsListOpen(false);
-      onCheckRules('subject', inputValues.subject);
+      onCheckRules(
+        'subject',
+        inputValues.subject as { id: string; name: string }
+      );
     });
   };
 
@@ -254,7 +269,7 @@ export default function CreateGroupForm() {
 
     try {
       const data = await createClass(
-        inputValues as ClassInfo,
+        inputValues as ClassRequest,
         user?.id as string,
         user?.authToken as string
       );
@@ -346,16 +361,18 @@ export default function CreateGroupForm() {
           >
             <legend>{inputData.label}</legend>
             <div className={styles['day-buttons']}>
-              {days.map((day) => (
+              {days.map((day, dayIndex) => (
                 <Button
                   key={day}
                   location={
-                    inputValues[day] === 'on'
+                    (inputValues.days as { dayName: string; dayVal: string }[])[
+                      dayIndex
+                    ].dayVal === 'on'
                       ? 'createGroup-active'
                       : 'createGroup-noactive'
                   }
                   text={day}
-                  onClickHandler={() => onChangeHandler(day, 'off')}
+                  onClickHandler={() => onChangeHandler('days', dayIndex)}
                   isDisable={false}
                 />
               ))}

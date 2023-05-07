@@ -10,7 +10,7 @@ export const TOAST_GENERAL_ERRORS = {
   SYSTEM: {
     title: 'Error',
     message: 'Intente más tarde',
-    type: 'Error',
+    type: 'error',
   },
 };
 
