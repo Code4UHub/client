@@ -82,13 +82,13 @@ export default function CreateGroupForm({ classes }: Props) {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [filteredClasses, setFilteredClassses] = useState<Subject[]>([]);
-  const reduxDispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.user.currentUser);
 
   let timeOutId: NodeJS.Timeout;
 
-  const [inputValues, dispatch] = useReducer(
+  const [inputValues, dispatchInputValues] = useReducer(
     inputValuesReducer,
     INPUT_VALUES_INITIAL
   );
@@ -112,7 +112,10 @@ export default function CreateGroupForm({ classes }: Props) {
 
   const resetValues = () => {
     setFilteredClassses(classes);
-    dispatch({ type: 'UPDATE_VALUES', payload: INPUT_VALUES_INITIAL });
+    dispatchInputValues({
+      type: 'UPDATE_VALUES',
+      payload: INPUT_VALUES_INITIAL,
+    });
     dispatchError({ type: 'UPDATE_ERRORS', payload: INPUT_ERRORES_INITIAL });
   };
 
@@ -174,9 +177,12 @@ export default function CreateGroupForm({ classes }: Props) {
     }
     if (days.includes(id)) {
       const newState = inputValues[id] === 'off' ? 'on' : 'off';
-      dispatch({ type: 'UPDATE_VALUES', payload: { [id]: newState } });
+      dispatchInputValues({
+        type: 'UPDATE_VALUES',
+        payload: { [id]: newState },
+      });
     } else {
-      dispatch({ type: 'UPDATE_VALUES', payload: { [id]: value } });
+      dispatchInputValues({ type: 'UPDATE_VALUES', payload: { [id]: value } });
     }
   };
 
@@ -211,7 +217,7 @@ export default function CreateGroupForm({ classes }: Props) {
 
     if (autoComplete.current) autoComplete.current.value = classValue;
 
-    dispatch({
+    dispatchInputValues({
       type: 'UPDATE_VALUES',
       payload: { subject: { id, name } },
     });
@@ -245,7 +251,7 @@ export default function CreateGroupForm({ classes }: Props) {
 
   const createClassHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    reduxDispatch(setLoading());
+    dispatch(setLoading());
 
     try {
       const data = await createClass(
@@ -255,7 +261,7 @@ export default function CreateGroupForm({ classes }: Props) {
       );
 
       if (data.status === 'success') {
-        reduxDispatch(
+        dispatch(
           updateToast({
             title: 'Success',
             message: 'La clase ha sido creada exitosamente',
@@ -264,7 +270,7 @@ export default function CreateGroupForm({ classes }: Props) {
         );
         setIsFormSubmitted(true);
       } else {
-        reduxDispatch(
+        dispatch(
           updateToast({
             title: data.status,
             message: data.data,
@@ -274,10 +280,10 @@ export default function CreateGroupForm({ classes }: Props) {
       }
     } catch (error) {
       console.log(error);
-      reduxDispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
+      dispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
     }
 
-    reduxDispatch(removeLoading());
+    dispatch(removeLoading());
   };
 
   // Renders inputfield based on inputData
