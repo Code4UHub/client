@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { InputField } from 'components/InputField/InputField';
 import { Button } from 'components/Button/Button';
-import { toastTime, Toast } from 'components/Toast/Toast';
-
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateUser } from 'store/user/userSlice';
+import { updateToast } from 'store/toast/toastSlice';
+import { setLoading, removeLoading } from 'store/loading/loadingSlice';
 import { UserPromise } from 'types/User/User';
 
 import {
@@ -38,12 +38,6 @@ function toTitleCase(sentence: string) {
 export default function AuthenticationForm({ screen }: Props) {
   const [inputErrors, setInputErrors] = useState<{ [key: string]: string }>({});
   const [inputValues, setInputValues] = useState<{ [key: string]: string }>({});
-  const [backendError, setBackendError] = useState<{ [key: string]: string }>({
-    title: '',
-    message: '',
-  });
-  const hasBackendError =
-    backendError.title !== '' && backendError.message !== '';
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -97,16 +91,8 @@ export default function AuthenticationForm({ screen }: Props) {
     }
   };
 
-  const turnOffToast = () => {
-    setTimeout(() => {
-      setBackendError({
-        title: '',
-        message: '',
-      });
-    }, toastTime);
-  };
-
   const submitForm = async (e: React.FormEvent<HTMLButtonElement>) => {
+    dispatch(setLoading());
     e.preventDefault();
     try {
       let user: UserPromise | undefined;
@@ -140,32 +126,38 @@ export default function AuthenticationForm({ screen }: Props) {
 
       if (user && user.status === 'success' && typeof user.data !== 'string') {
         dispatch(updateUser({ authToken: user.auth_token, ...user.data }));
-        navigate('/', {
-          state: {
+        dispatch(
+          updateToast({
             title: 'Success',
             message: `Bienvenido ${user.data.first_name}`,
-          },
-        });
+            type: 'success',
+          })
+        );
+        navigate('/');
       } else {
-        setBackendError({ title: user.status, message: user.data as string });
-        turnOffToast();
+        dispatch(
+          updateToast({
+            title: user.status,
+            message: user.data as string,
+            type: 'error',
+          })
+        );
       }
     } catch (error) {
       console.log(error);
-      setBackendError({ title: 'Error', message: 'Intente más tarde' });
-      turnOffToast();
+      dispatch(
+        updateToast({
+          title: 'Error',
+          message: 'Intente más tarde',
+          type: 'Error',
+        })
+      );
     }
+    dispatch(removeLoading());
   };
 
   return (
     <main className={style.form}>
-      {hasBackendError && (
-        <Toast
-          title={backendError.title}
-          message={backendError.message}
-          type="error"
-        />
-      )}
       <form>
         <h1 className={style['form-title']}>
           {screen === 'signUp'

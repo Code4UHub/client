@@ -3,9 +3,11 @@ import SectionHeader from 'components/SectionHeader/SectionHeader';
 import CloseQuestion from 'components/CloseQuestion/CloseQuestion';
 import { Button } from 'components/Button/Button';
 import Timer from 'components/Timer/Timer';
-import { Toast, toastTime } from 'components/Toast/Toast';
-import { questionData } from './questionData';
 
+import { useDispatch } from 'react-redux';
+import { updateToast } from 'store/toast/toastSlice';
+
+import { questionData } from './questionData';
 import style from './Assignment.module.css';
 
 function getTranslatedPixels(rems: number) {
@@ -23,14 +25,12 @@ export default function Assignment() {
     {}
   );
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const [toastMessage, setToastMessage] = useState<{ [key: string]: string }>(
-    {}
-  );
+
+  const dispatch = useDispatch();
+
   const allQuestionsAnswered = !Object.values(answers).every(
     (answer) => answer !== -1
   );
-  const hasToastMessage =
-    toastMessage.title !== '' && toastMessage.message !== '';
   const maxIndex = questionData.length - 1;
   const containerSelectQuestionRef = useRef<HTMLDivElement>(null);
 
@@ -38,10 +38,6 @@ export default function Assignment() {
     questionData.forEach((_question, index) => {
       setAnswers((ans) => ({ ...ans, [index]: -1 }));
       setTimeRegistry((times) => ({ ...times, [index]: 0 }));
-    });
-    setToastMessage({
-      title: '',
-      message: '',
     });
   }, []);
 
@@ -91,27 +87,20 @@ export default function Assignment() {
     }
   }
 
-  const turnOffToast = () => {
-    setTimeout(() => {
-      setToastMessage({
-        title: '',
-        message: '',
-      });
-    }, toastTime);
-  };
-
   const onMainClick = () => {
     const timeOnQuestion = timeOnAllQuestions();
     setTimeRegistry((registry) => ({
       ...registry,
       [questionIndex]: registry[questionIndex] + timeOnQuestion,
     }));
-    setToastMessage({
-      title: 'Success',
-      message: 'Exam completed!',
-    });
+    dispatch(
+      updateToast({
+        title: 'Success',
+        message: 'Exam completed!',
+        type: 'success',
+      })
+    );
     setIsSubmitted(true);
-    turnOffToast();
   };
 
   function defineButtonClass(index: number) {
@@ -126,67 +115,58 @@ export default function Assignment() {
   }
 
   return (
-    <>
-      {hasToastMessage && (
-        <Toast
-          title={toastMessage.title}
-          message={toastMessage.message}
-          type="success"
+    <div className={style.assignment}>
+      <SectionHeader title="Condicionales">
+        <Button
+          location="assignmentSubmit"
+          text="Terminar examen"
+          onClickHandler={onMainClick}
+          type="submit"
+          isDisable={allQuestionsAnswered}
         />
-      )}
-      <div className={style.assignment}>
-        <SectionHeader title="Condicionales">
-          <Button
-            location="assignmentSubmit"
-            text="Terminar examen"
-            onClickHandler={onMainClick}
-            type="submit"
-            isDisable={allQuestionsAnswered}
-          />
-        </SectionHeader>
-        <div className={style['assignment-info']}>
-          <Button
-            location="assignmentChange"
-            text="<"
-            onClickHandler={() => onClickHandler('previous')}
-            type="button"
-            isDisable={questionIndex === 0}
-          />
-          <div
-            ref={containerSelectQuestionRef}
-            className={style['select-question-container']}
-          >
-            {questionData.map((_, index) => (
-              <Button
-                location={defineButtonClass(index)}
-                text={answers[index] === -1 ? String(index + 1) : '\u2713'}
-                onClickHandler={() => onClickHandler('jump', index)}
-                type="button"
-                isDisable={false}
-              />
-            ))}
-          </div>
-          <Button
-            location="assignmentChange"
-            text=">"
-            onClickHandler={() => onClickHandler('next')}
-            type="button"
-            isDisable={questionIndex === maxIndex}
-          />
-          <Timer seconds={generalSeconds} />
+      </SectionHeader>
+      <div className={style['assignment-info']}>
+        <Button
+          location="assignmentChange"
+          text="<"
+          onClickHandler={() => onClickHandler('previous')}
+          type="button"
+          isDisable={questionIndex === 0}
+        />
+        <div
+          ref={containerSelectQuestionRef}
+          className={style['select-question-container']}
+        >
+          {questionData.map((_, index) => (
+            <Button
+              location={defineButtonClass(index)}
+              text={answers[index] === -1 ? String(index + 1) : '\u2713'}
+              onClickHandler={() => onClickHandler('jump', index)}
+              type="button"
+              isDisable={false}
+            />
+          ))}
         </div>
-        <div className={style['question-container']}>
-          <CloseQuestion
-            rightAnswer={isSubmitted ? questionData[questionIndex].answer : -1}
-            isSubmitted={isSubmitted}
-            questionIndex={questionIndex}
-            onChoose={onChooseAnswer}
-            chosenAnswer={answers[questionIndex]}
-            description={questionData[questionIndex].description}
-            options={questionData[questionIndex].options}
-          />
-        </div>
+        <Button
+          location="assignmentChange"
+          text=">"
+          onClickHandler={() => onClickHandler('next')}
+          type="button"
+          isDisable={questionIndex === maxIndex}
+        />
+        <Timer seconds={generalSeconds} />
       </div>
-    </>
+      <div className={style['question-container']}>
+        <CloseQuestion
+          rightAnswer={isSubmitted ? questionData[questionIndex].answer : -1}
+          isSubmitted={isSubmitted}
+          questionIndex={questionIndex}
+          onChoose={onChooseAnswer}
+          chosenAnswer={answers[questionIndex]}
+          description={questionData[questionIndex].description}
+          options={questionData[questionIndex].options}
+        />
+      </div>
+    </div>
   );
 }
