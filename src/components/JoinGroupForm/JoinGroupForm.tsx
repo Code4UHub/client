@@ -67,7 +67,7 @@ export default function JoinGroupForm() {
     setClassInfo(null);
   };
 
-  const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleGetClass = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     dispatch(setLoading());
 
@@ -92,7 +92,7 @@ export default function JoinGroupForm() {
     dispatch(removeLoading());
   };
 
-  const joinClassHandler = async (
+  const handleJoinClass = async (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
@@ -169,11 +169,11 @@ export default function JoinGroupForm() {
             <Button
               className={styles.button}
               location="joinGroup"
-              text="Unirse"
+              text="Buscar"
               type="submit"
               isDisable={isSubmitDisabled}
               ref={submitRef}
-              onClickHandler={handleClick}
+              onClickHandler={handleGetClass}
             />
           </div>
         </form>
@@ -207,7 +207,7 @@ export default function JoinGroupForm() {
               location="joinGroup"
               text="Si"
               type="submit"
-              onClickHandler={joinClassHandler}
+              onClickHandler={handleJoinClass}
             />
           </div>
         </>
