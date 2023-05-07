@@ -9,7 +9,7 @@ import Modal from 'components/Modal/Modal';
 import { Class } from 'types/Class/Class';
 import { getClass, joinClass } from 'utils/db/db.utils';
 
-import { updateToast, GENERAL_ERRORS } from 'store/toast/toastSlice';
+import { updateToast, TOAST_GENERAL_ERRORS } from 'store/toast/toastSlice';
 import { setLoading, removeLoading } from 'store/loading/loadingSlice';
 
 import { inputRules } from 'utils/inputRules/groupRules';
@@ -86,7 +86,7 @@ export default function JoinGroupForm() {
       }
     } catch (error) {
       console.log(error);
-      dispatch(updateToast(GENERAL_ERRORS.SYSTEM));
+      dispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
     }
     dispatch(removeLoading());
   };
@@ -124,7 +124,7 @@ export default function JoinGroupForm() {
       }
     } catch (error) {
       console.log(error);
-      dispatch(updateToast(GENERAL_ERRORS.SYSTEM));
+      dispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
     }
     dispatch(removeLoading());
   };

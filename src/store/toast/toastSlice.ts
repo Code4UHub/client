@@ -6,7 +6,7 @@ type ToastSlice = {
   message: string;
 };
 
-export const GENERAL_ERRORS = {
+export const TOAST_GENERAL_ERRORS = {
   SYSTEM: {
     title: 'Error',
     message: 'Intente más tarde',

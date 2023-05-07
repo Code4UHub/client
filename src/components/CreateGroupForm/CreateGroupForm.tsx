@@ -13,7 +13,7 @@ import { Subject } from 'types/Subject/Subject';
 import { createClass, ClassInfo } from 'utils/db/db.utils';
 
 import { setLoading, removeLoading } from 'store/loading/loadingSlice';
-import { updateToast, GENERAL_ERRORS } from 'store/toast/toastSlice';
+import { updateToast, TOAST_GENERAL_ERRORS } from 'store/toast/toastSlice';
 
 import { createGroupInputData, days } from './createGroupData';
 import styles from './CreateGroupFom.module.css';
@@ -278,7 +278,7 @@ export default function CreateGroupForm({ classes }: Props) {
       }
     } catch (error) {
       console.log(error);
-      reduxDispatch(updateToast(GENERAL_ERRORS.SYSTEM));
+      reduxDispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
     }
 
     reduxDispatch(removeLoading());

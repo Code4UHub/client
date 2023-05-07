@@ -4,7 +4,7 @@ import { Button } from 'components/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateUser } from 'store/user/userSlice';
-import { updateToast, GENERAL_ERRORS } from 'store/toast/toastSlice';
+import { updateToast, TOAST_GENERAL_ERRORS } from 'store/toast/toastSlice';
 import { setLoading, removeLoading } from 'store/loading/loadingSlice';
 import { UserPromise } from 'types/User/User';
 
@@ -145,7 +145,7 @@ export default function AuthenticationForm({ screen }: Props) {
       }
     } catch (error) {
       console.log(error);
-      dispatch(updateToast(GENERAL_ERRORS.SYSTEM));
+      dispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
     }
     dispatch(removeLoading());
   };
