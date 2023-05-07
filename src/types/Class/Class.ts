@@ -6,8 +6,7 @@ export type Class = {
   days: string[];
   start_time: string;
   end_time: string;
-  ['teacher.first_name']: string;
-  ['teacher.last_name']: string;
+  teacher_name: string;
   subject_id: string;
   subject_name: string;
 };

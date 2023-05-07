@@ -182,9 +182,7 @@ export default function JoinGroupForm() {
             <h2 className={styles['class-info-title']}>Tu grupo:</h2>
             <h3 className={styles['class-name']}>{classInfo.subject_name}</h3>
             <span className={styles['class-label']}>Profesor/a</span>
-            <p
-              className={styles['class-info']}
-            >{`${classInfo['teacher.first_name']} ${classInfo['teacher.last_name']}`}</p>
+            <p className={styles['class-info']}>{classInfo.teacher_name}</p>
             <span className={styles['class-label']}>Días </span>
             <p className={styles['class-info']}>{classInfo.days.toString()}</p>
             <span className={styles['class-label']}>Horario</span>
