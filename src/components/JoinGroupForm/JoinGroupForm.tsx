@@ -126,15 +126,9 @@ export default function JoinGroupForm() {
     dispatch(removeLoading());
   };
 
-  return (
-    <Modal
-      current={classInfo ? 'form' : 'confirmClass'}
-      open={isFormSubmitted}
-      title="Unirse a un grupo"
-      onClose={resetValues}
-      lastFocusableElement={isSubmitDisabled ? classCodeRef : submitRef}
-    >
-      {!classInfo ? (
+  const renderModalContent = () => {
+    if (!classInfo) {
+      return (
         <form
           autoComplete="off"
           className={styles['form-container']}
@@ -173,41 +167,55 @@ export default function JoinGroupForm() {
             />
           </div>
         </form>
-      ) : (
-        <>
-          <div className={styles['class-info-container']}>
-            <h2 className={styles['class-info-title']}>Tu grupo:</h2>
-            <h3 className={styles['class-name']}>{classInfo.subject_name}</h3>
-            <span className={styles['class-label']}>Profesor/a</span>
-            <p className={styles['class-info']}>{classInfo.teacher_name}</p>
-            <span className={styles['class-label']}>Días </span>
-            <p className={styles['class-info']}>{classInfo.days.toString()}</p>
-            <span className={styles['class-label']}>Horario</span>
-            <p className={styles['class-info']}>{`${formatTime(
-              classInfo.start_time
-            )} - ${formatTime(classInfo.end_time)}`}</p>
-          </div>
-          <p className={styles['class-confirm-message']}>
-            ¿Deseas ingresar a esta clase?
-          </p>
-          <div className={styles['class-buttons']}>
-            <Button
-              className=""
-              location=""
-              text="No"
-              type="button"
-              onClickHandler={resetValues}
-            />
-            <Button
-              className=""
-              location="joinGroup"
-              text="Si"
-              type="submit"
-              onClickHandler={handleJoinClass}
-            />
-          </div>
-        </>
-      )}
+      );
+    }
+
+    return (
+      <>
+        <div className={styles['class-info-container']}>
+          <h2 className={styles['class-info-title']}>Tu grupo:</h2>
+          <h3 className={styles['class-name']}>{classInfo.subject_name}</h3>
+          <span className={styles['class-label']}>Profesor/a</span>
+          <p className={styles['class-info']}>{classInfo.teacher_name}</p>
+          <span className={styles['class-label']}>Días </span>
+          <p className={styles['class-info']}>{classInfo.days.toString()}</p>
+          <span className={styles['class-label']}>Horario</span>
+          <p className={styles['class-info']}>{`${formatTime(
+            classInfo.start_time
+          )} - ${formatTime(classInfo.end_time)}`}</p>
+        </div>
+        <p className={styles['class-confirm-message']}>
+          ¿Deseas ingresar a esta clase?
+        </p>
+        <div className={styles['class-buttons']}>
+          <Button
+            className=""
+            location=""
+            text="No"
+            type="button"
+            onClickHandler={resetValues}
+          />
+          <Button
+            className=""
+            location="joinGroup"
+            text="Si"
+            type="submit"
+            onClickHandler={handleJoinClass}
+          />
+        </div>
+      </>
+    );
+  };
+
+  return (
+    <Modal
+      current={classInfo ? 'form' : 'confirmClass'}
+      open={isFormSubmitted}
+      title="Unirse a un grupo"
+      onClose={resetValues}
+      lastFocusableElement={isSubmitDisabled ? classCodeRef : submitRef}
+    >
+      {renderModalContent()}
     </Modal>
   );
 }
