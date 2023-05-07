@@ -1,47 +1,45 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { RootState } from 'store/store';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { InputField } from 'components/InputField/InputField';
 import { Button } from 'components/Button/Button';
 import Modal from 'components/Modal/Modal';
+
+import { Class } from 'types/Class/Class';
+import { getClass, joinClass } from 'utils/db/db.utils';
+
+import { updateToast, GENERAL_ERRORS } from 'store/toast/toastSlice';
+import { setLoading, removeLoading } from 'store/loading/loadingSlice';
 
 import { inputRules } from 'utils/inputRules/groupRules';
 
 import { correctState } from 'utils/inputRules/generalRules';
 import styles from './JoinGroupForm.module.css';
 
-type ClassInfo = {
-  class_id: string;
-  class_name: string;
-  teacher: string;
-  days: string;
-  time: string;
-};
-
-const dummyInfo = <T,>(): Promise<T> =>
-  new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        class_id: 'ITC023',
-        class_name: 'Tecnologias II',
-        teacher: 'Claudia Perez',
-        days: 'LU-JU',
-        time: '09:00-11:00',
-      } as T);
-    }, 1000);
-  });
-
 export default function JoinGroupForm() {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [classCode, setClassCode] = useState('');
   const [inputError, setInputError] = useState('');
-  const [classInfo, setClassInfo] = useState<ClassInfo | null>(null);
+  const [classInfo, setClassInfo] = useState<Class | null>(null);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const dispatch = useDispatch();
+
+  const user = useSelector((state: RootState) => state.user.currentUser);
 
   const classCodeRef = useRef<HTMLInputElement>(null);
   const submitRef = useRef<HTMLButtonElement>(null);
 
+  useEffect(() => {
+    if (isFormSubmitted) {
+      setTimeout(() => {
+        setIsFormSubmitted(false);
+      }, 1000);
+    }
+  }, [isFormSubmitted]);
+
   const checkClasscode = () => {
-    const classCodeRules = inputRules.find((rule) => rule.id === 'classCode');
+    const classCodeRules = inputRules.find((rule) => rule.id === 'class_id');
 
     const validationResult = classCodeRules?.validate(classCode);
 
@@ -70,10 +68,65 @@ export default function JoinGroupForm() {
 
   const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    dispatch(setLoading());
 
-    const data = await dummyInfo<ClassInfo>();
+    try {
+      const data = await getClass(user?.authToken as string, classCode);
 
-    setClassInfo(data);
+      if (data.status === 'success') {
+        setClassInfo(data.data as Class);
+      } else {
+        dispatch(
+          updateToast({
+            title: data.status,
+            type: 'error',
+            message: data.data as string,
+          })
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(updateToast(GENERAL_ERRORS.SYSTEM));
+    }
+    dispatch(removeLoading());
+  };
+
+  const joinClassHandler = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+    dispatch(setLoading());
+
+    try {
+      const data = await joinClass(
+        user?.authToken as string,
+        classCode,
+        user?.id as string
+      );
+
+      if (data.status === 'success') {
+        dispatch(
+          updateToast({
+            title: 'Success',
+            type: 'success',
+            message: 'Se ha solicitado el acceso',
+          })
+        );
+        setIsFormSubmitted(true);
+      } else {
+        dispatch(
+          updateToast({
+            title: data.status,
+            type: 'error',
+            message: data.data as string,
+          })
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(updateToast(GENERAL_ERRORS.SYSTEM));
+    }
+    dispatch(removeLoading());
   };
 
   return (
@@ -127,13 +180,17 @@ export default function JoinGroupForm() {
         <>
           <div className={styles['class-info-container']}>
             <h2 className={styles['class-info-title']}>Tu grupo:</h2>
-            <h3 className={styles['class-name']}>{classInfo.class_name}</h3>
+            <h3 className={styles['class-name']}>{classInfo.subject_name}</h3>
             <span className={styles['class-label']}>Profesor/a</span>
-            <p className={styles['class-info']}>{classInfo.teacher}</p>
+            <p
+              className={styles['class-info']}
+            >{`${classInfo['teacher.first_name']} ${classInfo['teacher.last_name']}`}</p>
             <span className={styles['class-label']}>Días </span>
-            <p className={styles['class-info']}>{classInfo.days}</p>
+            <p className={styles['class-info']}>{classInfo.days.toString()}</p>
             <span className={styles['class-label']}>Horario</span>
-            <p className={styles['class-info']}>{classInfo.time}</p>
+            <p
+              className={styles['class-info']}
+            >{`${classInfo.start_time} - ${classInfo.end_time}`}</p>
           </div>
           <p className={styles['class-confirm-message']}>
             ¿Deseas ingresar a esta clase?
@@ -151,13 +208,7 @@ export default function JoinGroupForm() {
               location="joinGroup"
               text="Si"
               type="submit"
-              onClickHandler={(e: React.MouseEvent<HTMLButtonElement>) => {
-                e.preventDefault();
-                setIsFormSubmitted(true);
-                setTimeout(() => {
-                  setIsFormSubmitted(false);
-                }, 1000);
-              }}
+              onClickHandler={joinClassHandler}
             />
           </div>
         </>
