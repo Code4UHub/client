@@ -15,7 +15,9 @@ export const toastSlice = createSlice({
   } as ToastSlice,
   reducers: {
     updateToast: (state, action: PayloadAction<ToastSlice>) => {
-      state = action.payload;
+      state.title = action.payload.title;
+      state.type = action.payload.type;
+      state.message = action.payload.message;
     },
   },
 });

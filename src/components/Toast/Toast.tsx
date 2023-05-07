@@ -1,41 +1,41 @@
 import React, { useState, useEffect } from 'react';
+import { RootState } from 'store/store';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateToast } from 'store/toast/toastSlice';
+
 import style from './Toast.module.css';
 
-const openTime = 5000;
-const closingTime = 1000;
-export const toastTime = openTime + closingTime;
+const TOAST_DURATION = 3000;
 
-type Props = {
-  title: string;
-  message: string;
-  type: string;
-};
-
-export enum ToastStatus {
-  created = 'created',
-  open = 'open',
-  closing = 'closing',
-}
-
-export function Toast({ title, message, type }: Props) {
-  const [status, setStatus] = useState(ToastStatus.created);
+export function Toast() {
+  const [isOpen, setIsOpen] = useState(false);
+  const { title, message, type } = useSelector(
+    (state: RootState) => state.toast
+  );
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (status === ToastStatus.created) {
+    if (title !== '') {
+      setIsOpen(true);
+
       setTimeout(() => {
-        setStatus(ToastStatus.open);
-      }, 1);
+        setIsOpen(false);
+        dispatch(
+          updateToast({
+            title: '',
+            type: '',
+            message: '',
+          })
+        );
+      }, TOAST_DURATION);
     }
-    if (status === ToastStatus.open) {
-      setTimeout(() => {
-        setStatus(ToastStatus.closing);
-      }, openTime);
-    }
-  }, [status]);
+  }, [title, message, type, dispatch]);
 
   return (
     <div
-      className={`${style.toast} ${style.top} ${style[type]} ${style[status]}`}
+      className={`${style.toast} ${style.top} ${style[type]} ${
+        isOpen && style.open
+      }`}
     >
       <div className={`${style['toast-title']}`}>{title}</div>
       <div className={`${style['toast-message']}`}>{message}</div>
