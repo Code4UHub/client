@@ -1,33 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { RootState } from 'store/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { Toast, toastTime } from 'components/Toast/Toast';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { updateUser } from 'store/user/userSlice';
 
 import CreateGroupForm from 'components/CreateGroupForm/CreateGroupForm';
 import JoinGroupForm from 'components/JoinGroupForm/JoinGroupForm';
 
 function App() {
-  const user = useSelector((state: RootState) => state.currentUser);
-  const [toastValue, setToastValue] = useState<{ [key: string]: string }>({
-    title: '',
-    message: '',
-  });
-  const hasToastValue = toastValue.title !== '' && toastValue.message !== '';
+  const user = useSelector((state: RootState) => state.user.currentUser);
   const dispatch = useDispatch();
-  const { state } = useLocation();
 
-  useEffect(() => {
-    if (state) {
-      const { title, message } = state;
-      setToastValue({ title, message });
-      setTimeout(() => {
-        setToastValue({ title: '', message: '' });
-      }, toastTime);
-    }
-  }, [state]);
   const navigate = useNavigate();
 
   const logOut = () => {
@@ -41,13 +25,6 @@ function App() {
 
   return (
     <div>
-      {hasToastValue && (
-        <Toast
-          type="success"
-          title={toastValue.title}
-          message={toastValue.message}
-        />
-      )}
       <h1>Aqui va el dashboard</h1>
       <CreateGroupForm />
       <JoinGroupForm />

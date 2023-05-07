@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { InputField } from 'components/InputField/InputField';
 import { Button } from 'components/Button/Button';
-import Loading from 'components/Loading/Loading';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateUser } from 'store/user/userSlice';
 import { updateToast } from 'store/toast/toastSlice';
+import { setLoading, removeLoading } from 'store/loading/loadingSlice';
 import { UserPromise } from 'types/User/User';
 
 import {
@@ -38,7 +38,6 @@ function toTitleCase(sentence: string) {
 export default function AuthenticationForm({ screen }: Props) {
   const [inputErrors, setInputErrors] = useState<{ [key: string]: string }>({});
   const [inputValues, setInputValues] = useState<{ [key: string]: string }>({});
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -93,7 +92,7 @@ export default function AuthenticationForm({ screen }: Props) {
   };
 
   const submitForm = async (e: React.FormEvent<HTMLButtonElement>) => {
-    setIsLoading(true);
+    dispatch(setLoading());
     e.preventDefault();
     try {
       let user: UserPromise | undefined;
@@ -154,16 +153,11 @@ export default function AuthenticationForm({ screen }: Props) {
         })
       );
     }
-    setIsLoading(false);
+    dispatch(removeLoading());
   };
 
   return (
     <main className={style.form}>
-      {isLoading && (
-        <div className={style.loading}>
-          <Loading type="bar" />
-        </div>
-      )}
       <form>
         <h1 className={style['form-title']}>
           {screen === 'signUp'
