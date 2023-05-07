@@ -103,11 +103,7 @@ export default function CreateGroupForm({ classes }: Props) {
   const autoComplete = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (isFormSubmitted) {
-      setTimeout(() => {
-        setIsFormSubmitted(false);
-      }, 1000);
-    }
+    if (isFormSubmitted) setIsFormSubmitted(false);
   }, [isFormSubmitted]);
 
   useEffect(() => {

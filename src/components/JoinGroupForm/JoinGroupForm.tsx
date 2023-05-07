@@ -32,11 +32,7 @@ export default function JoinGroupForm() {
   const submitRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (isFormSubmitted) {
-      setTimeout(() => {
-        setIsFormSubmitted(false);
-      }, 1000);
-    }
+    if (isFormSubmitted) setIsFormSubmitted(false);
   }, [isFormSubmitted]);
 
   const checkClasscode = () => {
