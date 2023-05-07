@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Toast } from 'components/Toast/Toast';
+import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
 import Authentication from 'routes/authentication/Authentication';
 import Assignment from 'routes/assignment/Assignment';
 import { store, persistor } from 'store/store';
@@ -49,6 +50,7 @@ root.render(
         loading={null}
       >
         <Toast />
+        <GlobalLoading />
         <RouterProvider router={router} />
       </PersistGate>
     </Provider>
