@@ -5,9 +5,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { updateUser } from 'store/user/userSlice';
 
-import CreateGroupForm from 'components/CreateGroupForm/CreateGroupForm';
-import JoinGroupForm from 'components/JoinGroupForm/JoinGroupForm';
-
 function App() {
   const user = useSelector((state: RootState) => state.user.currentUser);
   const dispatch = useDispatch();
@@ -26,8 +23,6 @@ function App() {
   return (
     <div>
       <h1>Aqui va el dashboard</h1>
-      <CreateGroupForm />
-      <JoinGroupForm />
       <p>User:</p>
       <p>{user?.first_name}</p>
       <p>{user?.role}</p>

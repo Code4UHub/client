@@ -7,11 +7,11 @@ import {
 import { correctState, generalRules } from './generalRules';
 
 const inputsMinLength = {
-  classCode: 4,
+  class_id: 4,
 };
 
 const inputsMaxLength = {
-  classCode: 8,
+  class_id: 16,
 };
 
 type InputRule = {
@@ -19,7 +19,7 @@ type InputRule = {
   validate: Function;
 };
 
-function isValidSubject(value: string | { id: number; name: string }) {
+function isValidSubject(value: string | { id: string; name: string }) {
   if (typeof value === 'string') {
     const trimmedValue = value.trim();
     if (trimmedValue.length === 0) return SubjectError.empty;
@@ -91,7 +91,7 @@ function runGeneralRules(idInput: string, inputValue: string) {
     inputsMaxLength
   );
   if (generalResults === correctState) {
-    if (idInput === 'classCode') {
+    if (idInput === 'class_id') {
       return isValidClasscode(inputValue);
     }
   }
@@ -104,19 +104,19 @@ export const inputRules: InputRule[] = [
     validate: isValidSubject,
   },
   {
-    id: 'classCode',
-    validate: (value: string) => runGeneralRules('classCode', value),
+    id: 'class_id',
+    validate: (value: string) => runGeneralRules('class_id', value),
   },
   {
-    id: 'startTime',
+    id: 'start_time',
     validate: isValidStartTime,
   },
   {
-    id: 'endTime',
+    id: 'end_time',
     validate: isValidEndTime,
   },
   {
-    id: 'endDate',
+    id: 'finished_date',
     validate: isEndDateValid,
   },
 ];

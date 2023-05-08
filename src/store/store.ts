@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage';
 import userReducer from './user/userSlice';
 import toastReducer from './toast/toastSlice';
 import loadingReducer from './loading/loadingSlice';
+import subjectReducer from './subject/subjectSlice';
 
 const persistConfig = {
   key: 'root',
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   toast: toastReducer,
   loading: loadingReducer,
+  subject: subjectReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
