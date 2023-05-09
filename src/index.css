@@ -56,6 +56,7 @@ html {
   --fs-mid-small-text: 1.8rem;
   --fs-small-text: 1.6rem;
   --fs-small-small-text: 1.4rem;
+  --fs-xsmall-text: 1.3rem;
 }
 
 * {

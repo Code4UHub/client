@@ -1,6 +1,11 @@
 import { TypePromise } from 'types/TypePromise/TypePromise';
 import { UserPromise } from 'types/User/User';
-import { ClassPromise, ClassRequest } from 'types/Class/Class';
+import {
+  ClassPromise,
+  ClassRequest,
+  StudentClassListPromise,
+  TeacherClassListPromise,
+} from 'types/Class/Class';
 import { SubjectPromise } from 'types/Subject/Subject';
 
 const BASE_URL = 'v1';
@@ -13,6 +18,8 @@ const ENDPOINTS = {
   CLASS: `${BASE_URL}/class`,
   CLASS_CREATE: `${BASE_URL}/class/create`,
   SUBJECT: `${BASE_URL}/subject`,
+  TEACHER_CLASSES: (id: string) => `${BASE_URL}/teacher/${id}/class`,
+  STUDENT_CLASSES: (id: string) => `${BASE_URL}/student/${id}/class`,
 };
 
 export const createStudent = async (user: {
@@ -155,6 +162,36 @@ export const getSubjects = async (
   };
 
   const request = await fetch(ENDPOINTS.SUBJECT, options);
+
+  return request.json();
+};
+
+export const getStudentClassList = async (
+  student_id: string,
+  auth_token: string
+): Promise<StudentClassListPromise> => {
+  const options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+
+  const request = await fetch(ENDPOINTS.STUDENT_CLASSES(student_id), options);
+
+  return request.json();
+};
+
+export const getTeacherClassList = async (
+  teacher_id: string,
+  auth_token: string
+): Promise<TeacherClassListPromise> => {
+  const options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+
+  const request = await fetch(ENDPOINTS.TEACHER_CLASSES(teacher_id), options);
 
   return request.json();
 };
