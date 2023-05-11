@@ -164,3 +164,12 @@
     width: 90%;
   }
 }
+.modal {
+  width: auto;
+  padding: 0 2rem;
+  height: 5rem;
+  background-color: var(--light-blue-color);
+  color: var(--white-color);
+  border-radius: 8px;
+  font-size: var(--fs-small-small-text);
+}

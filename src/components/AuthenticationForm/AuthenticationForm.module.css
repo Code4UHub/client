@@ -41,14 +41,6 @@
   margin-top: 2rem;
 }
 
-div .loading {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 1rem;
-}
-
 @media (max-width: 80em) {
   .halfInput {
     grid-row: span 2;

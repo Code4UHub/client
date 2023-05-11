@@ -84,7 +84,7 @@ export default function Modal({
       <Button
         text={title}
         onClickHandler={() => setIsModalOpen(true)}
-        location=""
+        location="modal"
       />
       {isModalOpen && (
         <div className={styles['modal-wrapper']}>
