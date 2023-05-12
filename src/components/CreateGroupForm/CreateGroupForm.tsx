@@ -100,7 +100,7 @@ export default function CreateGroupForm() {
 
   const [inputValues, dispatchInputValues] = useReducer(
     inputValuesReducer,
-    INPUT_VALUES_INITIAL
+    JSON.parse(JSON.stringify(INPUT_VALUES_INITIAL))
   );
 
   const [inputErrors, dispatchError] = useReducer(
@@ -124,7 +124,7 @@ export default function CreateGroupForm() {
     setFilteredSubjects(subjects);
     dispatchInputValues({
       type: 'UPDATE_VALUES',
-      payload: INPUT_VALUES_INITIAL,
+      payload: JSON.parse(JSON.stringify(INPUT_VALUES_INITIAL)),
     });
     dispatchError({ type: 'UPDATE_ERRORS', payload: INPUT_ERRORES_INITIAL });
   };
