@@ -1,0 +1,37 @@
+.nav {
+  display: flex;
+  list-style: none;
+  margin-top: 3.6rem;
+  font-size: var(--fs-small-text);
+  font-weight: 500;
+  margin-left: 1.2rem;
+  margin-right: 1.2rem;
+  overflow-x: scroll;
+}
+
+.nav::-webkit-scrollbar {
+  display: none;
+}
+
+.nav a {
+  display: block;
+  color: var(--dark-dark-gray);
+  padding: 1.2rem 2.4rem;
+}
+
+.nav li {
+  transition: background-color 0.2s linear;
+}
+
+.nav li:hover {
+  background-color: rgb(241, 241, 241);
+}
+
+.nav li:active {
+  background-color: rgb(227, 226, 226);
+}
+
+.nav a:global(.active) {
+  color: var(--light-blue-color);
+  border-bottom: 2px solid var(--main-blue-color);
+}

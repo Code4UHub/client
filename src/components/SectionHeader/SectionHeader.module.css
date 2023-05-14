@@ -1,4 +1,4 @@
-div .assignment-header-container {
+.assignment-header-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -7,10 +7,19 @@ div .assignment-header-container {
 
 .assignment-header hr {
   margin-top: 1rem;
-  border: 0.1rem solid black;
+  border: 0.05rem solid black;
 }
 
 .assignment-header h1 {
   font-weight: 300;
   font-size: var(--fs-sub-sub-title);
+}
+
+.nav {
+  flex-direction: column;
+  align-items: normal;
+}
+
+.nav + hr {
+  margin-top: 0;
 }

@@ -1,43 +1,91 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { Toast } from 'components/Toast/Toast';
-import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
-import Authentication from 'routes/authentication/Authentication';
-import Assignment from 'routes/assignment/Assignment';
-import { store, persistor } from 'store/store';
-import { Provider } from 'react-redux';
-import { Root } from 'routes/root/Root';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+  redirect,
+} from 'react-router-dom';
 
+import { store, persistor, RootState } from 'store/store';
+import { Provider, useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
+import { TypePromise } from 'types/TypePromise/TypePromise';
+
+import { getClass } from 'utils/db/db.utils';
+
+import { Root } from 'routes/root/Root';
+import Authentication from 'routes/authentication/Authentication';
 import Classes from 'routes/classes/Classes';
+import { Class } from 'routes/class/Class';
+import Assignment from 'routes/assignment/Assignment';
+
+import { Toast } from 'components/Toast/Toast';
+import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
 import './index.css';
 
-const router = createBrowserRouter([
-  {
-    element: <Root />,
-    children: [
-      {
-        path: '/',
-        element: <Classes />,
-      },
-      {
-        path: '/assignment',
-        element: <Assignment />,
-      },
-      {
-        path: '/report',
-        element: <h1>Aqui va los reportes</h1>,
-      },
-    ],
-    errorElement: <h1>Error</h1>,
-  },
-  {
-    path: '/auth',
-    element: <Authentication />,
-  },
-]);
+function Index() {
+  const user = useSelector((state: RootState) => state.user.currentUser);
+
+  const loaderWrapper = async (fn: () => Promise<TypePromise<any>>) => {
+    if (!user) {
+      return redirect('/auth');
+    }
+
+    const data = await fn();
+
+    if (data.status === 'success') return data.data;
+
+    console.log(data.status, data.data);
+    throw new Error();
+  };
+
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <Root />,
+      children: [
+        {
+          path: '/',
+          children: [
+            {
+              path: '/',
+              element: <Navigate to="/classes" />,
+            },
+            {
+              path: 'classes',
+              element: <Classes />,
+            },
+            {
+              path: 'classes/:id',
+              loader: async ({ params }) =>
+                await loaderWrapper(() =>
+                  getClass(user?.authToken as string, params.id as string)
+                ),
+              element: <Class />,
+            },
+          ],
+        },
+        {
+          path: 'assignment',
+          element: <Assignment />,
+        },
+        {
+          path: 'report',
+          element: <h1>Aqui va los reportes</h1>,
+        },
+      ],
+      errorElement: <h1>Error</h1>,
+    },
+    {
+      path: '/auth',
+      element: <Authentication />,
+    },
+  ]);
+
+  return <RouterProvider router={router} />;
+}
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -51,7 +99,7 @@ root.render(
       >
         <Toast />
         <GlobalLoading />
-        <RouterProvider router={router} />
+        <Index />
       </PersistGate>
     </Provider>
   </React.StrictMode>

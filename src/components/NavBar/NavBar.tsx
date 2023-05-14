@@ -94,7 +94,7 @@ export default function NavBar({ children }: NavBarProps) {
           </button>
         </div>
         <li className={`${styles['link-container']} ${styles.classes}`}>
-          <NavLink to="/">
+          <NavLink to="/classes">
             <IconModules />
             <span>Mis Clases</span>
           </NavLink>

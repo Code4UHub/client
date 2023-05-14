@@ -31,7 +31,7 @@ export default function ClassCard({ classInfo }: Props) {
       />
       <div className={styles['card-container']}>
         <Link
-          to={`class/${classInfo.class_id}`}
+          to={`/classes/${classInfo.class_id}`}
           className={styles['class-link']}
           title={classInfo.subject_name}
         >
