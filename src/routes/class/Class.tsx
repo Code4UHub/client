@@ -12,7 +12,12 @@ function ClassNav() {
     <nav>
       <ul className={styles.nav}>
         <li>
-          <NavLink to="">Inicio</NavLink>
+          <NavLink
+            to=""
+            end
+          >
+            Inicio
+          </NavLink>
         </li>
         <li>
           <NavLink to="modules">Módulos</NavLink>

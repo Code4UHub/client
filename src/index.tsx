@@ -20,6 +20,7 @@ import Authentication from 'routes/authentication/Authentication';
 import Classes from 'routes/classes/Classes';
 import { Class } from 'routes/class/Class';
 import Assignment from 'routes/assignment/Assignment';
+import Home from 'routes/class/home/Home';
 
 import { Toast } from 'components/Toast/Toast';
 import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
@@ -64,6 +65,15 @@ function Index() {
                   getClass(user?.authToken as string, params.id as string)
                 ),
               element: <Class />,
+              children: [
+                {
+                  path: '',
+                  element: <Home />,
+                },
+                { path: 'modules', element: 'Modulos' },
+                { path: 'activities', element: 'Actividades' },
+                { path: 'leaderboard', element: 'Leaderboard' },
+              ],
             },
           ],
         },
