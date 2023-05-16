@@ -37,12 +37,6 @@ export default function Classes() {
       <div className={styles['card-container']}>
         <CardSkeleton items={4} />
       </div>
-      <button
-        type="button"
-        onClick={() => setSection('requests')}
-      >
-        Mis solicitudes
-      </button>
     </>
   );
 }
