@@ -13,7 +13,7 @@ export type SortRule = {
   value: 'Up' | 'Down';
 };
 
-const HEADERS = [
+export const HEADERS = [
   'Grupo',
   'Nombre',
   'Apellidos',

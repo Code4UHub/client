@@ -6,6 +6,7 @@ import { Button } from 'components/Button/Button';
 import { StudentRequest } from 'types/StudentRequest/StudentRequest';
 import StudentRequestTable, {
   SortRule,
+  HEADERS,
 } from 'components/StudentRequestTable/StudentRequestTable';
 
 import { RootState } from 'store/store';
@@ -15,15 +16,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import style from './StudentRequests.module.css';
-
-const headers = [
-  'Grupo',
-  'Nombre',
-  'Apellidos',
-  'Matrícula',
-  'Fecha',
-  'Acciones',
-];
 
 export default function StudentRequests() {
   const dispatch = useDispatch();
@@ -37,7 +29,7 @@ export default function StudentRequests() {
   const [filterValue, setFilterValue] = useState<string>('Todos los grupos');
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [sortRule, setSortRule] = useState<SortRule>({
-    element: headers[0],
+    element: HEADERS[0],
     value: 'Up',
   });
 
