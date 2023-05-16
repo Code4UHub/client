@@ -1,8 +1,12 @@
-import { Request } from 'components/StudentRequest/StudentRequest';
+import { StudentRequest } from 'types/StudentRequest/StudentRequest';
 
-export function sortStudents(data: Request[], element: string, value: string) {
-  // Translate element from spanish (UI) to values in backend
-  let assignedElement: keyof Request = 'class_id';
+export function sortStudents(
+  data: StudentRequest[],
+  element: string,
+  value: string
+) {
+  // Translate element from spanish (UI) to english (values in backend)
+  let assignedElement: keyof StudentRequest = 'class_id';
   switch (element) {
     case 'Grupo':
       assignedElement = 'class_id';
@@ -17,7 +21,7 @@ export function sortStudents(data: Request[], element: string, value: string) {
       assignedElement = 'student_id';
       break;
     case 'Fecha':
-      assignedElement = 'requested_date';
+      assignedElement = 'request_date';
       break;
     default:
       assignedElement = 'class_id';
