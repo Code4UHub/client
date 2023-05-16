@@ -2,6 +2,7 @@ import { TypePromise } from 'types/TypePromise/TypePromise';
 import { UserPromise } from 'types/User/User';
 import { ClassPromise, ClassRequest } from 'types/Class/Class';
 import { SubjectPromise } from 'types/Subject/Subject';
+import { StudentRequestPromise } from 'types/StudentRequest/StudentRequest';
 
 const BASE_URL = 'v1';
 
@@ -13,6 +14,7 @@ const ENDPOINTS = {
   CLASS: `${BASE_URL}/class`,
   CLASS_CREATE: `${BASE_URL}/class/create`,
   SUBJECT: `${BASE_URL}/subject`,
+  STUDENT_REQUESTS: `${BASE_URL}/teacher`,
 };
 
 export const createStudent = async (user: {
@@ -155,6 +157,23 @@ export const getSubjects = async (
   };
 
   const request = await fetch(ENDPOINTS.SUBJECT, options);
+
+  return request.json();
+};
+
+export const getStudentRequests = async (
+  auth_token: string,
+  teacher_id: string
+): Promise<StudentRequestPromise> => {
+  const options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+  const request = await fetch(
+    `${ENDPOINTS.STUDENT_REQUESTS}/${teacher_id}/student_class`,
+    options
+  );
 
   return request.json();
 };
