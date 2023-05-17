@@ -21,6 +21,7 @@ const ENDPOINTS = {
   SUBJECT: `${BASE_URL}/subject`,
   TEACHER_CLASSES: (id: string) => `${BASE_URL}/teacher/${id}/class`,
   STUDENT_CLASSES: (id: string) => `${BASE_URL}/student/${id}/class`,
+  TIME: `${BASE_URL}/configuration/time`,
 };
 
 export const createStudent = async (user: {
