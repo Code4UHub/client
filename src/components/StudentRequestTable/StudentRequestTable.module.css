@@ -1,7 +1,7 @@
 
 .table-container {
     width: 100%;
-    overflow: scroll;
+    overflow-x: scroll;
     display: static;
     height: 80rem;
 }
