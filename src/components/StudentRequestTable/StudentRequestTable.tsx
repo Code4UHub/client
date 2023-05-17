@@ -82,6 +82,7 @@ type TableProps = {
   isLoading: boolean;
   isListOpen: boolean;
   isAllSelected: boolean;
+  handleAction: Function;
   handleSelect: Function;
   handleSelectAll: Function;
   sortedData: StudentRequest[];
@@ -94,6 +95,7 @@ export default function StudentRequestTable({
   isLoading,
   isListOpen,
   isAllSelected,
+  handleAction,
   handleSelect,
   handleSelectAll,
   sortedData,
@@ -113,7 +115,8 @@ export default function StudentRequestTable({
       <tbody>
         {!isListOpen &&
           sortedData.map((request) => {
-            const row = `${request.subject_id}.${request.class_id}.${request.student_id}`;
+            // Using a special char that is not allowed in forms, to ensured that it is not part of any attributes
+            const row = `${request.subject_id}<${request.class_id}<${request.student_id}`;
             const isSelected = selectedRows.includes(row);
             return (
               <tr
@@ -161,14 +164,14 @@ export default function StudentRequestTable({
                     <Button
                       location="accept-request"
                       text="Aceptar"
-                      onClickHandler={() => []}
+                      onClickHandler={() => handleAction('accept', 'one', row)}
                       type="button"
                       isDisable={false}
                     />
                     <Button
                       location="decline-request"
                       text="Rechazar"
-                      onClickHandler={() => []}
+                      onClickHandler={() => handleAction('reject', 'one', row)}
                       type="button"
                       isDisable={false}
                     />

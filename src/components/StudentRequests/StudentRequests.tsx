@@ -10,8 +10,13 @@ import StudentRequestTable, {
 } from 'components/StudentRequestTable/StudentRequestTable';
 
 import { RootState } from 'store/store';
-import { getStudentRequests } from 'utils/db/db.utils';
+import {
+  getStudentRequests,
+  respondOneStudentRequest,
+  respondManyStudentRequest,
+} from 'utils/db/db.utils';
 import { setLoading, removeLoading } from 'store/loading/loadingSlice';
+import { updateToast, TOAST_GENERAL_ERRORS } from 'store/toast/toastSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -51,6 +56,7 @@ export default function StudentRequests() {
       setIsLoading(false);
     };
     getStudentRequestList();
+    // eslint-disable-next-line
   }, []);
 
   const isAllSelected = selectedRows.length === data.length && data.length > 0;
@@ -97,7 +103,7 @@ export default function StudentRequests() {
     } else {
       const allSelectedRows = data.map(
         (request) =>
-          `${request.subject_id}.${request.class_id}.${request.student_id}`
+          `${request.subject_id}<${request.class_id}<${request.student_id}`
       );
       setSelectedRows(allSelectedRows);
     }
@@ -110,6 +116,67 @@ export default function StudentRequests() {
     setIsListOpen(false);
     setSelectedRows([]);
   }
+
+  /* eslint-disable @typescript-eslint/naming-convention */
+  function extractRowInfo(row: string) {
+    const values = row.split('<');
+    const subject_id = values[0];
+    const class_id = values[1];
+    const student_id = values[2];
+    return { subject_id, class_id, student_id };
+  }
+  async function handleAction(
+    action: 'accept' | 'reject',
+    multiplicity: 'one' | 'many',
+    row: string
+  ) {
+    dispatch(setLoading());
+    if (multiplicity === 'one') {
+      const { class_id, student_id } = extractRowInfo(row);
+      try {
+        const response = await respondOneStudentRequest(
+          user?.authToken as string,
+          class_id,
+          student_id,
+          action
+        );
+        dispatch(
+          updateToast({
+            title: response.status,
+            message: response.data,
+            type: response.status === 'success' ? response.status : 'error',
+          })
+        );
+      } catch (error) {
+        dispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
+      }
+    }
+    if (multiplicity === 'many') {
+      const rows = selectedRows.map((r) => {
+        const { class_id, student_id } = extractRowInfo(r);
+        return { class_id, student_id };
+      });
+      try {
+        const response = await respondManyStudentRequest(
+          user?.authToken as string,
+          rows,
+          action
+        );
+        dispatch(
+          updateToast({
+            title: response.status,
+            message: response.data,
+            type: response.status === 'success' ? response.status : 'error',
+          })
+        );
+      } catch (error) {
+        dispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
+      }
+    }
+    dispatch(removeLoading());
+    // window.location.reload();
+  }
+  /* eslint-enable @typescript-eslint/naming-convention */
 
   const onFilterChange = (_id: string, value: string) => {
     setFilterValue(value);
@@ -153,14 +220,14 @@ export default function StudentRequests() {
               <Button
                 location="accept-selected"
                 text="Aceptar seleccionados"
-                onClickHandler={() => []}
+                onClickHandler={() => handleAction('accept', 'many', '')}
                 type="button"
                 isDisable={selectedRows.length === 0 || isListOpen}
               />
               <Button
                 location="decline-selected"
                 text="Rechazar seleccionados"
-                onClickHandler={() => []}
+                onClickHandler={() => handleAction('reject', 'many', '')}
                 type="button"
                 isDisable={selectedRows.length === 0 || isListOpen}
               />
@@ -176,6 +243,11 @@ export default function StudentRequests() {
           isAllSelected={isAllSelected}
           handleSelect={(row: string) => handleSelect(row)}
           handleSelectAll={() => handleSelectAll()}
+          handleAction={(
+            a: 'accept' | 'reject',
+            m: 'one' | 'many',
+            r: string
+          ) => handleAction(a, m, r)}
           sortedData={sortedData}
           selectedRows={selectedRows}
         />
