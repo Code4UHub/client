@@ -9,6 +9,10 @@
   column-gap: 1.2rem;
 }
 
+.home-container-item:hover {
+  transform: none;
+}
+
 .home-container-item:nth-child(1),
 .home-container-item:nth-child(4) {
   grid-column: span 2;
