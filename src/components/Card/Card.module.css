@@ -2,4 +2,9 @@
   width: 100%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   padding: 1.2rem;
+  transition: transform 0.3s linear;
+}
+
+.card:hover {
+  transform: scale(1.05);
 }

@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .container span {
@@ -22,4 +23,11 @@
 
 .container span:nth-child(3) {
   font-size: var(--fs-mid-small-text);
+}
+
+@media (max-width: 96.8em) {
+  .container {
+    padding-left: 2.4rem;
+    padding-right: 2.4rem;
+  }
 }

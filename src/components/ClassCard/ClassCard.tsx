@@ -7,6 +7,7 @@ import { formatTime } from 'utils/format/formatTime';
 import { colorHash } from 'utils/colorHash/colorHash';
 
 import { StudentClass, TeacherClass } from 'types/Class/Class';
+import Card from 'components/Card/Card';
 
 import styles from './ClassCard.module.css';
 
@@ -24,7 +25,7 @@ export default function ClassCard({ classInfo }: Props) {
   if (isStudent(classInfo) && classInfo.is_finished) return null;
 
   return (
-    <div className={styles.card}>
+    <Card className={styles.card}>
       <div
         className={styles['color-bar']}
         style={{ backgroundColor: colorHash(classInfo.subject_name) }}
@@ -47,6 +48,6 @@ export default function ClassCard({ classInfo }: Props) {
           classInfo.end_time
         )}`}</span>
       </div>
-    </div>
+    </Card>
   );
 }
