@@ -10,4 +10,9 @@ export type StudentRequest = {
   request_date: string;
 };
 
+export type RequestAnswer = {
+  class_id: string;
+  student_id: string;
+};
+
 export interface StudentRequestPromise extends TypePromise<StudentRequest[]> {}
