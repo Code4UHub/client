@@ -6,7 +6,7 @@
     border-radius: 2rem;
 }
 
-td {
+.td-skeleton {
     padding: 2rem 3rem;
     justify-content: center;
     align-items: center;

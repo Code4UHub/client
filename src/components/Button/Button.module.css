@@ -138,7 +138,7 @@
   align-items: center;
   justify-content: center;
   font-size: var(--fs-small-small-text);
-  width: 40%;
+  width: 100%;
 }
 
 .accept-selected, .decline-selected {

@@ -13,7 +13,10 @@ function RequestRow() {
     <tbody>
       <tr className={style.request}>
         {Array.from({ length: HEADERS }, (_val, index) => (
-          <td key={index}>
+          <td
+            className={style['td-skeleton']}
+            key={index}
+          >
             <div className={style.skeleton} />
           </td>
         ))}

@@ -103,84 +103,96 @@ export default function StudentRequestTable({
 }: TableProps) {
   if (isLoading) return <StudentRequestSkeleton skeletons={10} />;
   if (!isLoading && sortedData.length === 0)
-    return <h2> Sin solicitudes pendientes</h2>;
+    return (
+      <h2 className={style['no-requests']}> Sin solicitudes pendientes</h2>
+    );
   return (
-    <table>
-      <TableHeaders
-        isAllSelected={isAllSelected}
-        sortRule={sortRule}
-        setSortRule={setSortRule}
-        handleSelectAll={handleSelectAll}
-      />
-      <tbody>
-        {!isListOpen &&
-          sortedData.map((request) => {
-            // Using a special char that is not allowed in forms, to ensured that it is not part of any attributes
-            const row = `${request.subject_id}<${request.class_id}<${request.student_id}`;
-            const isSelected = selectedRows.includes(row);
-            return (
-              <tr
-                key={`${request.subject_id}.${request.class_id}.${request.student_id}`}
-                className={
-                  isSelected ? style['request-selected'] : style['request-row']
-                }
-              >
-                <td>
-                  <span className={style['request-element']}>
-                    {request.subject_id}.{request.class_id}
-                  </span>
-                </td>
-                <td>
-                  <span className={style['request-element']}>
-                    {request.first_name}
-                  </span>
-                </td>
-                <td>
-                  <span className={style['request-element']}>
-                    {request.last_name}
-                  </span>
-                </td>
-                <td>
-                  <span className={style['request-element']}>
-                    {request.student_id}
-                  </span>
-                </td>
-                <td>
-                  <span className={style['request-element']}>
-                    {request.request_date}
-                  </span>
-                </td>
-                <td>
-                  <div className={style['request-action']}>
-                    <Button
-                      location={
-                        isSelected ? 'selected-request' : 'select-request'
-                      }
-                      text="Seleccionar"
-                      onClickHandler={() => handleSelect(row)}
-                      type="button"
-                      isDisable={false}
-                    />
-                    <Button
-                      location="accept-request"
-                      text="Aceptar"
-                      onClickHandler={() => handleAction('accept', 'one', row)}
-                      type="button"
-                      isDisable={false}
-                    />
-                    <Button
-                      location="decline-request"
-                      text="Rechazar"
-                      onClickHandler={() => handleAction('reject', 'one', row)}
-                      type="button"
-                      isDisable={false}
-                    />
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
-      </tbody>
-    </table>
+    <div className={style['table-container']}>
+      <table>
+        <TableHeaders
+          isAllSelected={isAllSelected}
+          sortRule={sortRule}
+          setSortRule={setSortRule}
+          handleSelectAll={handleSelectAll}
+        />
+        <tbody>
+          {!isListOpen &&
+            sortedData.map((request) => {
+              // Using a special char that is not allowed in forms, to ensured that it is not part of any attributes
+              const row = `${request.subject_id}<${request.class_id}<${request.student_id}`;
+              const isSelected = selectedRows.includes(row);
+              return (
+                <tr
+                  key={`${request.subject_id}.${request.class_id}.${request.student_id}`}
+                  className={
+                    isSelected
+                      ? style['request-selected']
+                      : style['request-row']
+                  }
+                >
+                  <td>
+                    <span className={style['request-element']}>
+                      {request.subject_id}.{request.class_id}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={style['request-element']}>
+                      {request.first_name}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={style['request-element']}>
+                      {request.last_name}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={style['request-element']}>
+                      {request.student_id}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={style['request-element']}>
+                      {request.request_date}
+                    </span>
+                  </td>
+                  <td>
+                    <div className={style['request-action']}>
+                      <Button
+                        location={
+                          isSelected ? 'selected-request' : 'select-request'
+                        }
+                        text="Seleccionar"
+                        onClickHandler={() => handleSelect(row)}
+                        type="button"
+                        isDisable={false}
+                      />
+                      <div className={style['request-buttons']}>
+                        <Button
+                          location="accept-request"
+                          text="Aceptar"
+                          onClickHandler={() =>
+                            handleAction('accept', 'one', row)
+                          }
+                          type="button"
+                          isDisable={false}
+                        />
+                        <Button
+                          location="decline-request"
+                          text="Rechazar"
+                          onClickHandler={() =>
+                            handleAction('reject', 'one', row)
+                          }
+                          type="button"
+                          isDisable={false}
+                        />
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+        </tbody>
+      </table>
+    </div>
   );
 }

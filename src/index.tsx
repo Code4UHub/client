@@ -5,7 +5,7 @@ import { Toast } from 'components/Toast/Toast';
 import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
 import Authentication from 'routes/authentication/Authentication';
 import Assignment from 'routes/assignment/Assignment';
-import StudentRequests from 'components/StudentRequests/StudentRequests';
+import StudentRequests from 'routes/StudentRequests/StudentRequests';
 import { store, persistor } from 'store/store';
 import { Provider } from 'react-redux';
 import { Root } from 'routes/root/Root';

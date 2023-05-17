@@ -22,21 +22,43 @@ import { useNavigate } from 'react-router-dom';
 
 import style from './StudentRequests.module.css';
 
-export default function StudentRequests() {
+const ALL_GROUPS: string = 'Todos los grupos';
+
+type Props = {
+  initialClass?: string;
+};
+
+export default function StudentRequests({ initialClass }: Props) {
+  const autoComplete = useRef<HTMLInputElement>(null);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.currentUser);
 
   // Complete array of Student Requests
   const [data, setData] = useState<StudentRequest[]>([]);
+  const [updateFetch, setUpdateFetch] = useState<boolean>(false);
   const [isListOpen, setIsListOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [filterValue, setFilterValue] = useState<string>('Todos los grupos');
+  const [filterValue, setFilterValue] = useState<string>(
+    initialClass as string
+  );
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [sortRule, setSortRule] = useState<SortRule>({
     element: HEADERS[0],
     value: 'Up',
   });
+
+  // THIS CODE DOENS'T REPRESENT THE CODING ABILITIES OF THE PEOPLE WHO WROTE IT
+  function fixAutoComplete() {
+    if (autoComplete.current) autoComplete.current.value = filterValue;
+    else {
+      setTimeout(() => {
+        fixAutoComplete();
+      }, 100);
+    }
+  }
+  // BEYOND THIS CODE, YOU CAN JUDGE OUR CODING ABILITIES
 
   // Get information from db on requests
   useEffect(() => {
@@ -56,10 +78,9 @@ export default function StudentRequests() {
       setIsLoading(false);
     };
     getStudentRequestList();
+    fixAutoComplete();
     // eslint-disable-next-line
-  }, []);
-
-  const isAllSelected = selectedRows.length === data.length && data.length > 0;
+  }, [updateFetch]);
 
   // Get requests sorted by buttons and filtered by values
   const sortedData = sortStudents(
@@ -67,23 +88,26 @@ export default function StudentRequests() {
     sortRule.element,
     sortRule.value
   ).filter((request) => {
-    if (filterValue === 'Todos los grupos' || isListOpen) return request;
+    if (filterValue === ALL_GROUPS || isListOpen) return request;
     const row = `${request.subject_id}.${request.class_id}`;
     return row === filterValue;
   });
 
+  const isAllSelected =
+    selectedRows.length === sortedData.length && sortedData.length > 0;
+
   // To display on dropdown menu all unique groups from students
   const allGroups = [
-    'Todos los grupos',
+    ALL_GROUPS,
     ...data
       .map((request) => `${request.subject_id}.${request.class_id}`)
       .filter((value, index, array) => array.indexOf(value) === index),
   ];
 
-  const autoComplete = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    if (autoComplete.current) autoComplete.current.value = filterValue;
-  }, [filterValue]);
+  // Closes autocomplete list on tab press
+  const skipAutocomplete = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Tab') setIsListOpen(false);
+  };
 
   //  Handles which rows are selected
   function handleSelect(row: string) {
@@ -101,7 +125,7 @@ export default function StudentRequests() {
     if (isAllSelected) {
       setSelectedRows([]);
     } else {
-      const allSelectedRows = data.map(
+      const allSelectedRows = sortedData.map(
         (request) =>
           `${request.subject_id}<${request.class_id}<${request.student_id}`
       );
@@ -125,6 +149,8 @@ export default function StudentRequests() {
     const student_id = values[2];
     return { subject_id, class_id, student_id };
   }
+
+  // Respond request and send it to db
   async function handleAction(
     action: 'accept' | 'reject',
     multiplicity: 'one' | 'many',
@@ -173,8 +199,8 @@ export default function StudentRequests() {
         dispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
       }
     }
+    setUpdateFetch(!updateFetch);
     dispatch(removeLoading());
-    // window.location.reload();
   }
   /* eslint-enable @typescript-eslint/naming-convention */
 
@@ -186,36 +212,37 @@ export default function StudentRequests() {
     <>
       <SectionHeader title="Solicitud de registro de estudiantes" />
       <div className={style['request-container']}>
-        <div className={style['request-shortcuts']}>
-          <div className={style.filter}>
-            <InputField
-              ref={autoComplete}
-              className={style['join-request']}
-              value={filterValue}
-              label="Filtrar por grupo"
-              type="text"
-              id="join-request"
-              error=""
-              required
-              handleFocus={() => setIsListOpen(true)}
-              handleChange={onFilterChange}
-              handleBlur={() => {}}
-            />
-            {isListOpen && (
-              <ul className={style['autocomplete-list']}>
-                {allGroups.map((group) => (
-                  // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
-                  <li
-                    key={group}
-                    onClick={() => selectGroup(group)}
-                  >
-                    {group}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          {!isLoading && (
+        {!isLoading && (
+          <div className={style['request-shortcuts']}>
+            <div className={style.filter}>
+              <InputField
+                ref={autoComplete}
+                className={style['join-request']}
+                value={filterValue}
+                label="Filtrar por grupo"
+                type="text"
+                id="join-request"
+                error=""
+                required
+                handleFocus={() => setIsListOpen(true)}
+                handleKeyDown={skipAutocomplete}
+                handleChange={onFilterChange}
+                handleBlur={() => {}}
+              />
+              {isListOpen && (
+                <ul className={style['autocomplete-list']}>
+                  {allGroups.map((group) => (
+                    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
+                    <li
+                      key={group}
+                      onClick={() => selectGroup(group)}
+                    >
+                      {group}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
             <div className={style['selected-shortcuts']}>
               <Button
                 location="accept-selected"
@@ -232,9 +259,8 @@ export default function StudentRequests() {
                 isDisable={selectedRows.length === 0 || isListOpen}
               />
             </div>
-          )}
-        </div>
-
+          </div>
+        )}
         <StudentRequestTable
           sortRule={sortRule}
           setSortRule={setSortRule}
@@ -255,3 +281,7 @@ export default function StudentRequests() {
     </>
   );
 }
+
+StudentRequests.defaultProps = {
+  initialClass: ALL_GROUPS,
+};

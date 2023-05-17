@@ -66,5 +66,11 @@
     .request-container {
         column-gap: 2rem;
     }
+    .filter {
+        width: 50%;
+    }
+    .join-request input {
+        font-size: var(--fs-small-small-text);
+    }
     
 }
