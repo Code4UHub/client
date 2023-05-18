@@ -43,13 +43,13 @@ type Props = {
 export default function HomeworkList({ homeworkList }: Props) {
   return (
     <ol className={`${styles.container} ${styles.content}`}>
-      {homeworkList.map((homeWorkGroup) => (
-        <li>
+      {homeworkList.map((homeWorkGroup, index) => (
+        <li key={index}>
           <div>
             <HomeworkDateHeader date={homeWorkGroup[0].date} />
             <ul className={styles.container}>
               {homeWorkGroup.map((homework) => (
-                <li>
+                <li key={homework.homework_id}>
                   <HomeWorkItem homework={homework} />
                 </li>
               ))}

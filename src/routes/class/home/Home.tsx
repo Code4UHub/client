@@ -5,7 +5,7 @@ import { RootState } from 'store/store';
 import ClassProgress from 'components/ClassProgress/ClassProgress';
 import ContinueActivityCard from 'components/ContinueActivityCard/ContinueActivityCard';
 import UpcomingHomeworkCard from 'components/UpcomingHomeworkCard/UpcomingHomeworkCard';
-import LeaderboardPositionCard from 'components/LeaderboardPositionCard/LeaderboardPositionCard';
+import HomeLeaderboardPositionCard from 'components/HomeLeaderboardPositionCard/HomeLeaderboardPositionCard';
 
 import styles from './Home.module.css';
 
@@ -15,7 +15,7 @@ function StudentHome() {
       <ClassProgress className={styles['home-container-item']} />
       <ContinueActivityCard className={styles['home-container-item']} />
       <UpcomingHomeworkCard className={styles['home-container-item']} />
-      <LeaderboardPositionCard className={styles['home-container-item']} />
+      <HomeLeaderboardPositionCard className={styles['home-container-item']} />
     </section>
   );
 }
