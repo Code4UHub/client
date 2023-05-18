@@ -7,19 +7,14 @@
   flex-direction: column;
 }
 
-@media (max-width: 40em) {
-  .main-content {
-    padding: 3rem 3rem;
-  }
-}
-
-@media (max-width: 60em) {
+@media (max-width: 48em) {
   .nav-bar {
     width: 0;
   }
 
   .main-content {
     width: 100vw;
+    padding: 3rem 3rem;
     margin-left: 0;
   }
 }
