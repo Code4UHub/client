@@ -108,7 +108,7 @@ export default function StudentRequestTable({
     );
   return (
     <div className={style['table-container']}>
-      <table>
+      <table className={style.table}>
         <TableHeaders
           isAllSelected={isAllSelected}
           sortRule={sortRule}

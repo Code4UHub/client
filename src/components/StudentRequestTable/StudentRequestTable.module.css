@@ -16,15 +16,15 @@
     font-style: italic;
 }
 
-table {
+.table {
     width: 100%;
     border-spacing: 0;
     border-collapse: collapse;
     display: table;
 }
 
-td {
-    justify-content: start;
+.table td {
+    justify-content: center;
     align-items: center;
     padding: 2rem 1rem;
     text-align: center;
@@ -68,10 +68,6 @@ td {
 
 
 @media (max-width: 60em) {
-    .request-container {
-        /* overflow: scroll; */
-        column-gap: 2rem;
-    }
     .request-action {
         flex-direction: column;
     }
