@@ -66,7 +66,6 @@ export default function StudentRequests({ initialClass }: Props) {
         user?.authToken as string,
         user?.id as string
       );
-      console.log(response.data);
       if (response.status === 'success') {
         setData(() => response.data as StudentRequest[]);
       } else {
@@ -76,6 +75,7 @@ export default function StudentRequests({ initialClass }: Props) {
       setIsLoading(false);
     };
     getStudentRequestList();
+    // eslint-disable-next-line
   }, [updateFetch]);
 
   // Get requests sorted by buttons and filtered by values
@@ -151,11 +151,11 @@ export default function StudentRequests({ initialClass }: Props) {
   }
 
   // Respond request and send it to db
-  async function handleAction(
+  const handleAction = async (
     action: 'accept' | 'reject',
     multiplicity: 'one' | 'many',
     row: string
-  ) {
+  ) => {
     dispatch(setLoading());
     if (multiplicity === 'one') {
       const { class_id, student_id } = extractRowInfo(row);
@@ -203,7 +203,7 @@ export default function StudentRequests({ initialClass }: Props) {
     setSelectedRows(() => []);
     setUpdateFetch((updateVal) => updateVal + 1);
     dispatch(removeLoading());
-  }
+  };
   /* eslint-enable @typescript-eslint/naming-convention */
 
   return (
