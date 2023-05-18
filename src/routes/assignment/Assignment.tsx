@@ -105,7 +105,7 @@ export default function Assignment() {
     if (action === 'jump') {
       if (container)
         container.scrollLeft += getTranslatedPixels(
-          ((newIndex || maxIndex) - questionIndex) * 5
+          ((newIndex as number) - questionIndex) * 5
         );
       setQuestionIndex(newIndex || 0);
     }
@@ -199,8 +199,9 @@ export default function Assignment() {
             ref={containerSelectQuestionRef}
             className={style['select-question-container']}
           >
-            {questionData.map((_, index) => (
+            {questionData.map((q, index) => (
               <Button
+                key={q.id}
                 location={defineButtonClass(index)}
                 text={defineButtonText(index)}
                 onClickHandler={() => onClickHandler('jump', index)}
