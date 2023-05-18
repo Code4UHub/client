@@ -1,4 +1,8 @@
 
+.table-skeleton {
+    width: 100%;
+}
+
 .skeleton {
     width: 100%;
     height: 1.5rem;
