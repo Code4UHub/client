@@ -37,7 +37,7 @@ export default function StudentRequests({ initialClass }: Props) {
 
   // Complete array of Student Requests
   const [data, setData] = useState<StudentRequest[]>([]);
-  const [updateFetch, setUpdateFetch] = useState<boolean>(false);
+  const [updateFetch, setUpdateFetch] = useState<number>(0);
   const [isListOpen, setIsListOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [filterValue, setFilterValue] = useState<string>(
@@ -51,17 +51,26 @@ export default function StudentRequests({ initialClass }: Props) {
 
   // THIS CODE DOENS'T REPRESENT THE CODING ABILITIES OF THE PEOPLE WHO WROTE IT
   function fixAutoComplete() {
-    if (autoComplete.current) autoComplete.current.value = filterValue;
-    else {
+    console.log('fixing autocomplete');
+    if (autoComplete.current) {
+      autoComplete.current.value = filterValue;
+      console.log('fixed with: ', filterValue);
+    } else {
       setTimeout(() => {
         fixAutoComplete();
       }, 100);
     }
   }
+
+  useEffect(() => {
+    if (autoComplete.current) autoComplete.current.value = filterValue;
+    else fixAutoComplete();
+  }, [filterValue]);
   // BEYOND THIS CODE, YOU CAN JUDGE OUR CODING ABILITIES
 
   // Get information from db on requests
   useEffect(() => {
+    console.log('getting info');
     if (user?.role !== 'teacher') {
       navigate('/');
     }
@@ -72,14 +81,16 @@ export default function StudentRequests({ initialClass }: Props) {
         user?.authToken as string,
         user?.id as string
       );
-      if (response.status === 'success')
-        setData(response.data as StudentRequest[]);
+      console.log(response.data);
+      if (response.status === 'success') {
+        setData(() => response.data as StudentRequest[]);
+      } else {
+        dispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
+      }
       dispatch(removeLoading());
       setIsLoading(false);
     };
     getStudentRequestList();
-    fixAutoComplete();
-    // eslint-disable-next-line
   }, [updateFetch]);
 
   // Get requests sorted by buttons and filtered by values
@@ -141,6 +152,10 @@ export default function StudentRequests({ initialClass }: Props) {
     setSelectedRows([]);
   }
 
+  const onFilterChange = (_id: string, value: string) => {
+    setFilterValue(value);
+  };
+
   /* eslint-disable @typescript-eslint/naming-convention */
   function extractRowInfo(row: string) {
     const values = row.split('<');
@@ -199,50 +214,48 @@ export default function StudentRequests({ initialClass }: Props) {
         dispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
       }
     }
-    setUpdateFetch(!updateFetch);
+    setFilterValue(ALL_GROUPS);
+    setSelectedRows(() => []);
+    setUpdateFetch((updateVal) => updateVal + 1);
     dispatch(removeLoading());
   }
   /* eslint-enable @typescript-eslint/naming-convention */
-
-  const onFilterChange = (_id: string, value: string) => {
-    setFilterValue(value);
-  };
 
   return (
     <>
       <SectionHeader title="Solicitud de registro de estudiantes" />
       <div className={style['request-container']}>
-        {!isLoading && (
-          <div className={style['request-shortcuts']}>
-            <div className={style.filter}>
-              <InputField
-                ref={autoComplete}
-                className={style['join-request']}
-                value={filterValue}
-                label="Filtrar por grupo"
-                type="text"
-                id="join-request"
-                error=""
-                required
-                handleFocus={() => setIsListOpen(true)}
-                handleKeyDown={skipAutocomplete}
-                handleChange={onFilterChange}
-                handleBlur={() => {}}
-              />
-              {isListOpen && (
-                <ul className={style['autocomplete-list']}>
-                  {allGroups.map((group) => (
-                    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
-                    <li
-                      key={group}
-                      onClick={() => selectGroup(group)}
-                    >
-                      {group}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+        <div className={style['request-shortcuts']}>
+          <div className={style.filter}>
+            <InputField
+              ref={autoComplete}
+              className={style['join-request']}
+              value={filterValue}
+              label={`Filtrar por grupo: ${filterValue}`}
+              type="text"
+              id="join-request"
+              error=""
+              required
+              handleFocus={() => setIsListOpen(true)}
+              handleKeyDown={skipAutocomplete}
+              handleChange={onFilterChange}
+              handleBlur={() => {}}
+            />
+            {isListOpen && (
+              <ul className={style['autocomplete-list']}>
+                {allGroups.map((group) => (
+                  // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
+                  <li
+                    key={group}
+                    onClick={() => selectGroup(group)}
+                  >
+                    {group}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          {!isLoading && (
             <div className={style['selected-shortcuts']}>
               <Button
                 location="accept-selected"
@@ -259,8 +272,8 @@ export default function StudentRequests({ initialClass }: Props) {
                 isDisable={selectedRows.length === 0 || isListOpen}
               />
             </div>
-          </div>
-        )}
+          )}
+        </div>
         <StudentRequestTable
           sortRule={sortRule}
           setSortRule={setSortRule}
