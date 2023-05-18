@@ -6,7 +6,7 @@ import Card from 'components/Card/Card';
 import { ReactComponent as UpArrowIcon } from './ArrowUp.svg';
 import { ReactComponent as DownArrowIcon } from './ArrowDown.svg';
 
-import styles from './LeaderboardPositionCard.module.css';
+import styles from './HomeLeaderboardPositionCard.module.css';
 
 type LeaderboardUpDownProps = {
   direction: 'up' | 'down';
@@ -26,7 +26,7 @@ type Props = {
   className?: string;
 };
 
-export default function LeaderboardPositionCard({ className }: Props) {
+export default function HomeLeaderboardPositionCard({ className }: Props) {
   return (
     <Card className={`${className} ${styles.container}`}>
       <div className={`${styles['section-header']}`}>
@@ -55,6 +55,6 @@ export default function LeaderboardPositionCard({ className }: Props) {
     </Card>
   );
 }
-LeaderboardPositionCard.defaultProps = {
+HomeLeaderboardPositionCard.defaultProps = {
   className: '',
 };
