@@ -47,4 +47,9 @@
   padding: 1.2rem 1.2rem;
   border-radius: 1.2rem;
   align-self: flex-end;
+  transition: background-color 0.23s linear;
+}
+
+.button:hover {
+  background-color: #445a6f;
 }
