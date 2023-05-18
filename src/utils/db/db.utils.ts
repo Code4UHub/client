@@ -9,6 +9,7 @@ import {
 import { SubjectPromise } from 'types/Subject/Subject';
 
 // http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
+// http://10.147.20.218:65534/v1
 const BASE_URL = 'http://10.147.20.218:65534/v1';
 
 const ENDPOINTS = {
