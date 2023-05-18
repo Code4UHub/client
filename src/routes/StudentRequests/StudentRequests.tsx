@@ -49,28 +49,13 @@ export default function StudentRequests({ initialClass }: Props) {
     value: 'Up',
   });
 
-  // THIS CODE DOENS'T REPRESENT THE CODING ABILITIES OF THE PEOPLE WHO WROTE IT
-  function fixAutoComplete() {
-    console.log('fixing autocomplete');
-    if (autoComplete.current) {
-      autoComplete.current.value = filterValue;
-      console.log('fixed with: ', filterValue);
-    } else {
-      setTimeout(() => {
-        fixAutoComplete();
-      }, 100);
-    }
-  }
-
+  // Update information for input
   useEffect(() => {
     if (autoComplete.current) autoComplete.current.value = filterValue;
-    else fixAutoComplete();
   }, [filterValue]);
-  // BEYOND THIS CODE, YOU CAN JUDGE OUR CODING ABILITIES
 
   // Get information from db on requests
   useEffect(() => {
-    console.log('getting info');
     if (user?.role !== 'teacher') {
       navigate('/');
     }
