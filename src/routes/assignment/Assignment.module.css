@@ -10,9 +10,16 @@ div .assignment {
 }
 
 div .assignment-info {
-  margin-top: 2rem;
-  display: grid;
-  grid-template-columns: 0.6fr 8fr 0.6fr 1fr;
+  display: block;
+  justify-content: space-between;
+  align-content: center;
+  width: 100%;
+}
+
+div .assignment-button-controllers {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
 div .select-question-container {
