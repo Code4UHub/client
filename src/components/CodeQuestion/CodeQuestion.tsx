@@ -6,6 +6,7 @@ import {
   ImperativePanelHandle,
 } from 'react-resizable-panels';
 import { Button } from 'components/Button/Button';
+import QuestionTags from 'components/QuestionTags/QuestionTags';
 import CodeEditor from 'components/CodeEditor/CodeEditor';
 import { ReactComponent as VertDots } from './vert-dots.svg';
 import styles from './CodeQuestion.module.css';
@@ -38,17 +39,10 @@ export default function CodeQuestion({
   updateCode,
   updateCorrect,
 }: QuestionProps) {
-  let levelStyle = '';
   const [code, setCode] = useState('');
   const [isPanelVertical, setPanelVertical] = useState(window.innerWidth < 800);
   const [compilerResults, setCompilerResults] = useState('');
   const [isTerminalOpen, setTerminalOpen] = useState(false);
-
-  if (questionData.difficulty === 'Fácil')
-    levelStyle = `${styles.level} ${styles.easy}`;
-  else if (questionData.difficulty === 'Medio')
-    levelStyle = `${styles.level} ${styles.medium}`;
-  else levelStyle = `${styles.level} ${styles.hard}`;
 
   useEffect(() => {
     const updatePanelOrientation = () => {
@@ -102,10 +96,10 @@ export default function CodeQuestion({
         <Panel maxSize={60}>
           <div className={styles['code-question-info-container']}>
             <h3 className={styles.title}>{questionData.title}</h3>
-            <div className={styles['tags-container']}>
-              <span className={styles.topic}>{questionData.topic}</span>
-              <span className={levelStyle}>{questionData.difficulty}</span>
-            </div>
+            <QuestionTags
+              topic={questionData.topic}
+              difficulty={questionData.difficulty}
+            />
             <p className={styles.description}>{questionData.description}</p>
           </div>
         </Panel>

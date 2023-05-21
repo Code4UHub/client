@@ -58,7 +58,7 @@
   background-color: var(--white-color);
   border-bottom-right-radius: 1.2rem;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .title {
