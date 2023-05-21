@@ -1,13 +1,20 @@
 import { TypePromise } from 'types/TypePromise/TypePromise';
 import { UserPromise } from 'types/User/User';
-import { ClassPromise, ClassRequest } from 'types/Class/Class';
+import {
+  ClassPromise,
+  ClassRequest,
+  StudentClassListPromise,
+  TeacherClassListPromise,
+} from 'types/Class/Class';
 import { SubjectPromise } from 'types/Subject/Subject';
 import {
   StudentRequestPromise,
   RequestAnswer,
 } from 'types/StudentRequest/StudentRequest';
 
-const BASE_URL = 'v1';
+// http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
+// http://10.147.20.218:65534/v1
+const BASE_URL = 'http://10.147.20.218:65534/v1';
 
 const ENDPOINTS = {
   STUDENT_REGISTER: `${BASE_URL}/student/register`,
@@ -22,6 +29,9 @@ const ENDPOINTS = {
   REJECT_ONE_STUDENT: `${BASE_URL}/class/reject_student`,
   ACCEPT_MANY_STUDENTS: `${BASE_URL}/class/accept_students`,
   REJECT_MANY_STUDENTS: `${BASE_URL}/class/reject_students`,
+  TEACHER_CLASSES: (id: string) => `${BASE_URL}/teacher/${id}/class`,
+  STUDENT_CLASSES: (id: string) => `${BASE_URL}/student/${id}/class`,
+  TIME: `${BASE_URL}/configuration/time`,
 };
 
 export const createStudent = async (user: {
@@ -256,5 +266,35 @@ export const respondManyStudentRequest = async (
   };
 
   const request = await fetch(ENDPOINTS.REJECT_MANY_STUDENTS, options);
+  return request.json();
+};
+
+export const getStudentClassList = async (
+  student_id: string,
+  auth_token: string
+): Promise<StudentClassListPromise> => {
+  const options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+
+  const request = await fetch(ENDPOINTS.STUDENT_CLASSES(student_id), options);
+
+  return request.json();
+};
+
+export const getTeacherClassList = async (
+  teacher_id: string,
+  auth_token: string
+): Promise<TeacherClassListPromise> => {
+  const options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+
+  const request = await fetch(ENDPOINTS.TEACHER_CLASSES(teacher_id), options);
+
   return request.json();
 };

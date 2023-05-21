@@ -1,4 +1,6 @@
 import React from 'react';
+import CardComponent from 'components/Card/Card';
+
 import styles from './CardSkeleton.module.css';
 
 type CardSkeletonProps = {
@@ -7,14 +9,14 @@ type CardSkeletonProps = {
 
 function Card() {
   return (
-    <div className={styles.card}>
+    <CardComponent className={styles.card}>
       <div className={`${styles.content} ${styles.subtitle}`} />
       <div className={`${styles.content} ${styles.title}`} />
       <div className={`${styles.content} ${styles['sub-content']}`} />
       <div className={`${styles.content} ${styles['sub-content']}`} />
       <div className={`${styles.content} ${styles['sub-sub-content']}`} />
       <div className={`${styles.content} ${styles['button-content']}`} />
-    </div>
+    </CardComponent>
   );
 }
 

@@ -3,13 +3,20 @@ import styles from './SectionHeader.module.css';
 
 type Props = {
   title: string;
+  childType?: 'nav' | '';
   children?: ReactNode;
 };
 
-export default function SectionHeader({ title, children }: Props) {
+export default function SectionHeader({
+  title,
+  children,
+  childType = '',
+}: Props) {
   return (
     <div className={styles['assignment-header']}>
-      <div className={styles['assignment-header-container']}>
+      <div
+        className={`${styles['assignment-header-container']} ${styles[childType]}`}
+      >
         <h1>{title}</h1>
         {children}
       </div>
@@ -20,4 +27,5 @@ export default function SectionHeader({ title, children }: Props) {
 
 SectionHeader.defaultProps = {
   children: null,
+  childType: '',
 };

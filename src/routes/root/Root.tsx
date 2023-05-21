@@ -2,8 +2,8 @@ import React from 'react';
 import { RootState } from 'store/store';
 import { useSelector } from 'react-redux';
 import { Navigate, useOutlet } from 'react-router-dom';
-import NavBar from 'components/NavBar/NavBar';
-import TeacherNavBar from 'components/TeacherNavBar/TeacherNavBar';
+import Sidebar from 'components/Sidebar/Sidebar';
+import TeacherSidebar from 'components/TeacherNavBar/TeacherNavBar';
 import styles from './Root.module.css';
 
 export function Root() {
@@ -14,7 +14,7 @@ export function Root() {
 
   return (
     <>
-      {user.role === 'student' ? <NavBar /> : <TeacherNavBar />}
+      {user.role === 'student' ? <Sidebar /> : <TeacherSidebar />}
       <main className={styles['main-content']}>{outlet}</main>
     </>
   );

@@ -6,13 +6,13 @@ import { ReactComponent as IconHome } from './Logo.svg';
 import { ReactComponent as IconModules } from './Modules.svg';
 import { ReactComponent as IconNotebook } from './Notebook.svg';
 
-import styles from './NavBar.module.css';
+import styles from './Sidebar.module.css';
 
-type NavBarProps = {
+type SidebarProps = {
   children?: ReactNode;
 };
 
-export default function NavBar({ children }: NavBarProps) {
+export default function Sidebar({ children }: SidebarProps) {
   const { pathname } = useLocation();
 
   const menuRef = useRef<HTMLUListElement>(null);
@@ -94,7 +94,7 @@ export default function NavBar({ children }: NavBarProps) {
           </button>
         </div>
         <li className={`${styles['link-container']} ${styles.classes}`}>
-          <NavLink to="/">
+          <NavLink to="/classes">
             <IconModules />
             <span>Mis Clases</span>
           </NavLink>
@@ -119,6 +119,6 @@ export default function NavBar({ children }: NavBarProps) {
   );
 }
 
-NavBar.defaultProps = {
+Sidebar.defaultProps = {
   children: null,
 };
