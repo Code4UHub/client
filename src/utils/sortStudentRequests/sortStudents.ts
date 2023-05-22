@@ -28,19 +28,19 @@ export function sortStudents(
       break;
   }
   if (assignedElement === 'class_id') {
-    return value === 'Down'
+    return value === 'Up'
       ? data.sort((a, b) =>
-          `${a.subject_id}.${a.class_id}`.localeCompare(
-            `${b.subject_id}.${b.class_id}`
+          `${a.class_id}.${a.subject_id}`.localeCompare(
+            `${b.class_id}.${b.subject_id}`
           )
         )
       : data.sort((a, b) =>
-          `${b.subject_id}.${b.class_id}`.localeCompare(
-            `${a.subject_id}.${a.class_id}`
+          `.${b.class_id}.${b.subject_id}`.localeCompare(
+            `.${a.class_id}.${a.subject_id}`
           )
         );
   }
-  return value === 'Down'
+  return value === 'Up'
     ? data.sort((a, b) => a[assignedElement].localeCompare(b[assignedElement]))
     : data.sort((a, b) => b[assignedElement].localeCompare(a[assignedElement]));
 }
