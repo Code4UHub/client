@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 import { Button } from 'components/Button/Button';
 import Card from 'components/Card/Card';
+import { CircularProgressBar } from 'components/CircularProgressBar/CircularProgressBar';
 import { ReactComponent as UnlockIcon } from './unlock.svg';
 import { ReactComponent as LockIcon } from './lock.svg';
 
@@ -12,14 +13,17 @@ const data = [
   {
     title: 'Introducción a la programación',
     isOpen: true,
+    percentage: 90,
   },
   {
     title: 'Problemas con cálculos',
     isOpen: true,
+    percentage: 59,
   },
   {
     title: 'Programación modular',
     isOpen: true,
+    percentage: 25,
   },
   {
     title: 'Estructuras de decisión',
@@ -78,7 +82,10 @@ export default function Modules() {
             </h2>
             <div className={style['icon-container']}>
               {moduleState[i] ? (
-                <UnlockIcon className={style.icon} />
+                <CircularProgressBar
+                  className={style['progress-bar']}
+                  percentage={data[i].percentage as number}
+                />
               ) : (
                 <LockIcon className={style.icon} />
               )}
