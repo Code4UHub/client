@@ -29,7 +29,7 @@ function isValidEmail(inputEmail: string) {
   const email = inputEmail.toLowerCase();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   const studentEmailRegex = /^a0\d{7}@/;
-  const startStudentEmailRegex = /^L0/;
+  const startStudentEmailRegex = /^a0/;
   if (startStudentEmailRegex.test(email)) {
     if (!emailRegex.test(email)) return EmailError.invalidEmailError;
     if (!studentEmailRegex.test(email)) return EmailError.studentIdError;
@@ -40,7 +40,7 @@ function isValidEmail(inputEmail: string) {
 
 // Follows security rules? Ask for them
 function isValidSignUpPassword(password: string) {
-  const hasUpperCaseRegex = /[A-Z]/;
+  const hasUpperCaseRegex = /[A-D]/;
   const hasLowerCaseRegex = /[a-z]/;
   const hasDigitRegex = /[1-9]/;
   const hasSpecialCharRegex = /[@$!%*?&]/;
