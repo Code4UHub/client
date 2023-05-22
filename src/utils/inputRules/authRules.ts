@@ -43,7 +43,7 @@ function isValidSignUpPassword(password: string) {
   const hasUpperCaseRegex = /[A-Z]/;
   const hasLowerCaseRegex = /[a-z]/;
   const hasDigitRegex = /[1-9]/;
-  const hasSpecialCharRegex = /[@%*?&]/;
+  const hasSpecialCharRegex = /[@$!%*?&]/;
   if (!hasUpperCaseRegex.test(password)) return PasswordError.noUpperError;
   if (!hasLowerCaseRegex.test(password)) return PasswordError.noLowerError;
   if (!hasDigitRegex.test(password)) return PasswordError.noNumberError;
@@ -56,7 +56,7 @@ function isValidConfirmationPassword(
   password: string,
   passwordConfirmation: string
 ) {
-  return password === passwordConfirmation
+  return password !== passwordConfirmation
     ? correctState
     : PasswordError.noMatchingError;
 }
