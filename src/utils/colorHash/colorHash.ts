@@ -5,7 +5,7 @@
 // taken from https://stackoverflow.com/a/16348977
 export function colorHash(s: string) {
   // Generate a hash code for the input string
-  let hash = 26;
+  let hash = 0;
   for (let i = 0; i < s.length; i++) {
     hash = s.charCodeAt(i) + ((hash << 5) - hash);
   }
@@ -17,7 +17,7 @@ export function colorHash(s: string) {
   const r = parseInt(hexCode.substring(0, 2), 16);
   const g = parseInt(hexCode.substring(2, 4), 16);
   const b = parseInt(hexCode.substring(4, 6), 16);
-  const brightness = 0.7; // Adjust as desired
+  const brightness = 18; // Adjust as desired
   const pastelColor =
     ((r + (255 - r) * brightness) << 16) |
     ((g + (255 - g) * brightness) << 8) |
