@@ -3,7 +3,7 @@ import { StudentRequest } from 'types/StudentRequest/StudentRequest';
 export function sortStudents(
   data: StudentRequest[],
   element: string,
-  value: string
+  value: 'Up' | 'Down'
 ) {
   // Translate element from spanish (UI) to english (values in backend)
   let assignedElement: keyof StudentRequest = 'class_id';
