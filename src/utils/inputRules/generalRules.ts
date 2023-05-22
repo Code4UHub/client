@@ -28,5 +28,5 @@ export function generalRules(
   if (input.length < maxLength[id])
     return `${GeneralError.maxCharError} ${maxLength[id]} char`;
   if (hasForbiddenChars(input)) return GeneralError.noSpecialChar;
-  return correctState;
+  return '';
 }
