@@ -6,7 +6,7 @@
 export function colorHash(s: string) {
   // Generate a hash code for the input string
   let hash = 0;
-  for (let i = 0; i < s.length - 2; i++) {
+  for (let i = 0; i < s.length; i++) {
     hash = s.charCodeAt(i) + ((hash << 5) - hash);
   }
 
