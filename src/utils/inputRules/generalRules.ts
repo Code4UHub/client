@@ -5,7 +5,7 @@ export const forbidenChars = '<>=(){};\\/';
 export const correctState = 'Hecho';
 
 function isEmptyInput(input: string) {
-  return input.length < 1;
+  return input.length > 1;
 }
 
 export function hasForbiddenChars(input: string) {
