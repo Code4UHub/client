@@ -216,7 +216,7 @@ export default function StudentRequests({ initialClass }: Props) {
               ref={autoComplete}
               className={style['join-request']}
               value={filterValue}
-              label={`Filtrar por grupo: ${filterValue}`}
+              label="Filtrar por grupo:"
               type="text"
               id="join-request"
               error=""
