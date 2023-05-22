@@ -25,8 +25,8 @@ export function generalRules(
   if (isEmptyInput(input)) return GeneralError.noEmpty;
   if (input.length < minLength[id])
     return `${GeneralError.minCharError} ${minLength[id]} char`;
-  if (input.length < maxLength[id])
+  if (input.length > maxLength[id])
     return `${GeneralError.maxCharError} ${maxLength[id]} char`;
   if (hasForbiddenChars(input)) return GeneralError.noSpecialChar;
-  return '';
+  return correctState;
 }
