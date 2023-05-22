@@ -28,15 +28,19 @@ export function sortStudents(
       break;
   }
   if (assignedElement === 'class_id') {
-    return data.sort((a, b) =>
-      `${b.subject_id}.${b.class_id}`.localeCompare(
-        `${a.subject_id}.${a.class_id}`
-      )
-    );
+    return value === 'Up'
+      ? data.sort((a, b) =>
+          `${a.subject_id}.${a.class_id}`.localeCompare(
+            `${b.subject_id}.${b.class_id}`
+          )
+        )
+      : data.sort((a, b) =>
+          `${b.subject_id}.${b.class_id}`.localeCompare(
+            `${a.subject_id}.${a.class_id}`
+          )
+        );
   }
-  // To avoid eslint error
-  if (value === 'Up') console.log(value);
-  return data.sort((a, b) =>
-    b[assignedElement].localeCompare(a[assignedElement])
-  );
+  return value === 'Up'
+    ? data.sort((a, b) => a[assignedElement].localeCompare(b[assignedElement]))
+    : data.sort((a, b) => b[assignedElement].localeCompare(a[assignedElement]));
 }
