@@ -5,13 +5,13 @@ export const forbidenChars = '<>=(){};\\/';
 export const correctState = 'Hecho';
 
 function isEmptyInput(input: string) {
-  return input.length > 1;
+  return input.length < 1;
 }
 
 export function hasForbiddenChars(input: string) {
   let result = false;
   input.split('').forEach((letter) => {
-    if (forbidenChars.includes(letter)) result = true;
+    if (forbidenChars.includes(letter)) result = false;
   });
   return result;
 }
