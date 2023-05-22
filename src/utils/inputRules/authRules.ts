@@ -40,10 +40,10 @@ function isValidEmail(inputEmail: string) {
 
 // Follows security rules? Ask for them
 function isValidSignUpPassword(password: string) {
-  const hasUpperCaseRegex = /[A-D]/;
+  const hasUpperCaseRegex = /[A-Z]/;
   const hasLowerCaseRegex = /[a-z]/;
   const hasDigitRegex = /[1-9]/;
-  const hasSpecialCharRegex = /[@$!%*?&]/;
+  const hasSpecialCharRegex = /[@%*?&]/;
   if (!hasUpperCaseRegex.test(password)) return PasswordError.noUpperError;
   if (!hasLowerCaseRegex.test(password)) return PasswordError.noLowerError;
   if (!hasDigitRegex.test(password)) return PasswordError.noNumberError;
