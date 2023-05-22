@@ -63,7 +63,7 @@ function isValidConfirmationPassword(
 
 function isValidName(name: string) {
   // Allow many Upper and lower case, with and without accents
-  const alphaAndAccents = '[a-zA-Z]+';
+  const alphaAndAccents = '[a-zA-ZáéíóúÁÉÍÓÚñÑ]+';
   // There should be a name, and optional, a space followed by a name
   const nameRegex = new RegExp(
     `^(${alphaAndAccents})(\\s+${alphaAndAccents})*$`
