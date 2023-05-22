@@ -25,4 +25,23 @@ describe('Sort Student Requests', () => {
       expect(actualSortedArray).toEqual(expectedSortedArray);
     });
   });
+  describe('Down', () => {
+    beforeAll(() => {
+      order = 'Down';
+    });
+
+    test.each(sortHeaders)('by %s', (attribute) => {
+      const expectedSortedArray = bubbleSort(
+        studentRequestTestingData,
+        order,
+        attribute
+      );
+      const actualSortedArray = sortStudents(
+        studentRequestTestingData,
+        attribute,
+        order
+      );
+      expect(actualSortedArray).toEqual(expectedSortedArray);
+    });
+  });
 });
