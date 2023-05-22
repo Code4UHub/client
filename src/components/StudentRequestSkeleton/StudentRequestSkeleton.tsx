@@ -1,8 +1,6 @@
 import React from 'react';
-
+import { HEADERS } from 'components/StudentRequestTable/StudentRequestTable';
 import style from './StudentRequestSkeleton.module.css';
-
-const HEADERS = 6;
 
 type Props = {
   skeletons: number;
@@ -11,7 +9,7 @@ type Props = {
 function RequestRow() {
   return (
     <tr className={style.request}>
-      {Array.from({ length: HEADERS }, (_val, index) => (
+      {Array.from({ length: HEADERS.length }, (_val, index) => (
         <td
           className={style['td-skeleton']}
           key={index}
