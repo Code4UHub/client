@@ -5,6 +5,7 @@ export function sortStudents(
   element: string,
   value: 'Up' | 'Down'
 ) {
+  return data;
   // Translate element from spanish (UI) to english (values in backend)
   let assignedElement: keyof StudentRequest = 'class_id';
   switch (element) {
@@ -28,7 +29,7 @@ export function sortStudents(
       break;
   }
   if (assignedElement === 'class_id') {
-    return value === 'Up' || value === 'Down'
+    return value === 'Up'
       ? data.sort((a, b) =>
           `${a.subject_id}.${a.class_id}`.localeCompare(
             `${b.subject_id}.${b.class_id}`
@@ -40,7 +41,7 @@ export function sortStudents(
           )
         );
   }
-  return value === 'Up' || value === 'Down'
+  return value === 'Up'
     ? data.sort((a, b) => a[assignedElement].localeCompare(b[assignedElement]))
     : data.sort((a, b) => b[assignedElement].localeCompare(a[assignedElement]));
 }
