@@ -27,8 +27,8 @@ type InputRule = {
 
 function isValidEmail(inputEmail: string) {
   const email = inputEmail.toLowerCase();
-  const emailRegex = /^[^\s@]+[^\s@]+\.[^\s@]{2,}$/;
-  const studentEmailRegex = /^a0\d{7}@/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const studentEmailRegex = /^a0\d{3}@/;
   const startStudentEmailRegex = /^a0/;
   if (startStudentEmailRegex.test(email)) {
     if (!emailRegex.test(email)) return EmailError.invalidEmailError;
