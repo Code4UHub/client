@@ -2,7 +2,6 @@
   "name": "code4u",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://10.147.20.218:65534/",
   "dependencies": {
     "@codemirror/autocomplete": "^6.5.1",
     "@codemirror/commands": "^6.2.3",
@@ -13,7 +12,6 @@
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "13.4.0",
     "@testing-library/user-event": "14.4.3",
-    "@types/jest": "27.5.2",
     "@types/node": "17.0.45",
     "@types/react": "18.0.30",
     "@types/react-dom": "18.0.11",
@@ -30,6 +28,7 @@
     "web-vitals": "2.1.4"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.1",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-airbnb-typescript": "17.0.0",
     "eslint-config-prettier": "8.8.0",
@@ -62,7 +61,9 @@
       "no-param-reassign": "off",
       "import/prefer-default-export": "off",
       "jsx-a11y/no-noninteractive-tabindex": "off",
-      "react-hooks/exhaustive-deps": "warn"
+      "react/no-array-index-key": "off",
+      "react-hooks/exhaustive-deps": "warn",
+      "@typescript-eslint/return-await": "off"
     }
   },
   "lint-staged": {

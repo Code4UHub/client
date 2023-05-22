@@ -1,23 +1,20 @@
-.nav-bar {
-  width: 8rem;
-  height: 100vh;
-  background: var(--blue-gradient);
-  position: fixed;
-  top: 0;
+.main-content {
+  width: calc(100vw - 8.4rem);
+  min-height: 100vh;
+  margin-left: 8.4rem;
+  padding: 5rem 10rem;
+  display: flex;
+  flex-direction: column;
 }
 
-.content {
-  width: calc(100% - 8rem);
-  margin-left: 8rem;
-}
-
-@media (max-width: 60em) {
+@media (max-width: 48em) {
   .nav-bar {
     width: 0;
   }
 
-  .content {
-    width: 100%;
+  .main-content {
+    width: 100vw;
+    padding: 3rem 3rem;
     margin-left: 0;
   }
 }

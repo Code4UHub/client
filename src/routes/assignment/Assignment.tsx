@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import CodeQuestion from 'components/CodeQuestion/CodeQuestion';
-import AssignmentHeader from 'components/AssignmentHeader/AssginmentHeader';
+import { useIndex } from 'hooks/useIndex';
+import { ClosedQuestion } from 'types/Questions/CloseQuestion';
+
+import SectionHeader from 'components/SectionHeader/SectionHeader';
 import CloseQuestion from 'components/CloseQuestion/CloseQuestion';
 import { Button } from 'components/Button/Button';
 import Timer from 'components/Timer/Timer';
-import { Toast, toastTime } from 'components/Toast/Toast';
-import { useIndex } from 'hooks/useIndex';
-import { ClosedQuestion } from 'types/Questions/CloseQuestion';
+
+import { useDispatch } from 'react-redux';
+import { updateToast } from 'store/toast/toastSlice';
 
 import { questionData } from './questionData';
 import style from './Assignment.module.css';
@@ -38,9 +41,9 @@ export default function Assignment() {
     {}
   );
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const [toastMessage, setToastMessage] = useState<{ [key: string]: string }>(
-    {}
-  );
+
+  const dispatch = useDispatch();
+
   // Only after all questions have been answered is submission enabled
   const allQuestionsAnswered = !Object.values(answers).every((answer) => {
     if (typeof answer === 'number') {
@@ -48,11 +51,10 @@ export default function Assignment() {
     }
     return (answer as CodeAnswer).isCorrect;
   });
-  const hasToastMessage =
-    toastMessage.title !== '' && toastMessage.message !== '';
-  // const maxIndex = questionData.length - 1;
+
   const containerSelectQuestionRef = useRef<HTMLDivElement>(null);
 
+  // Update the maximum possible index on hook useIndex
   useEffect(() => {
     setMaxIndex(questionData.length - 1);
   }, [setMaxIndex]);
@@ -69,10 +71,6 @@ export default function Assignment() {
       }
 
       setTimeRegistry((times) => ({ ...times, [i]: 0 }));
-    });
-    setToastMessage({
-      title: '',
-      message: '',
     });
   }, []);
 
@@ -143,15 +141,6 @@ export default function Assignment() {
     }));
   };
 
-  const turnOffToast = () => {
-    setTimeout(() => {
-      setToastMessage({
-        title: '',
-        message: '',
-      });
-    }, toastTime);
-  };
-
   // On Submit Assignment
   const onSubmitAssignment = () => {
     // Update time of that last question
@@ -160,12 +149,14 @@ export default function Assignment() {
       ...registry,
       [index]: registry[index] + timeOnQuestion,
     }));
-    setToastMessage({
-      title: 'Success',
-      message: 'Exam completed!',
-    });
+    dispatch(
+      updateToast({
+        title: 'Success',
+        message: 'Exam completed!',
+        type: 'success',
+      })
+    );
     setIsSubmitted(true);
-    turnOffToast();
   };
 
   function defineButtonClass(value: number) {
@@ -185,28 +176,23 @@ export default function Assignment() {
     const tickString = '\u2713';
     const numberString = String(i + 1);
 
-    if (typeof answers[i] === 'number') {
+    if (typeof answers[i] === 'number')
       return answers[i] !== -1 ? tickString : numberString;
-    }
-
     return (answers[i] as CodeAnswer)?.isCorrect ? tickString : numberString;
   }
 
   return (
-    <main className={style['assignment-container']}>
-      {hasToastMessage && (
-        <Toast
-          title={toastMessage.title}
-          message={toastMessage.message}
-          type="success"
+    <div className={style.assignment}>
+      <SectionHeader title="Condicionales">
+        <Button
+          location="assignmentSubmit"
+          text="Terminar examen"
+          onClickHandler={onSubmitAssignment}
+          type="submit"
+          isDisable={allQuestionsAnswered}
         />
-      )}
+      </SectionHeader>
       <div className={style.assignment}>
-        <AssignmentHeader
-          title="Condicionales"
-          onClickButton={onSubmitAssignment}
-          isButtonDisabled={allQuestionsAnswered}
-        />
         <div className={style['assignment-info']}>
           <Timer seconds={seconds} />
           <div className={style['assignment-button-controllers']}>
@@ -271,6 +257,6 @@ export default function Assignment() {
           )}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

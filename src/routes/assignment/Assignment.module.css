@@ -1,10 +1,9 @@
-.assignment-container {
+.assignment {
   width: 100%;
 }
 
 div .assignment {
   width: 100%;
-  padding: 5rem 10rem;
   display: flex;
   flex-direction: column;
 }
@@ -22,7 +21,7 @@ div .assignment-button-controllers {
   justify-content: flex-start;
 }
 
-div .select-question-container {
+.select-question-container {
   display: flex;
   flex-direction: row;
   overflow-x: scroll;
@@ -30,11 +29,11 @@ div .select-question-container {
   scroll-behavior: smooth;
 }
 
-div .question-container {
+.question-container {
   background-color: var(--light-gray);
   margin-top: 2rem;
   border-radius: 1rem;
-  padding: 5rem 10rem;
+  padding: 4rem 8rem;
   display: flex;
   flex-direction: column;
 }
@@ -44,19 +43,7 @@ div .code {
 }
 
 @media (max-width: 40em) {
-  div .assignment {
-    padding: 3rem 3rem;
-  }
-  .assignment-container {
-    width: 100vw;
-  }
-  div .question-container {
+  .question-container {
     padding: 2rem;
-  }
-}
-
-@media (max-width: 60em) {
-  .assignment-container {
-    width: 100vw;
   }
 }

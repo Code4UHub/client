@@ -122,3 +122,62 @@
   padding: 0.6rem 1.2rem;
   margin: 0.8rem;
 }
+
+/*  WINDOW TEACHER HANDLES STUDENT REQUESTS TO JOIN CLASS */
+
+.select-request, .selected-request, .not-all-requests, .all-requests {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border-radius: 0.5rem;
+  font-size: 0;
+  border: 0.2rem solid var(--light-blue-color);
+  background-color: white;
+}
+
+.selected-request, .all-requests {
+  background-color: var(--light-blue-color);
+}
+
+.accept-request, .decline-request {
+  padding: 0.2rem 0.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-small-small-text);
+  width: 100%;
+}
+
+.accept-selected, .decline-selected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-small-small-text);
+  height: 4rem;
+  padding: 1rem 2rem;
+}
+
+.accept-request, .accept-selected {
+  background-color: var(--light-green);
+  color: var(--dark-green);
+}
+.decline-request, .decline-selected {
+  background-color: var(--light-red);
+  color: var(--dark-red);
+}
+
+@media (max-width: 60em) {
+  .accept-request, .decline-request {
+    width: 90%;
+  }
+}
+.modal {
+  width: auto;
+  padding: 0 2rem;
+  height: 5rem;
+  background-color: var(--light-blue-color);
+  color: var(--white-color);
+  border-radius: 8px;
+  font-size: var(--fs-small-small-text);
+}
