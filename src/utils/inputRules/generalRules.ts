@@ -11,7 +11,7 @@ function isEmptyInput(input: string) {
 export function hasForbiddenChars(input: string) {
   let result = false;
   input.split('').forEach((letter) => {
-    if (forbidenChars.includes(letter)) result = false;
+    if (forbidenChars.includes(letter)) result = true;
   });
   return result;
 }
@@ -23,7 +23,7 @@ export function generalRules(
   maxLength: { [key: string]: number }
 ) {
   if (isEmptyInput(input)) return GeneralError.noEmpty;
-  if (input.length < minLength[id])
+  if (input.length > minLength[id])
     return `${GeneralError.minCharError} ${minLength[id]} char`;
   if (input.length > maxLength[id])
     return `${GeneralError.maxCharError} ${maxLength[id]} char`;
