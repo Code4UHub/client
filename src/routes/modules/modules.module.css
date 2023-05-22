@@ -1,0 +1,48 @@
+
+.modules {
+    margin: 2rem 0 0 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2rem 4rem;
+}
+
+.card {
+    min-height: 18rem;
+    padding: 3rem 4rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 500ms;
+}
+
+.locked {
+    background-color: #C6C3C3;
+}
+
+.title {
+    font-weight: 300;
+    font-size: var(--fs-mid-small-text)
+}
+
+@media (max-width : 60em) {
+    .modules {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width : 30em) {
+    .modules {
+        grid-template-columns: 1fr;
+    }
+}
+
+.icon-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.icon {
+    width: 5rem;
+    height: 5rem;
+}
