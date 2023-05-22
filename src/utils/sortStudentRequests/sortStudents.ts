@@ -28,7 +28,7 @@ export function sortStudents(
       break;
   }
   if (assignedElement === 'class_id') {
-    return value === 'Up'
+    return value === 'Down'
       ? data.sort((a, b) =>
           `${a.subject_id}.${a.class_id}`.localeCompare(
             `${b.subject_id}.${b.class_id}`
@@ -40,7 +40,7 @@ export function sortStudents(
           )
         );
   }
-  return value === 'Up'
+  return value === 'Down'
     ? data.sort((a, b) => a[assignedElement].localeCompare(b[assignedElement]))
     : data.sort((a, b) => b[assignedElement].localeCompare(a[assignedElement]));
 }
