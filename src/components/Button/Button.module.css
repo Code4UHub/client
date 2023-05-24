@@ -162,6 +162,7 @@
   background-color: var(--light-green);
   color: var(--dark-green);
 }
+
 .decline-request, .decline-selected {
   background-color: var(--light-red);
   color: var(--dark-red);
@@ -172,6 +173,7 @@
     width: 90%;
   }
 }
+
 .modal {
   width: auto;
   padding: 0 2rem;
@@ -180,4 +182,19 @@
   color: var(--white-color);
   border-radius: 8px;
   font-size: var(--fs-small-small-text);
+}
+
+.carousel {
+  width: 4.8rem;
+  height: 4.8rem;
+  padding: 0;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.carousel:hover:not(:disabled) {
+  transform: translateY(-50%) scale(1.05);
 }
