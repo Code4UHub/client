@@ -20,6 +20,7 @@ import Authentication from 'routes/authentication/Authentication';
 import StudentRequests from 'routes/StudentRequests/StudentRequests';
 import Classes from 'routes/classes/Classes';
 import Modules from 'routes/modules/modules';
+import Group from 'routes/group/Group';
 import { Class } from 'routes/class/Class';
 import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
@@ -78,6 +79,22 @@ function Index() {
                 { path: 'modules', element: <Modules /> },
                 { path: 'activities', element: 'Actividades' },
                 { path: 'leaderboard', element: 'Leaderboard' },
+                { path: 'group', element: <Group /> },
+                { path: 'group-leaderboard', element: <h1>Leaderboard</h1> },
+                {
+                  path: 'score',
+                  children: [
+                    { path: 'module', element: <h1>Promedio módulo</h1> },
+                    { path: 'topic', element: <h1>Promedio tema</h1> },
+                  ],
+                },
+                {
+                  path: 'progress',
+                  children: [
+                    { path: 'module', element: <h1>Progress módulo</h1> },
+                    { path: 'topic', element: <h1>Progress tema</h1> },
+                  ],
+                },
               ],
             },
           ],
