@@ -1,5 +1,7 @@
 import React from 'react';
 import { useLoaderData, NavLink, Outlet } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/store';
 
 import { Class as ClassType } from 'types/Class/Class';
 
@@ -7,7 +9,11 @@ import SectionHeader from 'components/SectionHeader/SectionHeader';
 
 import styles from './Class.module.css';
 
-function ClassNav() {
+type ClassNavProps = {
+  isStudent: boolean;
+};
+
+function ClassNav({ isStudent }: ClassNavProps) {
   return (
     <nav>
       <ul className={styles.nav}>
@@ -26,7 +32,9 @@ function ClassNav() {
           <NavLink to="activities">Actividades</NavLink>
         </li>
         <li>
-          <NavLink to="leaderboard">Leaderboard</NavLink>
+          <NavLink to={isStudent ? 'leaderboard' : 'group'}>
+            {isStudent ? 'Leaderboard' : 'Grupo'}
+          </NavLink>
         </li>
       </ul>
     </nav>
@@ -35,13 +43,14 @@ function ClassNav() {
 
 export function Class() {
   const classInfo = useLoaderData() as ClassType;
+  const user = useSelector((state: RootState) => state.user.currentUser);
   return (
     <>
       <SectionHeader
         title={classInfo.subject_name}
         childType="nav"
       >
-        <ClassNav />
+        <ClassNav isStudent={user?.role === 'student'} />
       </SectionHeader>
       <Outlet />
     </>
