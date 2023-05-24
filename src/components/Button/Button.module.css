@@ -192,3 +192,29 @@
   padding: 0 2rem;
   width: 18rem;
 }
+
+/* GROUP GRAPHS */
+.groupChange, .groupAll {
+  background-color: var(--light-blue-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.groupChange {
+  font-size: var(--fs-mid-small-text);
+  font-weight: 600;
+  border-radius: 120rem;
+  height: 2rem;
+  width: 2rem;
+  padding: 2rem 2rem;
+}
+
+.groupAll {
+  font-size: var(--fs-small-text);
+  height: 2rem;
+  padding: 2rem 2rem;
+  display: flex;
+  border-radius: 1rem;
+}

@@ -21,6 +21,7 @@ import StudentRequests from 'routes/StudentRequests/StudentRequests';
 import Classes from 'routes/classes/Classes';
 import Modules from 'routes/modules/modules';
 import Group from 'routes/group/Group';
+import GroupGraph from 'components/GroupGraph/GroupGraph';
 import { Class } from 'routes/class/Class';
 import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
@@ -80,20 +81,25 @@ function Index() {
                 { path: 'activities', element: 'Actividades' },
                 { path: 'leaderboard', element: 'Leaderboard' },
                 { path: 'group', element: <Group /> },
-                { path: 'group-leaderboard', element: <h1>Leaderboard</h1> },
                 {
-                  path: 'score',
-                  children: [
-                    { path: 'module', element: <h1>Promedio módulo</h1> },
-                    { path: 'topic', element: <h1>Promedio tema</h1> },
-                  ],
+                  path: 'group-leaderboard',
+                  element: <GroupGraph initialIndex={0} />,
                 },
                 {
-                  path: 'progress',
-                  children: [
-                    { path: 'module', element: <h1>Progress módulo</h1> },
-                    { path: 'topic', element: <h1>Progress tema</h1> },
-                  ],
+                  path: 'score-module',
+                  element: <GroupGraph initialIndex={1} />,
+                },
+                {
+                  path: 'score-topic',
+                  element: <GroupGraph initialIndex={2} />,
+                },
+                {
+                  path: 'progress-module',
+                  element: <GroupGraph initialIndex={3} />,
+                },
+                {
+                  path: 'progress-topic',
+                  element: <GroupGraph initialIndex={4} />,
                 },
               ],
             },

@@ -30,7 +30,7 @@ export default function ProgressBar({
       if (progress < percentage) {
         setProgress(progress + 1);
       }
-    }, 20);
+    }, 10);
   }, [progress, percentage]);
 
   const color = getColor(percentage);
