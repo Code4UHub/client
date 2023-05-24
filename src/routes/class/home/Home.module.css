@@ -26,6 +26,8 @@
 @media (max-width: 47em) {
   .home-container {
     grid-template-columns: 1fr;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .home-container-item:nth-child(1),

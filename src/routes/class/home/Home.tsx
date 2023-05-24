@@ -7,6 +7,8 @@ import ContinueActivityCard from 'components/ContinueActivityCard/ContinueActivi
 import UpcomingHomeworkCard from 'components/UpcomingHomeworkCard/UpcomingHomeworkCard';
 import HomeLeaderboardPositionCard from 'components/HomeLeaderboardPositionCard/HomeLeaderboardPositionCard';
 
+import ClassModulesProgressCard from 'components/ClassModulesProgressCard/ClassModulesProgressCard';
+
 import styles from './Home.module.css';
 
 function StudentHome() {
@@ -24,6 +26,7 @@ function TeacherHome() {
   return (
     <section className={styles['home-container']}>
       <ClassProgressCard className={styles['home-container-item']} />
+      <ClassModulesProgressCard className={styles['home-container-item']} />
     </section>
   );
 }
