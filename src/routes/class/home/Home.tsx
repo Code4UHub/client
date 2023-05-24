@@ -27,6 +27,7 @@ function TeacherHome() {
     <section className={styles['home-container']}>
       <ClassProgressCard className={styles['home-container-item']} />
       <ClassModulesProgressCard className={styles['home-container-item']} />
+      <UpcomingHomeworkCard className={styles['home-container-item']} />
     </section>
   );
 }
