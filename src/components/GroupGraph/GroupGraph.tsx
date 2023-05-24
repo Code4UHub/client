@@ -6,18 +6,14 @@ import { SortButtons } from 'components/SortButtons/SortButtons';
 import ProgressBar from 'components/ProgressBar/ProgressBar';
 import { groupOptions } from 'routes/group/groupOptions';
 import { useNavigate } from 'react-router-dom';
+import { GroupGraphType } from 'types/GroupGraph/GroupGraphType';
 import style from './GroupGraph.module.css';
 
 type Props = {
   initialIndex: number;
 };
 
-type GraphData = {
-  title: string;
-  value: number;
-};
-
-function getDummyGraphData(): GraphData[] {
+function getDummyGraphData(): GroupGraphType[] {
   const data = Array.from({ length: 10 }, (_, index) => {
     const title = `${index + 1}. Module de aprendizaje`;
     const value = Math.floor(Math.random() * 101);
@@ -29,7 +25,7 @@ function getDummyGraphData(): GraphData[] {
 
 export default function GroupGraph({ initialIndex }: Props) {
   const navigate = useNavigate();
-  const [graphData, setGraphData] = useState<GraphData[]>([]);
+  const [graphData, setGraphData] = useState<GroupGraphType[]>([]);
   const { index, max, next, prev, setMaxIndex } = useIndex({
     initial: initialIndex,
   });
