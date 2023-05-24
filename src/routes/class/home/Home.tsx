@@ -21,7 +21,11 @@ function StudentHome() {
 }
 
 function TeacherHome() {
-  return <h1>TODO: Create Teacher dashboard</h1>;
+  return (
+    <section className={styles['home-container']}>
+      <ClassProgressCard className={styles['home-container-item']} />
+    </section>
+  );
 }
 
 export default function Home() {
