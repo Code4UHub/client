@@ -3,21 +3,25 @@ const modules = [
     id: '1',
     name: 'Introducción a la programación',
     percentage: 75,
+    students: 24,
   },
   {
     id: '2',
     name: 'Problemas con cálculo',
     percentage: 50,
+    students: 16,
   },
   {
     id: '3',
     name: 'Programación modular',
-    percentage: 15,
+    percentage: 12.5,
+    students: 4,
   },
   {
     id: '4',
     name: 'Estructuras de decisión',
-    percentage: 10,
+    percentage: 25,
+    students: 8,
   },
 ];
 

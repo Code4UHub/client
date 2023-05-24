@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import Card from 'components/Card/Card';
-import { CircularProgressbar } from 'react-circular-progressbar';
+import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Carousel from 'components/Carousel/Carousel';
 
@@ -22,10 +22,12 @@ export default function ClassModulesProgressCard({ className }: Props) {
       className={styles['progress-bar-container']}
     >
       <div className={styles['progress-bar']}>
-        <CircularProgressbar
-          value={module.percentage}
-          text={`${module.percentage}%`}
-        />
+        <CircularProgressbarWithChildren value={module.percentage}>
+          <div className={styles['progress-bar-content']}>
+            <span className={styles.percentage}>{module.percentage}%</span>
+            <span className={styles.students}>{`${module.students}/32`}</span>
+          </div>
+        </CircularProgressbarWithChildren>
       </div>
       <span className={styles['module-name']}>{`Módulo ${index + 1}: ${
         module.name

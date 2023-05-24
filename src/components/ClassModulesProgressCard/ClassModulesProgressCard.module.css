@@ -46,6 +46,23 @@
     margin-bottom: 1.2rem;
 }
 
+.progress-bar span {
+    font-size: var(--fs-sub-title);
+    color: #3e98c7;
+}
+
+.students {
+    display: none;
+}
+
+.progress-bar-content:hover .percentage {
+    display: none;
+}
+
+.progress-bar-content:hover .students {
+    display: block;
+}
+
 .module-name {
     font-size: var(--fs-mid-small-text);
     font-weight: 500;
