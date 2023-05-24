@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import CodeQuestion from 'components/CodeQuestion/CodeQuestion';
+import { useIndex } from 'hooks/useIndex';
+import { ClosedQuestion } from 'types/Questions/CloseQuestion';
+
 import SectionHeader from 'components/SectionHeader/SectionHeader';
 import CloseQuestion from 'components/CloseQuestion/CloseQuestion';
 import { Button } from 'components/Button/Button';
@@ -10,6 +14,7 @@ import { updateToast } from 'store/toast/toastSlice';
 import { questionData } from './questionData';
 import style from './Assignment.module.css';
 
+// Translate rems to pixels, as needed to move container with buttons
 function getTranslatedPixels(rems: number) {
   const fontSize = parseFloat(
     getComputedStyle(document.documentElement).fontSize
@@ -17,10 +22,21 @@ function getTranslatedPixels(rems: number) {
   return rems * fontSize;
 }
 
+type CodeAnswer = {
+  isCorrect: boolean;
+  code: string | null;
+};
+
 export default function Assignment() {
-  const [questionIndex, setQuestionIndex] = useState<number>(0);
-  const [answers, setAnswers] = useState<{ [key: number]: number }>({});
-  const [generalSeconds, setGeneralSeconds] = useState<number>(0);
+  const { index, next, prev, jumpTo, setMaxIndex, max } = useIndex({
+    initial: 0,
+  });
+  const [answers, setAnswers] = useState<{
+    [key: number]: number | CodeAnswer;
+  }>({});
+  // Seconds on complete assignment
+  const [seconds, setSeconds] = useState<number>(0);
+  // Seconds per question
   const [timeRegistry, setTimeRegistry] = useState<{ [key: number]: number }>(
     {}
   );
@@ -28,70 +44,110 @@ export default function Assignment() {
 
   const dispatch = useDispatch();
 
-  const allQuestionsAnswered = !Object.values(answers).every(
-    (answer) => answer !== -1
-  );
-  const maxIndex = questionData.length - 1;
+  // Only after all questions have been answered is submission enabled
+  const allQuestionsAnswered = !Object.values(answers).every((answer) => {
+    if (typeof answer === 'number') {
+      return answer !== -1;
+    }
+    return (answer as CodeAnswer).isCorrect;
+  });
+
   const containerSelectQuestionRef = useRef<HTMLDivElement>(null);
 
+  // Update the maximum possible index on hook useIndex
   useEffect(() => {
-    questionData.forEach((_question, index) => {
-      setAnswers((ans) => ({ ...ans, [index]: -1 }));
-      setTimeRegistry((times) => ({ ...times, [index]: 0 }));
+    setMaxIndex(questionData.length - 1);
+  }, [setMaxIndex]);
+
+  useEffect(() => {
+    questionData.forEach((question, i) => {
+      if (question.type === 'open') {
+        setAnswers((ans) => ({
+          ...ans,
+          [i]: { isCorrect: false, code: null },
+        }));
+      } else {
+        setAnswers((ans) => ({ ...ans, [i]: -1 }));
+      }
+
+      setTimeRegistry((times) => ({ ...times, [i]: 0 }));
     });
   }, []);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (!isSubmitted) setGeneralSeconds((seconds) => seconds + 1);
+      if (!isSubmitted) setSeconds(seconds + 1);
     }, 1000);
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [isSubmitted, generalSeconds]);
+  }, [isSubmitted, seconds]);
 
-  const onChooseAnswer = (index: number, option: number) => {
-    setAnswers((ans) => ({ ...ans, [index]: option }));
+  // Update values on answer registry for ClosedQuestions
+  const onChooseAnswer = (i: number, option: number) => {
+    setAnswers((ans) => ({ ...ans, [i]: option }));
   };
 
-  // The total time - sum of time on registry, gives the time on an untracked question
+  // Total time on assignemnt - total registry = time on current question
   function timeOnAllQuestions(): number {
     const totalTime = Object.values(timeRegistry).reduce(
       (sum, value) => sum + value,
       0
     );
-    return generalSeconds - totalTime;
+    return seconds - totalTime;
   }
 
+  // For the buttons that change the question
   function onClickHandler(action: string, newIndex?: number) {
     const container = containerSelectQuestionRef.current;
     const timeOnQuestion = timeOnAllQuestions();
     setTimeRegistry((registry) => ({
       ...registry,
-      [questionIndex]: registry[questionIndex] + timeOnQuestion,
+      [index]: registry[index] + timeOnQuestion,
     }));
-    if (action === 'next' && questionIndex < maxIndex) {
-      if (container) container.scrollLeft += getTranslatedPixels(5);
-      setQuestionIndex((index) => index + 1);
+    if (action === 'next') {
+      // If next was successful and container exists
+      if (next() && container) {
+        container.scrollLeft += getTranslatedPixels(5);
+      }
     }
-    if (action === 'previous' && questionIndex > 0) {
-      if (container) container.scrollLeft -= getTranslatedPixels(5);
-      setQuestionIndex((index) => index - 1);
+    if (action === 'previous') {
+      // If prev was successful and container exists
+      if (prev() && container) {
+        container.scrollLeft -= getTranslatedPixels(5);
+      }
     }
     if (action === 'jump') {
-      if (container)
+      // JumpTo was succesful and container exists
+      if (jumpTo(newIndex as number) && container) {
         container.scrollLeft += getTranslatedPixels(
-          ((newIndex || maxIndex) - questionIndex) * 5
+          ((newIndex as number) - index) * 5
         );
-      setQuestionIndex(newIndex || 0);
+      }
     }
   }
 
-  const onMainClick = () => {
+  const updateCode = (newCode: string, i: number) => {
+    setAnswers((ans) => ({
+      ...ans,
+      [i]: { ...(ans[i] as CodeAnswer), code: newCode },
+    }));
+  };
+
+  const updateCodeCorrect = (i: number, value: boolean) => {
+    setAnswers((ans) => ({
+      ...ans,
+      [i]: { ...(ans[i] as CodeAnswer), isCorrect: value },
+    }));
+  };
+
+  // On Submit Assignment
+  const onSubmitAssignment = () => {
+    // Update time of that last question
     const timeOnQuestion = timeOnAllQuestions();
     setTimeRegistry((registry) => ({
       ...registry,
-      [questionIndex]: registry[questionIndex] + timeOnQuestion,
+      [index]: registry[index] + timeOnQuestion,
     }));
     dispatch(
       updateToast({
@@ -103,15 +159,26 @@ export default function Assignment() {
     setIsSubmitted(true);
   };
 
-  function defineButtonClass(index: number) {
-    if (index === questionIndex) return 'assignmentActive';
-    if (isSubmitted) {
-      if (answers[index] === questionData[index].answer)
-        return 'assignmentCorrect';
-      return 'assignmentIncorrect';
-    }
-    if (answers[index] !== -1) return 'assignmentAnswered';
+  function defineButtonClass(value: number) {
+    // Currently viewed question
+    if (value === index) return 'assignmentActive';
+    // Question is a multiple choice
+    if (typeof answers[value] === 'number') {
+      // Question is answered
+      if (answers[value] !== -1) return 'assignmentAnswered';
+    } else if ((answers[value] as CodeAnswer)?.isCorrect)
+      return 'assignmentAnswered';
+    // Unanswered question
     return 'assignmentInactive';
+  }
+
+  function defineButtonText(i: number) {
+    const tickString = '\u2713';
+    const numberString = String(i + 1);
+
+    if (typeof answers[i] === 'number')
+      return answers[i] !== -1 ? tickString : numberString;
+    return (answers[i] as CodeAnswer)?.isCorrect ? tickString : numberString;
   }
 
   return (
@@ -120,52 +187,75 @@ export default function Assignment() {
         <Button
           location="assignmentSubmit"
           text="Terminar examen"
-          onClickHandler={onMainClick}
+          onClickHandler={onSubmitAssignment}
           type="submit"
           isDisable={allQuestionsAnswered}
         />
       </SectionHeader>
-      <div className={style['assignment-info']}>
-        <Button
-          location="assignmentChange"
-          text="<"
-          onClickHandler={() => onClickHandler('previous')}
-          type="button"
-          isDisable={questionIndex === 0}
-        />
-        <div
-          ref={containerSelectQuestionRef}
-          className={style['select-question-container']}
-        >
-          {questionData.map((_, index) => (
+      <div className={style.assignment}>
+        <div className={style['assignment-info']}>
+          <Timer seconds={seconds} />
+          <div className={style['assignment-button-controllers']}>
             <Button
-              location={defineButtonClass(index)}
-              text={answers[index] === -1 ? String(index + 1) : '\u2713'}
-              onClickHandler={() => onClickHandler('jump', index)}
+              location="assignmentChange"
+              text="<"
+              onClickHandler={() => onClickHandler('previous')}
               type="button"
-              isDisable={false}
+              isDisable={index === 0}
             />
-          ))}
+            <div
+              ref={containerSelectQuestionRef}
+              className={style['select-question-container']}
+            >
+              {questionData.map((q, i) => (
+                <Button
+                  key={`${q.id}-button`}
+                  location={defineButtonClass(i)}
+                  text={defineButtonText(i)}
+                  onClickHandler={() => onClickHandler('jump', i)}
+                  type="button"
+                  isDisable={false}
+                />
+              ))}
+            </div>
+            <Button
+              location="assignmentChange"
+              text=">"
+              onClickHandler={() => onClickHandler('next')}
+              type="button"
+              isDisable={index === max}
+            />
+          </div>
         </div>
-        <Button
-          location="assignmentChange"
-          text=">"
-          onClickHandler={() => onClickHandler('next')}
-          type="button"
-          isDisable={questionIndex === maxIndex}
-        />
-        <Timer seconds={generalSeconds} />
-      </div>
-      <div className={style['question-container']}>
-        <CloseQuestion
-          rightAnswer={isSubmitted ? questionData[questionIndex].answer : -1}
-          isSubmitted={isSubmitted}
-          questionIndex={questionIndex}
-          onChoose={onChooseAnswer}
-          chosenAnswer={answers[questionIndex]}
-          description={questionData[questionIndex].description}
-          options={questionData[questionIndex].options}
-        />
+        <div
+          className={`${style['question-container']} ${
+            questionData[index].type === 'open' ? style.code : ''
+          }`}
+        >
+          {questionData[index].type === 'closed' ? (
+            <CloseQuestion
+              rightAnswer={
+                isSubmitted
+                  ? (questionData[index] as ClosedQuestion).answer
+                  : -1
+              }
+              isSubmitted={isSubmitted}
+              questionIndex={index}
+              onChoose={onChooseAnswer}
+              chosenAnswer={answers[index] as number}
+              questionData={questionData[index]}
+              options={(questionData[index] as ClosedQuestion).options}
+            />
+          ) : (
+            <CodeQuestion
+              updateCorrect={updateCodeCorrect}
+              questionIndex={index}
+              cachedData={answers[index]}
+              questionData={questionData[index]}
+              updateCode={updateCode}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

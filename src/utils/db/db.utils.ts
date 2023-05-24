@@ -7,6 +7,10 @@ import {
   TeacherClassListPromise,
 } from 'types/Class/Class';
 import { SubjectPromise } from 'types/Subject/Subject';
+import {
+  StudentRequestPromise,
+  RequestAnswer,
+} from 'types/StudentRequest/StudentRequest';
 
 // http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
 // http://10.147.20.218:65534/v1
@@ -20,6 +24,11 @@ const ENDPOINTS = {
   CLASS: `${BASE_URL}/class`,
   CLASS_CREATE: `${BASE_URL}/class/create`,
   SUBJECT: `${BASE_URL}/subject`,
+  STUDENT_REQUESTS: `${BASE_URL}/teacher`,
+  ACCEPT_ONE_STUDENT: `${BASE_URL}/class/accept_student`,
+  REJECT_ONE_STUDENT: `${BASE_URL}/class/reject_student`,
+  ACCEPT_MANY_STUDENTS: `${BASE_URL}/class/accept_students`,
+  REJECT_MANY_STUDENTS: `${BASE_URL}/class/reject_students`,
   TEACHER_CLASSES: (id: string) => `${BASE_URL}/teacher/${id}/class`,
   STUDENT_CLASSES: (id: string) => `${BASE_URL}/student/${id}/class`,
   TIME: `${BASE_URL}/configuration/time`,
@@ -166,6 +175,97 @@ export const getSubjects = async (
 
   const request = await fetch(ENDPOINTS.SUBJECT, options);
 
+  return request.json();
+};
+
+export const getStudentRequests = async (
+  auth_token: string,
+  teacher_id: string
+): Promise<StudentRequestPromise> => {
+  const options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+  const request = await fetch(
+    `${ENDPOINTS.STUDENT_REQUESTS}/${teacher_id}/student_class`,
+    options
+  );
+
+  return request.json();
+};
+
+export const respondOneStudentRequest = async (
+  auth_token: string,
+  class_id: string,
+  student_id: string,
+  action: 'accept' | 'reject'
+): Promise<TypePromise<string>> => {
+  const bodyContent = {
+    class_id,
+    student_id,
+  };
+
+  // ACCEPT ONE STUDENT
+  if (action === 'accept') {
+    const options: RequestInit = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth_token}`,
+      },
+      body: JSON.stringify(bodyContent),
+    };
+    const request = await fetch(ENDPOINTS.ACCEPT_ONE_STUDENT, options);
+    return request.json();
+  }
+
+  // REJECT ONE STUDENT
+  const options: RequestInit = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify(bodyContent),
+  };
+
+  const request = await fetch(ENDPOINTS.REJECT_ONE_STUDENT, options);
+  return request.json();
+};
+
+export const respondManyStudentRequest = async (
+  auth_token: string,
+  rows: RequestAnswer[],
+  action: 'accept' | 'reject'
+): Promise<TypePromise<string>> => {
+  const bodyContent = rows;
+
+  // ACCEPT ONE STUDENT
+  if (action === 'accept') {
+    const options: RequestInit = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth_token}`,
+      },
+      body: JSON.stringify(bodyContent),
+    };
+    const request = await fetch(ENDPOINTS.ACCEPT_MANY_STUDENTS, options);
+    return request.json();
+  }
+
+  // REJECT ONE STUDENT
+  const options: RequestInit = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify(bodyContent),
+  };
+
+  const request = await fetch(ENDPOINTS.REJECT_MANY_STUDENTS, options);
   return request.json();
 };
 

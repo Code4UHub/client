@@ -17,6 +17,7 @@ import { getClass } from 'utils/db/db.utils';
 
 import { Root } from 'routes/root/Root';
 import Authentication from 'routes/authentication/Authentication';
+import StudentRequests from 'routes/StudentRequests/StudentRequests';
 import Classes from 'routes/classes/Classes';
 import { Class } from 'routes/class/Class';
 import Assignment from 'routes/assignment/Assignment';
@@ -53,6 +54,10 @@ function Index() {
             {
               path: '/',
               element: <Navigate to="/classes" />,
+            },
+            {
+              path: '/requests',
+              element: <StudentRequests />,
             },
             {
               path: 'classes',
