@@ -47,6 +47,8 @@ export default function Carousel({ items, className }: Props) {
     prev();
   };
 
+  if (items.length === 0) return null;
+
   return (
     <div className={`${className} ${styles.container}`}>
       <Button
