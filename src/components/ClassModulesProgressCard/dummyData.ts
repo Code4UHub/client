@@ -27,5 +27,5 @@ export const getDummyData = (): Promise<ModuleList> =>
   new Promise((resolve) => {
     setTimeout(() => {
       resolve(modules);
-    });
+    }, 5000);
   });

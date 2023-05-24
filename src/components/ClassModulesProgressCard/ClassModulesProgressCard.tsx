@@ -27,9 +27,9 @@ export default function ClassModulesProgressCard({ className }: Props) {
           text={`${module.percentage}%`}
         />
       </div>
-      <span
-        className={styles['module-name']}
-      >{`Módulo ${index}: ${module.name}`}</span>
+      <span className={styles['module-name']}>{`Módulo ${index + 1}: ${
+        module.name
+      }`}</span>
     </div>
   ));
 
