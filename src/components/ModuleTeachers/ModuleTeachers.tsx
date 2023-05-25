@@ -13,7 +13,6 @@ type Props = {
   onClickHandler: Function;
   onCancel: Function;
   data: Module[];
-  moduleState: boolean[];
   changeModuleState: Function;
   cardStyles: (i: number) => string;
 };
@@ -24,7 +23,6 @@ export function ModuleTeachers({
   onClickHandler,
   onCancel,
   data,
-  moduleState,
   changeModuleState,
   cardStyles,
 }: Props) {
@@ -57,7 +55,7 @@ export function ModuleTeachers({
               {i + 1}. {module.title}
             </h2>
             <div className={style['icon-container']}>
-              {moduleState[i] ? (
+              {data[i].is_active ? (
                 <UnlockIcon
                   className={style.icon}
                   onClick={() => changeModuleState(i)}

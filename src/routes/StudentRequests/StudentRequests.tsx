@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { sortStudents } from 'utils/sortStudentRequests/sortStudents';
+// import { sortStudents } from 'utils/sortStudentRequests/sortStudents';
 import SectionHeader from 'components/SectionHeader/SectionHeader';
 import { InputField } from 'components/InputField/InputField';
 import { Button } from 'components/Button/Button';
 import { StudentRequest } from 'types/StudentRequest/StudentRequest';
 import StudentRequestTable, {
-  SortRule,
   HEADERS,
 } from 'components/StudentRequestTable/StudentRequestTable';
 
+import { useSort } from 'hooks/useSort';
 import { RootState } from 'store/store';
 import {
   getStudentRequests,
@@ -34,25 +34,30 @@ export default function StudentRequests({ initialClass }: Props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.currentUser);
+  const {
+    filter,
+    allFilterOptions,
+    getActiveSort,
+    sortedData,
+    onUpdateRules,
+    onUpdateFilter,
+    onUpdateData,
+  } = useSort({
+    initialRuleElement: HEADERS[0],
+    initialFilterElement: initialClass as string,
+    ALL_VALUES: ALL_GROUPS,
+    caller: 'studentRequests',
+  });
 
-  // Complete array of Student Requests
-  const [data, setData] = useState<StudentRequest[]>([]);
   const [updateFetch, setUpdateFetch] = useState<number>(0);
   const [isListOpen, setIsListOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [filterValue, setFilterValue] = useState<string>(
-    initialClass as string
-  );
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [sortRule, setSortRule] = useState<SortRule>({
-    element: HEADERS[0],
-    value: 'Up',
-  });
 
-  // Update information for input
+  // Update text on filterInput
   useEffect(() => {
-    if (autoComplete.current) autoComplete.current.value = filterValue;
-  }, [filterValue]);
+    if (autoComplete.current) autoComplete.current.value = filter;
+  }, [filter]);
 
   // Get information from db on requests
   useEffect(() => {
@@ -67,7 +72,7 @@ export default function StudentRequests({ initialClass }: Props) {
         user?.id as string
       );
       if (response.status === 'success') {
-        setData(() => response.data as StudentRequest[]);
+        onUpdateData(() => response.data as StudentRequest[]);
       } else {
         dispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
       }
@@ -78,27 +83,8 @@ export default function StudentRequests({ initialClass }: Props) {
     // eslint-disable-next-line
   }, [updateFetch]);
 
-  // Get requests sorted by buttons and filtered by values
-  const sortedData = sortStudents(
-    data,
-    sortRule.element,
-    sortRule.value
-  ).filter((request) => {
-    if (filterValue === ALL_GROUPS || isListOpen) return request;
-    const row = `${request.subject_id}.${request.class_id}`;
-    return row === filterValue;
-  });
-
   const isAllSelected =
     selectedRows.length === sortedData.length && sortedData.length > 0;
-
-  // To display on dropdown menu all unique groups from students
-  const allGroups = [
-    ALL_GROUPS,
-    ...data
-      .map((request) => `${request.subject_id}.${request.class_id}`)
-      .filter((value, index, array) => array.indexOf(value) === index),
-  ];
 
   // Closes autocomplete list on tab press
   const skipAutocomplete = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -122,7 +108,7 @@ export default function StudentRequests({ initialClass }: Props) {
       setSelectedRows([]);
     } else {
       const allSelectedRows = sortedData.map(
-        (request) =>
+        (request: StudentRequest) =>
           `${request.subject_id}<${request.class_id}<${request.student_id}`
       );
       setSelectedRows(allSelectedRows);
@@ -132,13 +118,13 @@ export default function StudentRequests({ initialClass }: Props) {
   // When user chooses to filter per group
   function selectGroup(group: string) {
     if (autoComplete.current) autoComplete.current.value = group;
-    setFilterValue(group);
+    onUpdateFilter(group);
     setIsListOpen(false);
     setSelectedRows([]);
   }
 
   const onFilterChange = (_id: string, value: string) => {
-    setFilterValue(value);
+    onUpdateFilter(value);
   };
 
   /* eslint-disable @typescript-eslint/naming-convention */
@@ -199,7 +185,7 @@ export default function StudentRequests({ initialClass }: Props) {
         dispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
       }
     }
-    setFilterValue(ALL_GROUPS);
+    onUpdateFilter(ALL_GROUPS);
     setSelectedRows(() => []);
     setUpdateFetch((updateVal) => updateVal + 1);
     dispatch(removeLoading());
@@ -215,7 +201,7 @@ export default function StudentRequests({ initialClass }: Props) {
             <InputField
               ref={autoComplete}
               className={style['join-request']}
-              value={filterValue}
+              value={filter}
               label="Filtrar por grupo:"
               type="text"
               id="join-request"
@@ -228,7 +214,7 @@ export default function StudentRequests({ initialClass }: Props) {
             />
             {isListOpen && (
               <ul className={style['autocomplete-list']}>
-                {allGroups.map((group) => (
+                {allFilterOptions.map((group: string) => (
                   // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
                   <li
                     key={group}
@@ -260,8 +246,8 @@ export default function StudentRequests({ initialClass }: Props) {
           )}
         </div>
         <StudentRequestTable
-          sortRule={sortRule}
-          setSortRule={setSortRule}
+          getActiveSort={getActiveSort}
+          onUpdateSortRule={onUpdateRules}
           isLoading={isLoading}
           isListOpen={isListOpen}
           isAllSelected={isAllSelected}

@@ -8,11 +8,10 @@ import style from './ModuleStudents.module.css';
 
 type Props = {
   data: StudentModule[];
-  moduleState: boolean[];
   cardStyles: (index: number) => string;
 };
 
-export function ModuleStudents({ data, moduleState, cardStyles }: Props) {
+export function ModuleStudents({ data, cardStyles }: Props) {
   return (
     <div className={style.modules}>
       {data.map((module, i) => (
@@ -24,7 +23,7 @@ export function ModuleStudents({ data, moduleState, cardStyles }: Props) {
             {i + 1}. {module.title}
           </h2>
           <div className={style['icon-container']}>
-            {moduleState[i] ? (
+            {data[i].is_active ? (
               <CircularProgressBar
                 className={style['progress-bar']}
                 percentage={data[i].percentage as number}
