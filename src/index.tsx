@@ -39,7 +39,6 @@ function Index() {
 
     if (data.status === 'success') return data.data;
 
-    console.log(data.status, data.data);
     throw new Error();
   };
 
