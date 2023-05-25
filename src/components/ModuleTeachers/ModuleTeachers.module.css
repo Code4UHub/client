@@ -9,6 +9,13 @@
     grid-gap: 2rem 4rem;
 }
 
+.button-container {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: flex-start;
+}
+
 @media (max-width : 60em) {
     .modules {
         grid-template-columns: repeat(2, 1fr);
