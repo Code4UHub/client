@@ -58,7 +58,7 @@ export default function Modules() {
     setModuleData(initialState);
   }
 
-  async function onClickHandler() {
+  const onClickHandler = async () => {
     if (editing) {
       const changedModules: UpdateModule[] = moduleData.reduce(
         (accumulator: UpdateModule[], module, index) => {
@@ -89,7 +89,7 @@ export default function Modules() {
     } else {
       setEditing(true);
     }
-  }
+  };
 
   function changeModuleState(index: number) {
     if (editing) {
