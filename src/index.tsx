@@ -19,6 +19,7 @@ import { Root } from 'routes/root/Root';
 import Authentication from 'routes/authentication/Authentication';
 import StudentRequests from 'routes/StudentRequests/StudentRequests';
 import Classes from 'routes/classes/Classes';
+import Modules from 'routes/modules/modules';
 import { Class } from 'routes/class/Class';
 import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
@@ -74,7 +75,7 @@ function Index() {
                   path: '',
                   element: <Home />,
                 },
-                { path: 'modules', element: 'Modulos' },
+                { path: 'modules', element: <Modules /> },
                 { path: 'activities', element: 'Actividades' },
                 { path: 'leaderboard', element: 'Leaderboard' },
               ],

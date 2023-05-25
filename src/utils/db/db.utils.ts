@@ -11,6 +11,7 @@ import {
   StudentRequestPromise,
   RequestAnswer,
 } from 'types/StudentRequest/StudentRequest';
+import { ModulePromise, UpdateModule } from 'types/Module/Module';
 
 // http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
 // http://10.147.20.218:65534/v1
@@ -23,6 +24,8 @@ const ENDPOINTS = {
   TEACHER_LOGIN: `${BASE_URL}/teacher/login`,
   CLASS: `${BASE_URL}/class`,
   CLASS_CREATE: `${BASE_URL}/class/create`,
+  CLASS_MODULES: (id_class: string) => `${BASE_URL}/class/${id_class}/modules`,
+  UPDATE_MODULES: (id_class: string) => `${BASE_URL}/class/${id_class}/modules`,
   SUBJECT: `${BASE_URL}/subject`,
   STUDENT_REQUESTS: `${BASE_URL}/teacher`,
   ACCEPT_ONE_STUDENT: `${BASE_URL}/class/accept_student`,
@@ -296,5 +299,38 @@ export const getTeacherClassList = async (
 
   const request = await fetch(ENDPOINTS.TEACHER_CLASSES(teacher_id), options);
 
+  return request.json();
+};
+
+// ====== MODULES FROM A CLASS  =======
+export const getClassModules = async (
+  class_id: string,
+  auth_token: string
+): Promise<ModulePromise> => {
+  const options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+
+  const request = await fetch(ENDPOINTS.CLASS_MODULES(class_id), options);
+
+  return request.json();
+};
+
+export const updateClassModules = async (
+  changed_modules: UpdateModule[],
+  auth_token: string,
+  id_class: string
+): Promise<TypePromise<string>> => {
+  const options: RequestInit = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify(changed_modules),
+  };
+  const request = await fetch(ENDPOINTS.UPDATE_MODULES(id_class), options);
   return request.json();
 };
