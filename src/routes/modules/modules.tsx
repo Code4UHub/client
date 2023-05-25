@@ -85,7 +85,7 @@ export default function Modules() {
         })
       );
       setEditing(false);
-      setReload(reload + 1);
+      setReload((currentValue) => currentValue + 1);
     } else {
       setEditing(true);
     }
