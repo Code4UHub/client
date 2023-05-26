@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from 'components/Card/Card';
+
 import { groupOptions } from './groupOptions';
 
 import style from './Group.module.css';
@@ -9,7 +10,7 @@ export default function Group() {
   const navigate = useNavigate();
 
   const handleNavigate = (i: number) => {
-    navigate(groupOptions[i].url, { replace: true });
+    navigate(groupOptions[i].url, { replace: false });
   };
 
   return (
