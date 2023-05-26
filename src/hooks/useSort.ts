@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { sortStudents } from 'utils/sortStudentRequests/sortStudents';
+import { sortGraphs } from 'utils/sortGraphs/sortGraphs';
 import { StudentRequest } from 'types/StudentRequest/StudentRequest';
+import { GroupGraphType } from 'types/GroupGraph/GroupGraphType';
+import { GraphCategory, GraphEvaluate } from 'types/GroupOptions/GroupOptions';
 
 type Props = {
   initialRuleElement: string; // Sort value that is active on start
@@ -38,15 +41,15 @@ export const useSort = ({
     setFilter(value);
   }
 
-  function onUpdateData(value: any) {
+  const onUpdateData = (value: any) => {
     setData(value);
-  }
+  };
 
   useEffect(() => {
+    // Get requests sorted by buttons and filtered by values
     if (caller === 'studentRequests') {
-      // Get requests sorted by buttons and filtered by values
       const newArray: StudentRequest[] = sortStudents(
-        data,
+        [...data],
         ruleElement,
         ruleDirection
       ).filter((request) => {
@@ -57,7 +60,12 @@ export const useSort = ({
       setSortedData(newArray);
     }
     if (caller === 'groupGraphs') {
-      setSortedData(data);
+      const newArray: GroupGraphType[] = sortGraphs(
+        [...data],
+        ruleElement as GraphCategory | GraphEvaluate,
+        ruleDirection
+      );
+      setSortedData(newArray);
     }
   }, [data, ruleDirection, ruleElement, filter, ALL_VALUES, caller]);
 
