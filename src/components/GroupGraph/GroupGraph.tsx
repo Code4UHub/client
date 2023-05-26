@@ -47,6 +47,7 @@ export default function GroupGraph({ graphData, category, evaluate }: Props) {
   return (
     <div className={style.container}>
       <div className={style.sorters}>
+        <span className={style.hint}>Ordenar por: </span>
         <div className={style.sort}>
           <SortButtons
             active={getActiveSort(category)}
