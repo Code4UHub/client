@@ -1,124 +1,78 @@
-import React, { useEffect, useState } from 'react';
-
-import { useIndex } from 'hooks/useIndex';
-import { Button } from 'components/Button/Button';
-import { SortButtons } from 'components/SortButtons/SortButtons';
+import React, { useEffect } from 'react';
 import ProgressBar from 'components/ProgressBar/ProgressBar';
-import { groupOptions } from 'routes/group/groupOptions';
-import { useNavigate } from 'react-router-dom';
+import { SortButtons } from 'components/SortButtons/SortButtons';
+
 import { GroupGraphType } from 'types/GroupGraph/GroupGraphType';
+import { GraphCategory, GraphEvaluate } from 'types/GroupOptions/GroupOptions';
+
+import { useSort } from 'hooks/useSort';
+
 import style from './GroupGraph.module.css';
 
 type Props = {
-  initialIndex: number;
+  graphData: GroupGraphType[];
+  category: GraphCategory;
+  evaluate: GraphEvaluate;
 };
 
-function getDummyGraphData(): GroupGraphType[] {
-  const data = Array.from({ length: 10 }, (_, index) => {
-    const title = `${index + 1}. Module de aprendizaje`;
-    const value = Math.floor(Math.random() * 101);
-    return { title, value };
-  });
-
-  return data;
-}
-
-export default function GroupGraph({ initialIndex }: Props) {
-  const navigate = useNavigate();
-  const [graphData, setGraphData] = useState<GroupGraphType[]>([]);
-  const { index, max, next, prev, setMaxIndex } = useIndex({
-    initial: initialIndex,
+export default function GroupGraph({ graphData, category, evaluate }: Props) {
+  const ALL_VALUES = 'ALL';
+  const {
+    ruleElement,
+    ruleDirection,
+    sortedData,
+    getActiveSort,
+    onUpdateRules,
+    onUpdateData,
+  } = useSort({
+    initialRuleElement: category,
+    initialFilterElement: ALL_VALUES,
+    ALL_VALUES,
+    caller: 'groupGraphs',
   });
 
   useEffect(() => {
-    setMaxIndex(groupOptions.length);
-  }, []);
-
-  useEffect(() => {
-    const createdData = getDummyGraphData();
-    setGraphData(createdData);
-  }, [index]);
-
-  const onClickHandler = (action: string) => {
-    if (action === 'all') {
-      navigate('../group');
-    }
-    if (action === 'prev') {
-      prev();
-    }
-    if (action === 'next') {
-      next();
-    }
-  };
+    onUpdateData(
+      graphData.map((graph) => ({
+        title: `${graph.id}. ${graph.title}`,
+        value: graph.value,
+        id: graph.id,
+      }))
+    );
+    // eslint-disable-next-line
+  }, [graphData]);
 
   return (
     <div className={style.container}>
-      <div className={style.controllers}>
-        <Button
-          location="groupChange"
-          text="<"
-          onClickHandler={() => onClickHandler('prev')}
-          type="button"
-          isDisable={index === 0}
-        />
-        <Button
-          location="groupAll"
-          text="Todas las opciones"
-          onClickHandler={() => onClickHandler('all')}
-          type="button"
-          isDisable={false}
-        />
-        <Button
-          location="groupChange"
-          text=">"
-          onClickHandler={() => onClickHandler('next')}
-          type="button"
-          isDisable={index === max - 1}
-        />
-      </div>
-
-      <h2 className={style.title}>{groupOptions[index].title}</h2>
-      <p className={style.description}>{groupOptions[index].information}</p>
-
       <div className={style.sorters}>
         <div className={style.sort}>
           <SortButtons
-            active="Up"
-            group={groupOptions[index].category}
-            updateSortRule={() => {}}
+            active={getActiveSort(category)}
+            parameter={category}
+            updateSortRule={onUpdateRules}
           />
-          <span>{groupOptions[index].category}</span>
         </div>
         <div className={style.sort}>
           <SortButtons
-            active="none"
-            group={groupOptions[index].evaluate}
-            updateSortRule={() => {}}
+            active={getActiveSort(evaluate)}
+            parameter={evaluate}
+            updateSortRule={onUpdateRules}
           />
-          <span>{groupOptions[index].evaluate}</span>
         </div>
       </div>
 
       <div className={style.graphs}>
-        {graphData.map((d) => (
-          <>
-            <span
-              key={`${index}${d.title}${d.value}span`}
-              className={style['graph-title']}
-            >
-              {d.title}
-            </span>
-            <div
-              key={`${index}${d.title}${d.value}cont`}
-              className={style['bar-graph']}
-            >
+        {sortedData.map((d) => (
+          <React.Fragment key={`${d.id}${d.value}`}>
+            <span className={style['graph-title']}>{d.title}</span>
+            <div className={style['bar-graph']}>
               <ProgressBar
                 percentage={d.value}
                 textPosition="in"
-                key={`${index}${d.title}${d.value}graph`}
+                key={`${d.id}${d.value}${ruleElement}${ruleDirection}graph`}
               />
             </div>
-          </>
+          </React.Fragment>
         ))}
       </div>
     </div>
