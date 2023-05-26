@@ -42,6 +42,8 @@ export default function GroupGraph({ graphData, category, evaluate }: Props) {
     // eslint-disable-next-line
   }, [graphData]);
 
+  if (!sortedData) return <h1>Loading</h1>;
+
   return (
     <div className={style.container}>
       <div className={style.sorters}>

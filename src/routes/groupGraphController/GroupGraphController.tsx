@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Button } from 'components/Button/Button';
 import GroupGraph from 'components/GroupGraph/GroupGraph';
+import LeaderboardTeacher from 'components/LeaderboardTeacher/LeaderboardTeacher';
 
 import { groupOptions } from 'routes/group/groupOptions';
 
@@ -9,16 +10,23 @@ import { useIndex } from 'hooks/useIndex';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { GroupGraphType } from 'types/GroupGraph/GroupGraphType';
+import { Leaderboard } from 'types/Leaderboard/Leaderboard';
+
+import { leaderboardData } from './leaderboardDummyData';
 import style from './GroupGraphController.module.css';
 
-function getDummyGraphData(): GroupGraphType[] {
+function getDummyGraphData(
+  isLeaderboard: boolean
+): (GroupGraphType | Leaderboard)[] {
+  if (isLeaderboard) {
+    return leaderboardData;
+  }
   const data = Array.from({ length: 10 }, () => {
     const title = 'Modulo de aprendizaje';
     const value = Math.floor(Math.random() * 101);
     const id = Math.floor(Math.random() * 101);
     return { title, value, id };
   });
-
   return data;
 }
 
@@ -26,7 +34,9 @@ export default function GroupGraphController() {
   const params = useParams();
   const navigate = useNavigate();
 
-  const [graphData, setGraphData] = useState<GroupGraphType[]>([]);
+  const [graphData, setGraphData] = useState<(GroupGraphType | Leaderboard)[]>(
+    []
+  );
   const { index, max, next, prev, setMaxIndex } = useIndex({
     initial: parseInt(params.id_graph as string, 10) || 0,
   });
@@ -37,9 +47,9 @@ export default function GroupGraphController() {
   }, [setMaxIndex]);
 
   useEffect(() => {
-    const createdData = getDummyGraphData();
+    const createdData = getDummyGraphData(isLeaderboard);
     setGraphData(createdData);
-  }, [index]);
+  }, [index, isLeaderboard]);
 
   const onClickHandler = (action: string) => {
     if (action === 'all') {
@@ -83,11 +93,11 @@ export default function GroupGraphController() {
       <p className={style.description}>{groupOptions[index].information}</p>
 
       {isLeaderboard ? (
-        <h1>Leaderboard</h1>
+        <LeaderboardTeacher data={graphData as Leaderboard[]} />
       ) : (
         <GroupGraph
           key={`${groupOptions[index].category}${groupOptions[index].evaluate}`}
-          graphData={graphData}
+          graphData={graphData as GroupGraphType[]}
           category={groupOptions[index].category}
           evaluate={groupOptions[index].evaluate}
         />

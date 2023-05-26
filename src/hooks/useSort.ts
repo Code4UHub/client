@@ -60,15 +60,18 @@ export const useSort = ({
       setSortedData(newArray);
     }
     if (caller === 'groupGraphs') {
-      const newArray: GroupGraphType[] = sortGraphs(
-        [...data],
-        ruleElement as GraphCategory | GraphEvaluate,
-        ruleDirection
-      );
-      setSortedData(newArray);
+      if (data.length > 0 && (data[0] as GroupGraphType).id) {
+        const newArray: GroupGraphType[] = sortGraphs(
+          [...data],
+          ruleElement as GraphCategory | GraphEvaluate,
+          ruleDirection
+        );
+        setSortedData(newArray as GroupGraphType[]);
+      }
     }
   }, [data, ruleDirection, ruleElement, filter, ALL_VALUES, caller]);
 
+  // DEFINE ALL FILTER OPTIONS, FOR COMPONENTS TO SELECT
   let allFilterOptions: string[] = [ALL_VALUES];
   if (caller === 'studentRequests') {
     allFilterOptions = [

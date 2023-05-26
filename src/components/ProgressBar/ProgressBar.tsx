@@ -14,7 +14,7 @@ function getColor(percentage: number) {
   const green = '#37A169';
 
   if (percentage < 70) return red;
-  if (percentage < 100) return blue;
+  if (percentage < 90) return blue;
   return green;
 }
 
