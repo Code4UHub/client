@@ -184,6 +184,17 @@
   font-size: var(--fs-small-small-text);
 }
 
+/* MODULES */
+.modules {
+  margin: 2rem 0 0 0;
+  background-color: var(--light-blue-color);
+  color: var(--white-color);
+  font-size: var(--fs-small-small-text);
+  height: 4rem;
+  padding: 0 2rem;
+  width: 18rem;
+}
+
 .carousel {
   width: 4.8rem;
   height: 4.8rem;
@@ -197,4 +208,6 @@
 
 .carousel:hover:not(:disabled) {
   transform: translateY(-50%) scale(1.05);
+  
 }
+

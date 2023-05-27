@@ -8,11 +8,6 @@ import { StudentRequest } from 'types/StudentRequest/StudentRequest';
 
 import style from './StudentRequestTable.module.css';
 
-export type SortRule = {
-  element: string;
-  value: 'Up' | 'Down';
-};
-
 export const HEADERS = [
   'Grupo',
   'Nombre',
@@ -22,28 +17,18 @@ export const HEADERS = [
   'Acciones',
 ];
 
-function getActiveSortValues(
-  sortRule: SortRule,
-  header: string
-): 'Up' | 'Down' | 'none' {
-  if (sortRule.element === header) {
-    return sortRule.value;
-  }
-  return 'none';
-}
-
 type HeaderProps = {
   isAllSelected: boolean;
-  sortRule: SortRule;
-  setSortRule: Function;
+  onUpdateSortRule: Function;
   handleSelectAll: Function;
+  getActiveSort: Function;
 };
 
 function TableHeaders({
-  sortRule,
-  setSortRule,
+  onUpdateSortRule,
   isAllSelected,
   handleSelectAll,
+  getActiveSort,
 }: HeaderProps) {
   return (
     <thead>
@@ -53,21 +38,25 @@ function TableHeaders({
             <div className={style['header-element']}>
               {header !== 'Acciones' && (
                 <SortButtons
-                  group={header}
-                  updateSortRule={setSortRule}
-                  active={getActiveSortValues(sortRule, header)}
+                  parameter={header}
+                  updateSortRule={onUpdateSortRule}
+                  active={getActiveSort(header)}
                 />
               )}
               {header === 'Acciones' && (
-                <Button
-                  location={isAllSelected ? 'all-requests' : 'not-all-requests'}
-                  text="Seleccionar"
-                  onClickHandler={() => handleSelectAll()}
-                  type="button"
-                  isDisable={false}
-                />
+                <>
+                  <Button
+                    location={
+                      isAllSelected ? 'all-requests' : 'not-all-requests'
+                    }
+                    text="Seleccionar"
+                    onClickHandler={() => handleSelectAll()}
+                    type="button"
+                    isDisable={false}
+                  />
+                  <span className={style['header-name']}>{header}</span>
+                </>
               )}
-              <span className={style['header-name']}>{header}</span>
             </div>
           </th>
         ))}
@@ -76,12 +65,20 @@ function TableHeaders({
   );
 }
 
+const HEADERS_INFO = [
+  'subject_id',
+  'first_name',
+  'last_name',
+  'student_id',
+  'request_date',
+];
+
 type TableProps = {
-  sortRule: SortRule;
-  setSortRule: Function;
+  onUpdateSortRule: Function;
   isLoading: boolean;
   isListOpen: boolean;
   isAllSelected: boolean;
+  getActiveSort: Function;
   handleAction: Function;
   handleSelect: Function;
   handleSelectAll: Function;
@@ -90,11 +87,11 @@ type TableProps = {
 };
 
 export default function StudentRequestTable({
-  sortRule,
-  setSortRule,
+  onUpdateSortRule,
   isLoading,
   isListOpen,
   isAllSelected,
+  getActiveSort,
   handleAction,
   handleSelect,
   handleSelectAll,
@@ -111,8 +108,8 @@ export default function StudentRequestTable({
       <table className={style.table}>
         <TableHeaders
           isAllSelected={isAllSelected}
-          sortRule={sortRule}
-          setSortRule={setSortRule}
+          getActiveSort={getActiveSort}
+          onUpdateSortRule={onUpdateSortRule}
           handleSelectAll={handleSelectAll}
         />
         <tbody>
@@ -130,31 +127,23 @@ export default function StudentRequestTable({
                       : style['request-row']
                   }
                 >
-                  <td>
-                    <span className={style['request-element']}>
-                      {request.subject_id}.{request.class_id}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={style['request-element']}>
-                      {request.first_name}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={style['request-element']}>
-                      {request.last_name}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={style['request-element']}>
-                      {request.student_id}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={style['request-element']}>
-                      {request.request_date}
-                    </span>
-                  </td>
+                  {HEADERS_INFO.map((header) => {
+                    if (header === 'subject_id')
+                      return (
+                        <td key={`${request.subject_id}.${request.class_id}`}>
+                          <span className={style['request-element']}>
+                            {request.subject_id}.{request.class_id}
+                          </span>
+                        </td>
+                      );
+                    return (
+                      <td key={request[header as keyof StudentRequest]}>
+                        <span className={style['request-element']}>
+                          {request[header as keyof StudentRequest]}
+                        </span>
+                      </td>
+                    );
+                  })}
                   <td>
                     <div className={style['request-action']}>
                       <Button
