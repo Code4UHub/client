@@ -4,6 +4,7 @@
     align-items: center;
     flex-direction: column;
     height: 100%;
+    width: 100%;
 }
 
 .bar-background {
@@ -30,6 +31,13 @@
 .in-percentage, .up-percentage {
     font-weight: 800;
     font-size: var(--fs-small-small-text);
+}
+
+.up-text-container {
+    margin: 0.3rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .up-text {

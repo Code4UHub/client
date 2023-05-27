@@ -23,7 +23,6 @@ export default function ProgressBar({
   textPosition,
   textAdded,
 }: Props) {
-  const text = ` ${textAdded}`;
   const [progress, setProgress] = useState(0);
   useEffect(() => {
     setTimeout(() => {
@@ -38,14 +37,16 @@ export default function ProgressBar({
   return (
     <div className={style.container}>
       {textPosition === 'up' && (
-        <div>
+        <div className={style['up-text-container']}>
           <span
             className={style[`${textPosition}-percentage`]}
             style={{ color }}
           >
             {`${percentage}% `}
           </span>
-          <span className={style[`${textPosition}-text`]}>{text}</span>
+          <span className={style[`${textPosition}-text`]}>
+            &nbsp;{textAdded}
+          </span>
         </div>
       )}
       <div className={style['bar-background']}>
@@ -61,7 +62,9 @@ export default function ProgressBar({
               <span className={style[`${textPosition}-percentage`]}>
                 {`${percentage}% `}
               </span>
-              <span className={style[`${textPosition}-text`]}>{text}</span>
+              <span className={style[`${textPosition}-text`]}>
+                &nbsp;{textAdded}
+              </span>
             </>
           )}
           <div />
