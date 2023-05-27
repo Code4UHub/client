@@ -22,6 +22,7 @@ import Classes from 'routes/classes/Classes';
 import Modules from 'routes/modules/modules';
 import Group from 'routes/group/Group';
 import GroupGraphController from 'routes/groupGraphController/GroupGraphController';
+import Topics from 'routes/topics/topics';
 import { Class } from 'routes/class/Class';
 import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
@@ -78,6 +79,7 @@ function Index() {
                   element: <Home />,
                 },
                 { path: 'modules', element: <Modules /> },
+                { path: 'topics', element: <Topics /> },
                 { path: 'activities', element: 'Actividades' },
                 { path: 'leaderboard', element: 'Leaderboard' },
                 { path: 'group', element: <Group /> },
