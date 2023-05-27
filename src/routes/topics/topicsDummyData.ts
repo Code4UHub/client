@@ -77,7 +77,7 @@ export const data: Topic[] = [
     ],
   },
   {
-    topic_id: 1,
+    topic_id: 4,
     title: 'Optimizing loops',
     percentage: 40,
     challenges: [
