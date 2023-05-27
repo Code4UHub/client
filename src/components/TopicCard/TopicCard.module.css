@@ -1,0 +1,85 @@
+.container {
+    margin: 3rem;
+    transition: all 2s;
+}
+
+.topic-card {
+    display: grid;
+    grid-template-columns: 3fr 3fr 1fr;
+    width: 100%;
+}
+
+.icon {
+    width: 3rem;
+    height: 3rem;
+    align-self: center;
+    justify-self: center;
+}
+
+.title {
+    font-size: var(--fs-small-text);
+    font-weight: 500;
+    align-self: center;
+    padding: 0 2rem;
+}
+
+.challenge-card {
+    background-color: #F5F2F2;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-items: center;
+    align-items: center;
+    width: 100%;
+}
+
+.hidden-card {
+    display: none;
+}
+
+/* SPANS */
+
+.status, .level, .points {
+    font-weight: 300;
+    font-size: 1rem;
+    font-size: var(--fs-small-small-text);
+}
+
+.red, .blue, .green {
+    font-weight: 700;
+    font-size: var(--fs-small-small-text);
+}
+
+.red {
+    color: #D76B65;
+}
+
+.blue {
+    color: #2D689F;
+}
+
+.green {
+    color: #37A169;
+}
+
+@media (max-width: 45em) {
+    .title {
+        font-size: var(--fs-small-small-text);
+    }
+    .red, .blue, .green, .points, .status, .level {
+        font-size: var(--fs-xsmall-text);
+    }
+}
+
+@media (max-width: 30em) {
+    .topic-card {
+        grid-template-columns: 1fr;
+        grid-row-gap: 1rem;
+        justify-items: center;
+        padding: 2rem 4rem;
+    }
+    .challenge-card {
+        grid-template-columns: repeat(2, 1fr);
+        grid-row-gap: 0.5rem;
+    }
+
+}
