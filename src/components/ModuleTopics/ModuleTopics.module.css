@@ -1,0 +1,5 @@
+.title {
+    text-align: center;
+    font-size: var(--fs-mid-text);
+    margin: 2rem;
+}
