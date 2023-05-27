@@ -1,22 +1,24 @@
 import React, { useEffect } from 'react';
 
 import { Button } from 'components/Button/Button';
+import ModuleTopics from 'components/ModuleTopics/ModuleTopics';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useIndex } from 'hooks/useIndex';
 
 import { data } from './topicsDummyData';
 import style from './topics.module.css';
 
-type Props = {
-  initialIndex: number;
-};
+export default function Topics() {
+  const navigate = useNavigate();
+  // Retrieve initialIndex and module data
+  const location = useLocation();
+  const titles = location.state.titles || [];
+  const initialIndex = location.state.initialIndex || 0;
 
-export default function Topics({ initialIndex }: Props) {
   const { index, max, next, prev, setMaxIndex } = useIndex({
     initial: initialIndex,
   });
-  const navigate = useNavigate();
 
   const onClickHandler = (action: string) => {
     if (action === 'all') {
@@ -31,8 +33,8 @@ export default function Topics({ initialIndex }: Props) {
   };
 
   useEffect(() => {
-    setMaxIndex(data.length);
-  }, [data]);
+    setMaxIndex(titles.length);
+  }, [titles, setMaxIndex]);
 
   return (
     <div className={style.container}>
@@ -46,7 +48,7 @@ export default function Topics({ initialIndex }: Props) {
         />
         <Button
           location="groupAll"
-          text="Todas las opciones"
+          text="Todos los módulos"
           onClickHandler={() => onClickHandler('all')}
           type="button"
           isDisable={false}
@@ -59,6 +61,10 @@ export default function Topics({ initialIndex }: Props) {
           isDisable={index === max - 1}
         />
       </div>
+      <ModuleTopics
+        module_title={titles[index]}
+        topics={data}
+      />
     </div>
   );
 }
