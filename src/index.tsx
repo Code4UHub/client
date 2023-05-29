@@ -81,7 +81,7 @@ function Index() {
                 { path: 'activities', element: 'Actividades' },
                 { path: 'leaderboard', element: 'Leaderboard' },
                 { path: 'group', element: <Group /> },
-                { path: 'graph/:id_graph', element: <GroupGraphController /> },
+                { path: 'graph', element: <GroupGraphController /> },
               ],
             },
           ],
