@@ -7,7 +7,7 @@ import LeaderboardTeacher from 'components/LeaderboardTeacher/LeaderboardTeacher
 import { groupOptions } from 'routes/group/groupOptions';
 
 import { useIndex } from 'hooks/useIndex';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import { GroupGraphType } from 'types/GroupGraph/GroupGraphType';
 import { Leaderboard } from 'types/Leaderboard/Leaderboard';
@@ -31,14 +31,14 @@ function getDummyGraphData(
 }
 
 export default function GroupGraphController() {
-  const params = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const [graphData, setGraphData] = useState<(GroupGraphType | Leaderboard)[]>(
     []
   );
   const { index, max, next, prev, setMaxIndex } = useIndex({
-    initial: parseInt(params.id_graph as string, 10) || 0,
+    initial: parseInt(location.state.id_graph as string, 10) || 0,
   });
   const isLeaderboard = groupOptions[index].category === 'Leaderboard';
 
