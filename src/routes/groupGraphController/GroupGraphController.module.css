@@ -9,17 +9,16 @@
 }
 
 .title {
-    text-align: center;
+    text-align: left;
     font-size: var(--fs-mid-text);
 }
 
 .description {
-    text-align: center;
+    text-align: left;
     font-size: var(--fs-mid-text);
     font-weight: 100;
     font-style: italic;
     color: #565555;
     margin: 2rem 0;
-    padding: 0rem 5rem;
 }
 
