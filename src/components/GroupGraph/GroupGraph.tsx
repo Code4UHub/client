@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import ProgressBar from 'components/ProgressBar/ProgressBar';
+import ProgressBar, { BarLegend } from 'components/ProgressBar/ProgressBar';
 import { SortButtons } from 'components/SortButtons/SortButtons';
 
 import { GroupGraphType } from 'types/GroupGraph/GroupGraphType';
@@ -46,6 +46,9 @@ export default function GroupGraph({ graphData, category, evaluate }: Props) {
 
   return (
     <div className={style.container}>
+      <div className={style.legend}>
+        <BarLegend />
+      </div>
       <div className={style.sorters}>
         <span className={style.hint}>Ordenar por: </span>
         <div className={style.sort}>

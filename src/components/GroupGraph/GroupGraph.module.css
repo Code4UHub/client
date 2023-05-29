@@ -17,6 +17,12 @@
     align-items: center;
 }
 
+@media (max-width: 45em) {
+    .sorters {
+        gap: 2rem;
+    }
+}
+
 
 /* GRAPH */
 
@@ -29,7 +35,7 @@
 }
 
 .graph-title {
-    text-align: center;
+    text-align: left;
     font-size: var(--fs-mid-small-text);
     display: flex;
     justify-content: center;
