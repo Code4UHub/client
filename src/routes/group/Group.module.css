@@ -19,8 +19,8 @@
 
 .title {
     font-weight: 500;
-    font-size: var(--fs-mid-small-text);
-    color: #551A8B;
+    font-size: var(--fs-mid-text);
+    color: var(--light-blue-color)
 }
 
 .description {
