@@ -1,3 +1,31 @@
+/* PROGRESS BAR LEGEND */
+
+.legend {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    justify-content: center;
+}
+
+.lightBlue, .blue, .green {
+    padding: 0.5rem 2rem;
+    color: white;
+    border-radius: 1rem;
+    font-size: var(--fs-small-small-text)
+}
+
+.lightBlue {
+    background-color: #57A7F1
+}
+.blue {
+    background-color: #2D689F
+}
+.green {
+    background-color: #37A169
+}
+
+/* PROGRESS BAR */
+
 .container {
     display: flex;
     justify-content: center;
