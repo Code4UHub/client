@@ -1,4 +1,4 @@
-export type GraphCategory = 'Leaderboard' | 'Módulo' | 'Tema';
+export type GraphCategory = 'Leaderboard' | 'Módulo' | 'Actividad';
 
 export type GraphEvaluate = 'Puntaje' | 'Promedio' | 'Progreso';
 
@@ -8,5 +8,4 @@ export type GroupOptions = {
   information: string;
   category: GraphCategory;
   evaluate: GraphEvaluate;
-  url: string;
 };
