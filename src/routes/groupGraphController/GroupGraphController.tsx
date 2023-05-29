@@ -38,7 +38,7 @@ export default function GroupGraphController() {
     []
   );
   const { index, max, next, prev, setMaxIndex } = useIndex({
-    initial: parseInt(location.state.id_graph as string, 10) || 0,
+    initial: parseInt(location.state?.id_graph, 10) || 0,
   });
   const isLeaderboard = groupOptions[index].category === 'Leaderboard';
 
@@ -53,7 +53,7 @@ export default function GroupGraphController() {
 
   const onClickHandler = (action: string) => {
     if (action === 'all') {
-      navigate('../group');
+      navigate('../');
     }
     if (action === 'prev') {
       prev();
