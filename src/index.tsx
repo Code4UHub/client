@@ -23,7 +23,7 @@ import Modules from 'routes/modules/modules';
 import { Class } from 'routes/class/Class';
 import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
-import App from 'App';
+import Test from 'routes/test/Test';
 
 import { Toast } from 'components/Toast/Toast';
 import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
@@ -93,7 +93,7 @@ function Index() {
         },
         {
           path: 'test',
-          element: <App />,
+          element: <Test />,
         },
       ],
       errorElement: <h1>Error</h1>,
