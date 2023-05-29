@@ -25,6 +25,7 @@ import GroupGraphController from 'routes/groupGraphController/GroupGraphControll
 import { Class } from 'routes/class/Class';
 import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
+import Test from 'routes/test/Test';
 
 import { Toast } from 'components/Toast/Toast';
 import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
@@ -78,7 +79,7 @@ function Index() {
                   element: <Home />,
                 },
                 { path: 'modules', element: <Modules /> },
-                { path: 'activities', element: 'Actividades' },
+                { path: 'assignment', element: 'Actividades' },
                 { path: 'leaderboard', element: 'Leaderboard' },
                 { path: 'group', element: <Group /> },
                 { path: 'graph', element: <GroupGraphController /> },
@@ -93,6 +94,10 @@ function Index() {
         {
           path: 'report',
           element: <h1>Aqui va los reportes</h1>,
+        },
+        {
+          path: 'test',
+          element: <Test />,
         },
       ],
       errorElement: <h1>Error</h1>,
