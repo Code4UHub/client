@@ -11,6 +11,9 @@ import {
   StudentRequestPromise,
   RequestAnswer,
 } from 'types/StudentRequest/StudentRequest';
+// TODO: Delete when backend has this information
+import { leaderboardData } from 'routes/groupGraphController/leaderboardDummyData';
+import { GroupGraphPromise } from 'types/GroupGraph/GroupGraphType';
 import { ModulePromise, UpdateModule } from 'types/Module/Module';
 
 // http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
@@ -333,4 +336,31 @@ export const updateClassModules = async (
   };
   const request = await fetch(ENDPOINTS.UPDATE_MODULES(id_class), options);
   return request.json();
+};
+
+// ====== GRAPHS FROM A CLASS  =======
+export const getGraphData = async (
+  auth_token: string,
+  id_class: string,
+  graph_id: number
+): Promise<GroupGraphPromise> => {
+  // Information for leaderboard
+  if (graph_id < 1) {
+    return new Promise((resolve) => {
+      setTimeout(
+        () => resolve({ status: 'success', data: leaderboardData }),
+        100
+      );
+    });
+  }
+  // Information for every other graph
+  const data = Array.from({ length: 10 }, () => {
+    const title = 'Modulo de aprendizaje';
+    const value = Math.floor(Math.random() * 101);
+    const id = Math.floor(Math.random() * 101);
+    return { title, value, id };
+  });
+  return new Promise((resolve) => {
+    setTimeout(() => resolve({ status: 'success', data }), 100);
+  });
 };
