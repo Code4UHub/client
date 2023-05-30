@@ -13,7 +13,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import { TypePromise } from 'types/TypePromise/TypePromise';
 
-import { getClass } from 'utils/db/db.utils';
+import { getClass, getGraphData } from 'utils/db/db.utils';
 
 import { Root } from 'routes/root/Root';
 import Authentication from 'routes/authentication/Authentication';
@@ -26,6 +26,7 @@ import Topics from 'routes/topics/topics';
 import { Class } from 'routes/class/Class';
 import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
+import Test from 'routes/test/Test';
 
 import { Toast } from 'components/Toast/Toast';
 import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
@@ -34,15 +35,19 @@ import './index.css';
 function Index() {
   const user = useSelector((state: RootState) => state.user.currentUser);
 
-  const loaderWrapper = async (fn: () => Promise<TypePromise<any>>) => {
+  const loaderWrapper = async (
+    fn: () => Promise<TypePromise<any>>,
+    allowedUsers: 'student' | 'teacher' | 'all'
+  ) => {
     if (!user) {
+      return redirect('/auth');
+    }
+    if (allowedUsers !== 'all' && allowedUsers !== user.role) {
       return redirect('/auth');
     }
 
     const data = await fn();
-
     if (data.status === 'success') return data.data;
-
     throw new Error();
   };
 
@@ -69,8 +74,10 @@ function Index() {
             {
               path: 'classes/:id',
               loader: async ({ params }) =>
-                await loaderWrapper(() =>
-                  getClass(user?.authToken as string, params.id as string)
+                await loaderWrapper(
+                  () =>
+                    getClass(user?.authToken as string, params.id as string),
+                  'all'
                 ),
               element: <Class />,
               children: [
@@ -80,10 +87,23 @@ function Index() {
                 },
                 { path: 'modules', element: <Modules /> },
                 { path: 'topics', element: <Topics /> },
-                { path: 'activities', element: 'Actividades' },
+                { path: 'assignment', element: 'Actividades' },
                 { path: 'leaderboard', element: 'Leaderboard' },
                 { path: 'group', element: <Group /> },
-                { path: 'graph/:id_graph', element: <GroupGraphController /> },
+                {
+                  path: 'group/graph/:graph_id',
+                  loader: async ({ params }) =>
+                    await loaderWrapper(
+                      () =>
+                        getGraphData(
+                          user?.authToken as string,
+                          params.id as string,
+                          parseInt(params.graph_id ?? '0', 10)
+                        ),
+                      'teacher'
+                    ),
+                  element: <GroupGraphController />,
+                },
               ],
             },
           ],
@@ -95,6 +115,10 @@ function Index() {
         {
           path: 'report',
           element: <h1>Aqui va los reportes</h1>,
+        },
+        {
+          path: 'test',
+          element: <Test />,
         },
       ],
       errorElement: <h1>Error</h1>,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { Button } from 'components/Button/Button';
 import GroupGraph from 'components/GroupGraph/GroupGraph';
@@ -6,60 +6,28 @@ import LeaderboardTeacher from 'components/LeaderboardTeacher/LeaderboardTeacher
 
 import { groupOptions } from 'routes/group/groupOptions';
 
-import { useIndex } from 'hooks/useIndex';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useLoaderData, useParams } from 'react-router-dom';
 
-import { GroupGraphType } from 'types/GroupGraph/GroupGraphType';
-import { Leaderboard } from 'types/Leaderboard/Leaderboard';
+import { GroupGraphType, Leaderboard } from 'types/GroupGraph/GroupGraphType';
 
-import { leaderboardData } from './leaderboardDummyData';
 import style from './GroupGraphController.module.css';
 
-function getDummyGraphData(
-  isLeaderboard: boolean
-): (GroupGraphType | Leaderboard)[] {
-  if (isLeaderboard) {
-    return leaderboardData;
-  }
-  const data = Array.from({ length: 10 }, () => {
-    const title = 'Modulo de aprendizaje';
-    const value = Math.floor(Math.random() * 101);
-    const id = Math.floor(Math.random() * 101);
-    return { title, value, id };
-  });
-  return data;
-}
-
 export default function GroupGraphController() {
-  const params = useParams();
+  const graphData = useLoaderData() as (GroupGraphType | Leaderboard)[];
   const navigate = useNavigate();
-
-  const [graphData, setGraphData] = useState<(GroupGraphType | Leaderboard)[]>(
-    []
-  );
-  const { index, max, next, prev, setMaxIndex } = useIndex({
-    initial: parseInt(params.id_graph as string, 10) || 0,
-  });
-  const isLeaderboard = groupOptions[index].category === 'Leaderboard';
-
-  useEffect(() => {
-    setMaxIndex(groupOptions.length);
-  }, [setMaxIndex]);
-
-  useEffect(() => {
-    const createdData = getDummyGraphData(isLeaderboard);
-    setGraphData(createdData);
-  }, [index, isLeaderboard]);
+  const params = useParams();
+  const graphId = parseInt(params.graph_id ?? '0', 10);
+  const isLeaderboard = groupOptions[graphId].category === 'Leaderboard';
 
   const onClickHandler = (action: string) => {
     if (action === 'all') {
-      navigate('../group');
+      navigate('../../', { relative: 'path' });
     }
-    if (action === 'prev') {
-      prev();
+    if (action === 'prev' && graphId > 0) {
+      navigate(`../${graphId - 1}`, { relative: 'path' });
     }
-    if (action === 'next') {
-      next();
+    if (action === 'next' && graphId < groupOptions.length) {
+      navigate(`../${graphId + 1}`, { relative: 'path' });
     }
   };
 
@@ -71,7 +39,7 @@ export default function GroupGraphController() {
           text="<"
           onClickHandler={() => onClickHandler('prev')}
           type="button"
-          isDisable={index === 0}
+          isDisable={graphId === 0}
         />
         <Button
           location="groupAll"
@@ -85,21 +53,21 @@ export default function GroupGraphController() {
           text=">"
           onClickHandler={() => onClickHandler('next')}
           type="button"
-          isDisable={index === max - 1}
+          isDisable={graphId === groupOptions.length - 1}
         />
       </div>
 
-      <h2 className={style.title}>{groupOptions[index].title}</h2>
-      <p className={style.description}>{groupOptions[index].information}</p>
+      <h2 className={style.title}>{groupOptions[graphId].title}</h2>
+      <p className={style.description}>{groupOptions[graphId].information}</p>
 
       {isLeaderboard ? (
         <LeaderboardTeacher data={graphData as Leaderboard[]} />
       ) : (
         <GroupGraph
-          key={`${groupOptions[index].category}${groupOptions[index].evaluate}`}
+          key={`${groupOptions[graphId].category}${groupOptions[graphId].evaluate}`}
           graphData={graphData as GroupGraphType[]}
-          category={groupOptions[index].category}
-          evaluate={groupOptions[index].evaluate}
+          category={groupOptions[graphId].category}
+          evaluate={groupOptions[graphId].evaluate}
         />
       )}
     </div>

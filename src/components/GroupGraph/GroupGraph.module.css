@@ -17,6 +17,12 @@
     align-items: center;
 }
 
+@media (max-width: 45em) {
+    .sorters {
+        gap: 2rem;
+    }
+}
+
 
 /* GRAPH */
 
@@ -29,14 +35,20 @@
 }
 
 .graph-title {
-    text-align: center;
+    text-align: left;
     font-size: var(--fs-mid-small-text);
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 0 2rem;
+    padding: 0;
 }
 
 .bar-graph {
     height: 4rem;
+}
+
+
+@media (max-width: 45em) {
+    .graph-title {
+        font-size: var(--fs-small-text);
+    }
 }

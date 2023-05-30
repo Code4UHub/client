@@ -1,16 +1,19 @@
 import React, { useEffect } from 'react';
+import { RootState } from 'store/store';
+import { useSelector } from 'react-redux';
 
 import Card from 'components/Card/Card';
 
 import { getDummyData } from './dummyData';
-import styles from './ClassProgress.module.css';
+import styles from './ClassProgressCard.module.css';
 
 type Props = {
   className?: string;
 };
 
-export default function ClassProgress({ className }: Props) {
+export default function ClassProgressCard({ className }: Props) {
   const [progress, setProgress] = React.useState(0);
+  const user = useSelector((state: RootState) => state.user.currentUser);
 
   useEffect(() => {
     const getProgress = async () => {
@@ -23,13 +26,15 @@ export default function ClassProgress({ className }: Props) {
 
   return (
     <Card className={`${styles.container} ${className}`}>
-      <span>Has completado el</span>
+      <span>
+        {user?.role === 'student' ? 'Has completado' : 'Avance del grupo'}
+      </span>
       <span>{progress} %</span>
-      <span>del curso</span>
+      <span>del curso {user?.role === 'teacher' ? 'total' : ''} </span>
     </Card>
   );
 }
 
-ClassProgress.defaultProps = {
+ClassProgressCard.defaultProps = {
   className: '',
 };
