@@ -11,13 +11,11 @@ export default function Group() {
     <div className={style.container}>
       {groupOptions.map((option, i) => (
         <Link
-          to="graph"
+          to={`graph/${i}`}
           state={{ id_graph: i }}
+          key={option.title}
         >
-          <Card
-            key={option.title}
-            className={style.card}
-          >
+          <Card className={style.card}>
             <h3 className={style.title}>{option.title}</h3>
             <p className={style.description}>{option.description}</p>
           </Card>

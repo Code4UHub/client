@@ -13,7 +13,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import { TypePromise } from 'types/TypePromise/TypePromise';
 
-import { getClass } from 'utils/db/db.utils';
+import { getClass, getGraphData } from 'utils/db/db.utils';
 
 import { Root } from 'routes/root/Root';
 import Authentication from 'routes/authentication/Authentication';
@@ -34,15 +34,19 @@ import './index.css';
 function Index() {
   const user = useSelector((state: RootState) => state.user.currentUser);
 
-  const loaderWrapper = async (fn: () => Promise<TypePromise<any>>) => {
+  const loaderWrapper = async (
+    fn: () => Promise<TypePromise<any>>,
+    allowedUsers: 'student' | 'teacher' | 'all'
+  ) => {
     if (!user) {
+      return redirect('/auth');
+    }
+    if (allowedUsers !== 'all' && allowedUsers !== user.role) {
       return redirect('/auth');
     }
 
     const data = await fn();
-
     if (data.status === 'success') return data.data;
-
     throw new Error();
   };
 
@@ -69,8 +73,10 @@ function Index() {
             {
               path: 'classes/:id',
               loader: async ({ params }) =>
-                await loaderWrapper(() =>
-                  getClass(user?.authToken as string, params.id as string)
+                await loaderWrapper(
+                  () =>
+                    getClass(user?.authToken as string, params.id as string),
+                  'all'
                 ),
               element: <Class />,
               children: [
@@ -82,7 +88,20 @@ function Index() {
                 { path: 'assignment', element: 'Actividades' },
                 { path: 'leaderboard', element: 'Leaderboard' },
                 { path: 'group', element: <Group /> },
-                { path: 'group/graph', element: <GroupGraphController /> },
+                {
+                  path: 'group/graph/:graph_id',
+                  loader: async ({ params }) =>
+                    await loaderWrapper(
+                      () =>
+                        getGraphData(
+                          user?.authToken as string,
+                          params.id as string,
+                          parseInt(params.graph_id ?? '0', 10)
+                        ),
+                      'teacher'
+                    ),
+                  element: <GroupGraphController />,
+                },
               ],
             },
           ],
