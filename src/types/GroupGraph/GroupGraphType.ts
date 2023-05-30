@@ -6,4 +6,12 @@ export interface GroupGraphType {
   id: number;
 }
 
-export interface GroupGraphPromise extends TypePromise<GroupGraphType[]> {}
+export interface Leaderboard {
+  position: number;
+  name: string;
+  points: number;
+  student_id: string;
+}
+
+export interface GroupGraphPromise
+  extends TypePromise<(GroupGraphType | Leaderboard)[]> {}
