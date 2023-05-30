@@ -1,4 +1,4 @@
-import { Leaderboard } from 'types/Leaderboard/Leaderboard';
+import { Leaderboard } from 'types/GroupGraph/GroupGraphType';
 
 export const leaderboardData: Leaderboard[] = [
   {

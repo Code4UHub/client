@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Leaderboard } from 'types/Leaderboard/Leaderboard';
+import { Leaderboard } from 'types/GroupGraph/GroupGraphType';
 import Card from 'components/Card/Card';
 
 import style from './LeaderboardTeacher.module.css';
