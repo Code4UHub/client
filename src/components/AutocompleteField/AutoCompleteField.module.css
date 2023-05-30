@@ -8,11 +8,15 @@
   max-height: 35rem;
   background-color: var(--light-gray);
   position: absolute;
+  bottom: 0;
+  transform: translateY(calc(100% + 5px));
   list-style: none;
   font-size: var(--fs-small-text);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  border: 0.063rem solid #b2b3b7;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .autocomplete-list li {
@@ -21,6 +25,10 @@
   padding-bottom: 0.6rem;
   padding-top: 0.6rem;
   cursor: pointer;
+}
+
+.autocomplete-list li:not(:last-child) {
+  border-bottom: 1px solid var(--dark-gray);
 }
 
 .autocomplete-list li:first-child {
