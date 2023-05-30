@@ -1,0 +1,9 @@
+
+.card {
+    min-height: 5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    font-size: var(--fs-small-text)
+}

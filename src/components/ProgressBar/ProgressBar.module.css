@@ -1,0 +1,65 @@
+/* PROGRESS BAR LEGEND */
+
+.legend {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    justify-content: center;
+}
+
+.lightBlue, .blue, .green {
+    padding: 0.5rem 2rem;
+    color: white;
+    border-radius: 1rem;
+    font-size: var(--fs-small-small-text)
+}
+
+.lightBlue {
+    background-color: #57A7F1
+}
+.blue {
+    background-color: #2D689F
+}
+.green {
+    background-color: #37A169
+}
+
+/* PROGRESS BAR */
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+}
+
+.bar-background {
+    width: 100%;
+    height: 100%;
+    min-height: 1rem;
+    background-color: #e4e4ed;
+    border-radius: 0.5rem;
+}
+
+.bar-progress {
+    height: 100%;
+    min-height: 1rem;
+    border-radius: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.in-percentage, .in-text {
+    color: white;
+}
+
+.in-percentage, .up-percentage {
+    font-weight: 800;
+    font-size: var(--fs-small-small-text);
+}
+
+.up-text {
+    color: black
+}
