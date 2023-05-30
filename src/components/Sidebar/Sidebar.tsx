@@ -100,9 +100,9 @@ export default function Sidebar({ children }: SidebarProps) {
           </NavLink>
         </li>
         <li className={`${styles['link-container']} ${styles.assignments}`}>
-          <NavLink to="/assignment">
+          <NavLink to="/homework">
             <IconNotebook />
-            <span>Actividades</span>
+            <span>Mis Tareas</span>
           </NavLink>
         </li>
         {children &&

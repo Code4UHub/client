@@ -26,6 +26,7 @@ import { Class } from 'routes/class/Class';
 import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
 import Test from 'routes/test/Test';
+import CreateHomework from 'routes/homework/CreateHomework';
 
 import { Toast } from 'components/Toast/Toast';
 import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
@@ -88,7 +89,7 @@ function Index() {
                   element: <Home />,
                 },
                 { path: 'modules', element: <Modules /> },
-                { path: 'assignment', element: 'Actividades' },
+                { path: 'homework', element: 'Tareas' },
                 { path: 'leaderboard', element: 'Leaderboard' },
                 { path: 'group', element: <Group /> },
                 {
@@ -107,11 +108,35 @@ function Index() {
                 },
               ],
             },
+            {
+              path: 'classes/:id/homework/create/easy',
+              element: <CreateHomework difficulty="Fácil" />,
+            },
+            {
+              path: 'classes/:id/homework/create/medium',
+              element: <CreateHomework difficulty="Media" />,
+            },
+            {
+              path: 'classes/:id/homework/create/hard',
+              element: <CreateHomework difficulty="Díficil" />,
+            },
           ],
         },
         {
-          path: 'assignment',
+          path: 'homework',
           element: <Assignment />,
+        },
+        {
+          path: 'homework/create/easy',
+          element: <CreateHomework difficulty="Fácil" />,
+        },
+        {
+          path: 'homework/create/medium',
+          element: <CreateHomework difficulty="Media" />,
+        },
+        {
+          path: 'homework/create/hard',
+          element: <CreateHomework difficulty="Díficil" />,
         },
         {
           path: 'report',
