@@ -42,11 +42,14 @@ function Index() {
       return redirect('/auth');
     }
     if (allowedUsers !== 'all' && allowedUsers !== user.role) {
-      return redirect('/auth');
+      throw new Error();
     }
 
     const data = await fn();
-    if (data.status === 'success') return data.data;
+    if (data.status === 'success') {
+      return data.data;
+    }
+
     throw new Error();
   };
 
