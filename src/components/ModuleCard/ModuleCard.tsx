@@ -7,13 +7,13 @@ import ProgressBar from 'components/ProgressBar/ProgressBar';
 import { ReactComponent as OpenIcon } from './openIcon.svg';
 import { ReactComponent as CloseIcon } from './closeIcon.svg';
 
-import style from './TopicCard.module.css';
+import style from './ModuleCard.module.css';
 
 type Props = {
   data: Topic;
 };
 
-export default function TopicCard({ data }: Props) {
+export default function ModuleCard({ data }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   const getPointsColor = (student_points: number, total_points: number) => {
@@ -35,12 +35,12 @@ export default function TopicCard({ data }: Props) {
           textAdded="completado"
         />
         {isOpen ? (
-          <OpenIcon
+          <CloseIcon
             className={style.icon}
             onClick={() => setIsOpen((value) => !value)}
           />
         ) : (
-          <CloseIcon
+          <OpenIcon
             className={style.icon}
             onClick={() => setIsOpen((value) => !value)}
           />

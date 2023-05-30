@@ -19,10 +19,10 @@ import { Root } from 'routes/root/Root';
 import Authentication from 'routes/authentication/Authentication';
 import StudentRequests from 'routes/StudentRequests/StudentRequests';
 import Classes from 'routes/classes/Classes';
-import Modules from 'routes/modules/modules';
+import ModuleTeachers from 'routes/modules/ModuleTeachers';
+import ModuleStudents from 'routes/modules/ModuleStudents';
 import Group from 'routes/group/Group';
 import GroupGraphController from 'routes/groupGraphController/GroupGraphController';
-import Topics from 'routes/topics/topics';
 import { Class } from 'routes/class/Class';
 import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
@@ -35,6 +35,11 @@ import './index.css';
 function Index() {
   const user = useSelector((state: RootState) => state.user.currentUser);
 
+  const noChecking = async (): Promise<TypePromise<string>> =>
+    new Promise((resolve) => {
+      setTimeout(() => resolve({ status: 'success', data: '' }), 100);
+    });
+
   const loaderWrapper = async (
     fn: () => Promise<TypePromise<any>>,
     allowedUsers: 'student' | 'teacher' | 'all'
@@ -43,11 +48,13 @@ function Index() {
       return redirect('/auth');
     }
     if (allowedUsers !== 'all' && allowedUsers !== user.role) {
-      return redirect('/auth');
+      throw new Error();
     }
 
     const data = await fn();
-    if (data.status === 'success') return data.data;
+    if (data.status === 'success') {
+      return data.data;
+    }
     throw new Error();
   };
 
@@ -85,8 +92,19 @@ function Index() {
                   path: '',
                   element: <Home />,
                 },
-                { path: 'modules', element: <Modules /> },
-                { path: 'topics', element: <Topics /> },
+                {
+                  path: 'modules/teacher',
+                  element: <ModuleTeachers />,
+                  loader: async () =>
+                    await loaderWrapper(() => noChecking(), 'teacher'),
+                },
+                {
+                  path: 'modules/student',
+                  element: <ModuleStudents />,
+                  loader: async () =>
+                    await loaderWrapper(() => noChecking(), 'student'),
+                },
+
                 { path: 'assignment', element: 'Actividades' },
                 { path: 'leaderboard', element: 'Leaderboard' },
                 { path: 'group', element: <Group /> },

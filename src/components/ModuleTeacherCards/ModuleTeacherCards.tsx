@@ -1,31 +1,81 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from 'components/Button/Button';
 import Card from 'components/Card/Card';
+import CardSkeleton from 'components/CardSkeleton/CardSkeleton';
+
 import { ReactComponent as LockIcon } from 'routes/modules/lock.svg';
 import { ReactComponent as UnlockIcon } from 'routes/modules/unlock.svg';
+
 import { Module } from 'types/Module/Module';
 
-import style from './ModuleTeachers.module.css';
+import { useSelector } from 'react-redux';
+
+import { RootState } from 'store/store';
+
+import style from './ModuleTeacherCards.module.css';
 
 type Props = {
-  editing: boolean;
-  hasChanges: boolean;
-  onClickHandler: Function;
-  onCancel: Function;
   data: Module[];
-  changeModuleState: Function;
-  cardStyles: (i: number) => string;
+  initialState: Module[];
+  setModuleData: Function;
+  onUpdate: Function;
 };
 
-export function ModuleTeachers({
-  editing,
-  hasChanges,
-  onClickHandler,
-  onCancel,
+export function ModuleTeacherCards({
   data,
-  changeModuleState,
-  cardStyles,
+  initialState,
+  setModuleData,
+  onUpdate,
 }: Props) {
+  const isLoading = useSelector((state: RootState) => state.loading.loadingVal);
+
+  const [editing, setEditing] = useState(false);
+
+  const hasChanges = data.reduce((result, current, index) => {
+    if (current.is_active !== initialState[index].is_active) result = true;
+    return result;
+  }, false);
+
+  function onCancel() {
+    setEditing(false);
+    setModuleData(initialState);
+  }
+
+  const onClickHandler = async () => {
+    if (editing) {
+      onUpdate();
+      setEditing(false);
+    } else {
+      setEditing(true);
+    }
+  };
+
+  function changeModuleState(index: number) {
+    if (editing) {
+      setModuleData(
+        data.map((module, i) => {
+          if (i === index) return { ...module, is_active: !module.is_active };
+          return module;
+        })
+      );
+    }
+  }
+
+  const cardStyles = (i: number) => {
+    if (data[i].is_active) return style.card;
+    return `${style.card} ${style.locked}`;
+  };
+
+  if (isLoading) {
+    return (
+      <div className={style['modules-container']}>
+        <div className={style.modules}>
+          <CardSkeleton items={8} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={style['modules-container']}>
       <div className={style['button-container']}>

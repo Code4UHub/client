@@ -4,7 +4,7 @@ export const data: Topic[] = [
   {
     topic_id: 1,
     title: 'Using for loop',
-    percentage: 75,
+    percentage: 95,
     challenges: [
       {
         challenge_id: 1,
@@ -29,7 +29,7 @@ export const data: Topic[] = [
   {
     topic_id: 2,
     title: 'Using while loop',
-    percentage: 66,
+    percentage: 70,
     challenges: [
       {
         challenge_id: 4,

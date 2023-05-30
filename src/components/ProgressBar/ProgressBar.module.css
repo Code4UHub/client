@@ -69,5 +69,6 @@
 }
 
 .up-text {
-    color: black
+    color: black;
+    font-size: var(--fs-small-small-text);
 }
