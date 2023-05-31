@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import style from './ProgressBar.module.css';
 
 const COLORS = {
-  lightBlue: '#57A7F1',
+  red: '#D76B65',
   blue: '#2D689F',
   green: '#37A169',
 };
@@ -22,7 +22,7 @@ export function BarLegend() {
 }
 
 function getColor(percentage: number) {
-  if (percentage < 70) return COLORS.lightBlue;
+  if (percentage < 70) return COLORS.red;
   if (percentage < 90) return COLORS.blue;
   return COLORS.green;
 }

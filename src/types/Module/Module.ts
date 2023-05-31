@@ -6,10 +6,12 @@ type Score = {
 };
 
 export type Challenge = {
-  level: 'fácil' | 'medio' | 'difícil';
   total_points: number;
   challenge_id: number;
-  difficulty_id: number;
+  difficulty: {
+    difficulty: 'Fácil' | 'Medio' | 'Difícil';
+    difficulty_id: number;
+  };
   title: string;
   student_challenge: Score[];
 };

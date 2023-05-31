@@ -13,19 +13,6 @@ type Props = {
   data: StudentModule;
 };
 
-function getDifficulty(id: number) {
-  switch (id) {
-    case 1:
-      return 'Fácil';
-    case 2:
-      return 'Medio';
-    case 3:
-      return 'Difícil';
-    default:
-      return 'Difícil';
-  }
-}
-
 export default function ModuleCard({ data }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -62,7 +49,7 @@ export default function ModuleCard({ data }: Props) {
 
       {data.challenge.map((challenge) => {
         const studentPoints = challenge.student_challenge[0].score;
-        const difficulty = getDifficulty(challenge.difficulty_id);
+        const { difficulty } = challenge.difficulty;
         const challengePercentage = studentPoints / challenge.total_points;
         const isChallengePassed = challengePercentage >= 0.7;
         return (
