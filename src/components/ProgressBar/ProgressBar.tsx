@@ -9,7 +9,7 @@ const COLORS = {
 };
 
 export function BarLegend() {
-  const description = ['Menor a 70', 'Menor a 90', '90 o más'];
+  const description = ['Menor a 70%', 'Menor a 90%', '90% o más'];
   return (
     <div className={style.legend}>
       {Object.keys(COLORS).map((color, i) => (

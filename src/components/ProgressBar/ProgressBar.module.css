@@ -5,17 +5,19 @@
     flex-direction: row;
     gap: 2rem;
     justify-content: center;
+    align-items: center;
 }
 
-.lightBlue, .blue, .green {
+.red, .blue, .green {
     padding: 0.5rem 2rem;
     color: white;
     border-radius: 1rem;
-    font-size: var(--fs-small-small-text)
+    font-size: var(--fs-small-small-text);
+    text-align: center;
 }
 
-.lightBlue {
-    background-color: #57A7F1
+.red {
+    background-color: #D76B65
 }
 .blue {
     background-color: #2D689F
