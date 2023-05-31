@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import ModuleCard from 'components/ModuleCard/ModuleCard';
 import CardSkeleton from 'components/CardSkeleton/CardSkeleton';
+import { BarLegend } from 'components/ProgressBar/ProgressBar';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -59,6 +60,7 @@ export default function ModuleStudents() {
   // Display real information
   return (
     <div className={style.container}>
+      <BarLegend />
       {data.map((module) => (
         <ModuleCard
           key={module.module_id}
