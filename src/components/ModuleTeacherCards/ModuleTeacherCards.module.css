@@ -8,6 +8,10 @@
     transition: all 500ms;
 }
 
+.card:hover {
+    transform: scale(1);
+}
+
 .locked {
     background-color: #C6C3C3;
 }
@@ -53,7 +57,13 @@
     justify-content: flex-end;
 }
 
-.icon {
+.icon, .clickable-icon {
     width: 6rem;
     height: 6rem;
+    transition: transform 0.5s;
+}
+
+.clickable-icon:hover {
+    cursor: pointer;
+    transform: scale(1.1);
 }

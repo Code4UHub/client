@@ -107,12 +107,12 @@ export function ModuleTeacherCards({
             <div className={style['icon-container']}>
               {data[i].is_active ? (
                 <UnlockIcon
-                  className={style.icon}
+                  className={editing ? style['clickable-icon'] : style.icon}
                   onClick={() => changeModuleState(i)}
                 />
               ) : (
                 <LockIcon
-                  className={style.icon}
+                  className={editing ? style['clickable-icon'] : style.icon}
                   onClick={() => changeModuleState(i)}
                 />
               )}
