@@ -1,25 +1,28 @@
-
 .loading-container {
-    width: 100%;
-    height: 100%;
-    background-color: rgba(#E4E4ED, 0.5);
+  width: 100vw;
+  height: 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  background-color: rgba(#e4e4ed, 0.5);
 }
 
 .bar {
-    width: 20rem;
-    height: 100%;
-    background: var(--blue-gradient);
-    border-radius: 0.5rem;
-    animation: barAnimation 2s infinite ease-in-out;
+  width: 20rem;
+  height: 100%;
+  background: var(--blue-gradient);
+  border-radius: 0.5rem;
+  animation: barAnimation 2s infinite ease-in-out;
 }
 
 @keyframes barAnimation {
-    0% {
-        transform: translateX(-10vw);
-        width: 20rem;
-    }
-    100% {
-        width: 20rem;
-        transform: translateX(100vw);
-    }
+  0% {
+    transform: translateX(-10vw);
+    width: 20rem;
+  }
+  100% {
+    width: 20rem;
+    transform: translateX(100vw);
+  }
 }

@@ -1,0 +1,44 @@
+.card {
+  height: 18rem;
+  display: flex;
+  overflow: hidden;
+  padding: 0;
+}
+
+.card span {
+  display: block;
+}
+
+.color-bar {
+  width: 1.6rem;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.card-container {
+  width: calc(100% - 1.6rem);
+  padding: 2.4rem 1.2rem;
+  font-size: var(--fs-xsmall-text);
+  color: var(--sec-blue-color);
+}
+
+.class-link {
+  font-size: var(--fs-mid-text);
+  color: var(--light-blue-color);
+  display: block;
+  margin-bottom: 1.2rem;
+}
+
+.class-link span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.class-link:hover {
+  text-decoration: underline;
+}
+
+.teacher-name {
+  margin-bottom: 0.4rem;
+}
