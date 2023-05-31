@@ -15,7 +15,8 @@ import {
   logTeacher,
 } from 'utils/db/db.utils';
 
-import { authRules } from 'utils/inputRules/authRules';
+import { useDebounceRules } from 'hooks/useDebounceRules';
+
 import { correctState } from 'utils/inputRules/generalRules';
 import { authData } from './authData';
 
@@ -36,8 +37,9 @@ function toTitleCase(sentence: string) {
 }
 
 export default function AuthenticationForm({ screen }: Props) {
-  const [inputErrors, setInputErrors] = useState<{ [key: string]: string }>({});
   const [inputValues, setInputValues] = useState<{ [key: string]: string }>({});
+  const { inputErrors, onRestartIdValue, restartAllInputErrors } =
+    useDebounceRules(inputValues, 'auth');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [backendError, setBackendError] = useState<{ [key: string]: string }>({
     title: '',
@@ -56,46 +58,19 @@ export default function AuthenticationForm({ screen }: Props) {
 
   // Update values of inputs and errors, according to the screen
   useEffect(() => {
-    setInputErrors({});
-    authData[screen].forEach(({ id }) => {
-      setInputErrors((inputE) => ({ ...inputE, [id]: '' }));
-    });
     setInputValues({});
-    authData[screen].forEach(({ id }) => {
+    const screenIds: string[] = authData[screen].map(({ id }) => id);
+    screenIds.forEach((id) => {
       setInputValues((value) => ({ ...value, [id]: '' }));
     });
+    restartAllInputErrors(screenIds);
+    // eslint-disable-next-line
   }, [screen]);
 
   // Keep record of values and restart errors as a value changes
   const onChangeHandler = (id: string, value: string) => {
     setInputValues((storedValues) => ({ ...storedValues, [id]: value }));
-    setInputErrors((previousErrors) => ({ ...previousErrors, [id]: '' }));
-    // If password changes, passwordConfirmation validation status will change. Restart it
-    if (id === 'password')
-      setInputErrors((previousErrors) => ({
-        ...previousErrors,
-        passwordConfirmation: '',
-      }));
-  };
-
-  // Update errors according to rules
-  const onCheckRules = (id: string, value: string) => {
-    const rule = authRules.find((r) => r.id === id);
-    let validationResult = '';
-    if (rule) {
-      switch (id) {
-        case 'passwordConfirmation':
-          validationResult = rule.validate(value, inputValues.password);
-          break;
-        default:
-          validationResult = rule.validate(value);
-          break;
-      }
-      setInputErrors((previousErrors) => ({
-        ...previousErrors,
-        [id]: validationResult,
-      }));
-    }
+    onRestartIdValue(id);
   };
 
   const turnOffToast = () => {
@@ -153,7 +128,6 @@ export default function AuthenticationForm({ screen }: Props) {
         turnOffToast();
       }
     } catch (error) {
-      console.log(error);
       setBackendError({ title: 'Error', message: 'Intente más tarde' });
       turnOffToast();
     }
@@ -191,7 +165,7 @@ export default function AuthenticationForm({ screen }: Props) {
               error={inputErrors[field.id]}
               required
               handleChange={onChangeHandler}
-              handleBlur={onCheckRules}
+              handleBlur={() => []}
               className={
                 screen === 'signUp' && index < 2
                   ? style.halfInput
