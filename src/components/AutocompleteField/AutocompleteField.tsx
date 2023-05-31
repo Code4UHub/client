@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import { InputField } from 'components/InputField/InputField';
 
 import styles from './AutoCompleteField.module.css';
 
-type Item = {
+export type ItemList = {
   id: string;
   value: string;
 };
@@ -12,7 +12,7 @@ type Item = {
 type Props = {
   label: string;
   id: string;
-  list: Item[];
+  list: ItemList[];
   error: string;
   handleChange: Function;
   handleBlur: Function;
@@ -28,6 +28,7 @@ export default function AutocompleteField({
   handleBlur,
   className,
 }: Props) {
+  const autocompleteListRef = useRef<HTMLUListElement>(null);
   const inputFieldRef = useRef<HTMLInputElement>(null);
 
   const [isListOpen, setIsListOpen] = useState(false);
@@ -40,7 +41,16 @@ export default function AutocompleteField({
     ? list
     : list.filter((item) => item.value.includes(inputValue.trim()));
 
-  const handleClickedItem = (item: Item) => {
+  useEffect(() => {
+    if (focusedItem && focusedItem !== 0 && autocompleteListRef.current) {
+      const element = autocompleteListRef.current.childNodes[
+        focusedItem - 1
+      ] as HTMLElement;
+      element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [focusedItem]);
+
+  const handleClickedItem = (item: ItemList) => {
     if (inputFieldRef.current) inputFieldRef.current.value = item.value;
 
     setInputValue(item.value);
@@ -121,7 +131,12 @@ export default function AutocompleteField({
         required
       />
       {isListOpen && (
-        <ul className={styles['autocomplete-list']}>{listItems}</ul>
+        <ul
+          className={styles['autocomplete-list']}
+          ref={autocompleteListRef}
+        >
+          {listItems}
+        </ul>
       )}
     </div>
   );
