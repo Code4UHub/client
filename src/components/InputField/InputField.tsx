@@ -45,9 +45,6 @@ export const InputField = forwardRef<HTMLInputElement, Props>((props, ref) => (
       readOnly={props.readOnly}
       value={props.defaultValue ? props.defaultValue : undefined}
       min={props.type === 'number' ? 0 : undefined}
-      onReset={() => {
-        console.log(props.id, 'I have reseted');
-      }}
     />
   </div>
 ));
