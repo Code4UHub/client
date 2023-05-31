@@ -1,103 +1,179 @@
-import { Topic } from 'types/Topic/Topic';
+import { StudentModule } from 'types/Module/Module';
 
-export const data: Topic[] = [
+export const data: StudentModule[] = [
   {
-    topic_id: 1,
+    module_id: 1,
     title: 'Using for loop',
-    percentage: 95,
-    challenges: [
+    score: 95,
+    is_active: true,
+    challenge: [
       {
         challenge_id: 1,
         level: 'fácil',
-        student_points: 60,
         total_points: 100,
+        difficulty_id: 1,
+        title: '',
+        student_challenge: [
+          {
+            score: 10,
+          },
+        ],
       },
       {
         challenge_id: 2,
         level: 'medio',
-        student_points: 60,
         total_points: 200,
+        difficulty_id: 2,
+        title: '',
+        student_challenge: [
+          {
+            score: 20,
+          },
+        ],
       },
       {
         challenge_id: 3,
         level: 'difícil',
-        student_points: 60,
         total_points: 300,
+        difficulty_id: 3,
+        title: '',
+        student_challenge: [
+          {
+            score: 10,
+          },
+        ],
       },
     ],
   },
   {
-    topic_id: 2,
+    module_id: 2,
     title: 'Using while loop',
-    percentage: 70,
-    challenges: [
+    score: 70,
+    is_active: true,
+    challenge: [
       {
         challenge_id: 4,
         level: 'fácil',
-        student_points: 10,
         total_points: 100,
+        difficulty_id: 1,
+        title: '',
+        student_challenge: [
+          {
+            score: 20,
+          },
+        ],
       },
       {
         challenge_id: 5,
         level: 'medio',
-        student_points: 160,
         total_points: 200,
+        difficulty_id: 2,
+        title: '',
+        student_challenge: [
+          {
+            score: 20,
+          },
+        ],
       },
       {
         challenge_id: 6,
         level: 'difícil',
-        student_points: 0,
         total_points: 300,
+        difficulty_id: 3,
+        title: '',
+        student_challenge: [
+          {
+            score: 20,
+          },
+        ],
       },
     ],
   },
   {
-    topic_id: 3,
+    module_id: 3,
     title: 'Nested loops',
-    percentage: 15,
-    challenges: [
+    score: 15,
+    is_active: true,
+    challenge: [
       {
         challenge_id: 7,
         level: 'fácil',
-        student_points: 10,
         total_points: 100,
+        difficulty_id: 1,
+        title: '',
+        student_challenge: [
+          {
+            score: 50,
+          },
+        ],
       },
       {
         challenge_id: 8,
         level: 'medio',
-        student_points: 30,
         total_points: 200,
+        difficulty_id: 2,
+        title: '',
+        student_challenge: [
+          {
+            score: 70,
+          },
+        ],
       },
       {
         challenge_id: 9,
         level: 'difícil',
-        student_points: 20,
         total_points: 300,
+        difficulty_id: 3,
+        title: '',
+        student_challenge: [
+          {
+            score: 10,
+          },
+        ],
       },
     ],
   },
   {
-    topic_id: 4,
+    module_id: 4,
     title: 'Optimizing loops',
-    percentage: 40,
-    challenges: [
+    score: 40,
+    is_active: true,
+    challenge: [
       {
         challenge_id: 10,
         level: 'fácil',
-        student_points: 90,
         total_points: 100,
+        difficulty_id: 1,
+        title: '',
+        student_challenge: [
+          {
+            score: 20,
+          },
+        ],
       },
       {
         challenge_id: 11,
         level: 'medio',
-        student_points: 150,
         total_points: 200,
+        difficulty_id: 2,
+        title: '',
+        student_challenge: [
+          {
+            score: 20,
+          },
+        ],
       },
       {
         challenge_id: 12,
         level: 'difícil',
-        student_points: 200,
         total_points: 300,
+        difficulty_id: 3,
+        title: '',
+        student_challenge: [
+          {
+            score: 20,
+          },
+        ],
       },
     ],
   },
