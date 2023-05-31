@@ -14,8 +14,6 @@ import { StudentModule } from 'types/Module/Module';
 
 import { getStudentModuleProgress } from 'utils/db/db.utils';
 
-// import { data } from './moduledummy';
-
 import style from './ModuleStudents.module.css';
 
 export default function ModuleStudents() {
@@ -25,9 +23,10 @@ export default function ModuleStudents() {
   const dispatch = useDispatch();
   const [data, setData] = useState<StudentModule[]>([]);
 
+  // Get information from database
   useEffect(() => {
     const getData = async () => {
-      dispatch(setLoading);
+      dispatch(setLoading());
       const response = await getStudentModuleProgress(
         params.id as string,
         user?.authToken as string,
@@ -44,18 +43,20 @@ export default function ModuleStudents() {
           })
         );
       }
-      dispatch(removeLoading);
+      dispatch(removeLoading());
     };
     getData();
-  }, []);
+  }, [dispatch, params.id, user?.id, user?.authToken]);
 
+  // Show skeleton if information is loading
   if (isLoading)
     return (
-      <div className={style.container}>
+      <div className={style.loading}>
         <CardSkeleton items={10} />
       </div>
     );
 
+  // Display real information
   return (
     <div className={style.container}>
       {data.map((module) => (
