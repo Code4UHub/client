@@ -3,17 +3,25 @@
     transition: all 2s;
 }
 
-.topic-card {
+.topic-card, .closed {
     display: grid;
-    grid-template-columns: 3fr 3fr 1fr;
     width: 100%;
+}
+
+.topic-card {
     background-color: white;
+    grid-template-columns: 3fr 3fr 1fr;
     position: relative;
     z-index: 10;
     box-shadow: inset;
 }
 
-.topic-card:hover, .challenge-card:hover {
+.closed {
+    background-color: #a1a0a0;
+    grid-template-columns: 6fr 1fr;
+}
+
+.topic-card:hover, .challenge-card:hover, .closed:hover {
     transform: scale(1);
 }
 

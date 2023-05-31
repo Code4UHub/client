@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 
 import { Button } from 'components/Button/Button';
 import Card from 'components/Card/Card';
-import { StudentModule } from 'types/Module/Module';
 import ProgressBar from 'components/ProgressBar/ProgressBar';
+
+import { StudentModule } from 'types/Module/Module';
+
 import { ReactComponent as OpenIcon } from './openIcon.svg';
 import { ReactComponent as CloseIcon } from './closeIcon.svg';
+import { ReactComponent as LockIcon } from './lock.svg';
 
 import style from './ModuleCard.module.css';
 
@@ -25,21 +28,25 @@ export default function ModuleCard({ data }: Props) {
 
   return (
     <div className={style.container}>
-      <Card className={style['topic-card']}>
+      <Card className={data.is_active ? style['topic-card'] : style.closed}>
         <span className={style.title}>
           {data.module_id}. {data.title}
         </span>
-        <ProgressBar
-          percentage={data.score}
-          textPosition="up"
-          textAdded="completado"
-        />
-        {isOpen ? (
+        {data.is_active && (
+          <ProgressBar
+            percentage={data.score}
+            textPosition="up"
+            textAdded="completado"
+          />
+        )}
+        {!data.is_active && <LockIcon className={style.icon} />}
+        {data.is_active && isOpen && (
           <CloseIcon
             className={style.icon}
             onClick={() => setIsOpen((value) => !value)}
           />
-        ) : (
+        )}
+        {data.is_active && !isOpen && (
           <OpenIcon
             className={style.icon}
             onClick={() => setIsOpen((value) => !value)}
