@@ -59,9 +59,9 @@ input:-webkit-autofill:focus {
   background-color: var(--dark-gray);
 }
 
-.readOnly {
-  background-color: #b2b3b7 !important;
-  color: var(--dark-dark-gray) !important;
+.inputField input.readOnly {
+  background-color: #b2b3b7;
+  color: var(--dark-dark-gray);
   cursor: not-allowed;
 }
 
