@@ -109,42 +109,24 @@ function Index() {
               ],
             },
             {
-              path: 'classes/:id/homework/create/easy',
-              element: <CreateHomework difficulty="Fácil" />,
+              path: 'classes/:id/homework/create/:difficulty',
+              element: <CreateHomework />,
               loader: async ({ params }) => {
-                const data = (await loaderWrapper(
-                  () =>
-                    getClass(user?.authToken as string, params.id as string),
-                  'teacher'
-                )) as TeacherClass;
+                if (
+                  params.difficulty === '1' ||
+                  params.difficulty === '2' ||
+                  params.difficulty === '3'
+                ) {
+                  const data = (await loaderWrapper(
+                    () =>
+                      getClass(user?.authToken as string, params.id as string),
+                    'teacher'
+                  )) as TeacherClass;
 
-                return { id: data.class_id, value: data.subject_name };
-              },
-            },
-            {
-              path: 'classes/:id/homework/create/medium',
-              element: <CreateHomework difficulty="Media" />,
-              loader: async ({ params }) => {
-                const data = (await loaderWrapper(
-                  () =>
-                    getClass(user?.authToken as string, params.id as string),
-                  'teacher'
-                )) as TeacherClass;
+                  return { id: data.class_id, value: data.subject_name };
+                }
 
-                return { id: data.class_id, value: data.subject_name };
-              },
-            },
-            {
-              path: 'classes/:id/homework/create/hard',
-              element: <CreateHomework difficulty="Díficil" />,
-              loader: async ({ params }) => {
-                const data = (await loaderWrapper(
-                  () =>
-                    getClass(user?.authToken as string, params.id as string),
-                  'teacher'
-                )) as TeacherClass;
-
-                return { id: data.class_id, value: data.subject_name };
+                throw new Error();
               },
             },
           ],
@@ -154,49 +136,31 @@ function Index() {
           element: <Assignment />,
         },
         {
-          path: 'homework/create/easy',
-          element: <CreateHomework difficulty="Fácil" />,
-          loader: async () => {
-            const data = (await loaderWrapper(
-              () =>
-                getTeacherClassList(
-                  user?.id as string,
-                  user?.authToken as string
-                ),
-              'teacher'
-            )) as TeacherClass[];
+          path: 'homework/create/:difficulty',
+          element: <CreateHomework />,
+          loader: async ({ params }) => {
+            if (
+              params.difficulty === '1' ||
+              params.difficulty === '2' ||
+              params.difficulty === '3'
+            ) {
+              const data = (await loaderWrapper(
+                () =>
+                  getTeacherClassList(
+                    user?.id as string,
+                    user?.authToken as string
+                  ),
+                'teacher'
+              )) as TeacherClass[];
 
-            return data.map((classItem) => ({
-              id: classItem.class_id,
-              value: `[${classItem.class_id}] - ${classItem.subject_name}`,
-            }));
+              return data.map((classItem) => ({
+                id: classItem.class_id,
+                value: `[${classItem.class_id}] - ${classItem.subject_name}`,
+              }));
+            }
+
+            throw new Error();
           },
-        },
-        {
-          path: 'homework/create/medium',
-          element: <CreateHomework difficulty="Media" />,
-          loader: async () =>
-            await loaderWrapper(
-              () =>
-                getTeacherClassList(
-                  user?.id as string,
-                  user?.authToken as string
-                ),
-              'teacher'
-            ),
-        },
-        {
-          path: 'homework/create/hard',
-          element: <CreateHomework difficulty="Díficil" />,
-          loader: async () =>
-            await loaderWrapper(
-              () =>
-                getTeacherClassList(
-                  user?.id as string,
-                  user?.authToken as string
-                ),
-              'teacher'
-            ),
         },
         {
           path: 'report',
