@@ -63,6 +63,9 @@
     .controllers {
         flex-direction: column;
     }
+    .instructions {
+        text-align: center;
+    }
 }
 
 .title {
