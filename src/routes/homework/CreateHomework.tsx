@@ -15,8 +15,10 @@ import { HomeworkRequest } from 'types/Homework/Homework';
 
 import { correctState } from 'utils/inputRules/generalRules';
 import { createHomeworkRules } from 'utils/inputRules/createHomeworkRules';
-import { Question, questionList } from './dummyData';
 
+import { formatDifficulty } from 'utils/format/formatDifficulty';
+
+import { Question, questionList } from './dummyData';
 import { ReactComponent as IconBack } from './ArrowBack.svg';
 import { ReactComponent as IconDelete } from './Delete.svg';
 import styles from './CreateHomework.module.css';
@@ -87,9 +89,11 @@ function inputErrorsReducer(state: InputErrors, action: InputErrorActions) {
   }
 }
 
+type Difficulty = 1 | 2 | 3;
+
 const INITIAL_HOMEWORK = (
   class_id: ItemList | undefined,
-  difficulty: 1 | 2 | 3
+  difficulty: Difficulty
 ): HomeworkRequest => ({
   class_id: class_id || '',
   difficulty_id: difficulty,
@@ -101,7 +105,7 @@ const INITIAL_HOMEWORK = (
 });
 
 type UpdateClass = { type: 'class'; payload: string | ItemList };
-type UpdateDifficulty = { type: 'difficulty'; payload: 1 | 2 | 3 };
+type UpdateDifficulty = { type: 'difficulty'; payload: Difficulty };
 type UpdateTitle = { type: 'title'; payload: string };
 type UpdateOpenQuestions = { type: 'open_questions'; payload: number };
 type UpdateClosedQuestions = { type: 'closed_questions'; payload: number };
@@ -149,25 +153,10 @@ function homeworkRequestReducer(
   }
 }
 
-type Props = {
-  difficulty: 'Fácil' | 'Media' | 'Díficil';
-};
-
-const getDifficultyId = (difficulty: 'Fácil' | 'Media' | 'Díficil') => {
-  switch (difficulty) {
-    case 'Fácil':
-      return 1;
-    case 'Media':
-      return 2;
-    default:
-      return 3;
-  }
-};
-
-export default function CreateHomework({ difficulty }: Props) {
+export default function CreateHomework() {
   const formRef = useRef<HTMLFormElement>(null);
 
-  const { id } = useParams();
+  const { id, difficulty } = useParams();
   const toastDispatch = useDispatch();
   const data = useLoaderData() as ItemList[] | ItemList;
 
@@ -177,7 +166,7 @@ export default function CreateHomework({ difficulty }: Props) {
     homeworkRequestReducer,
     INITIAL_HOMEWORK(
       id ? (data as ItemList) : undefined,
-      getDifficultyId(difficulty)
+      Number(difficulty) as Difficulty
     )
   );
 
@@ -267,7 +256,7 @@ export default function CreateHomework({ difficulty }: Props) {
       type: 'reset',
       payload: INITIAL_HOMEWORK(
         id ? (data as ItemList) : undefined,
-        getDifficultyId(difficulty)
+        Number(difficulty) as Difficulty
       ),
     });
   };
@@ -387,7 +376,9 @@ export default function CreateHomework({ difficulty }: Props) {
   return (
     <>
       <SectionHeader
-        title={`Crear Tarea ${difficulty}`}
+        title={`Crear Tarea ${formatDifficulty(
+          Number(difficulty) as Difficulty
+        )}`}
         childType="backButton"
       >
         <Link
@@ -473,13 +464,6 @@ export default function CreateHomework({ difficulty }: Props) {
         <div className={styles.question}>
           <div className={styles['header-container']}>
             <span className={styles.header}>Preguntas</span>
-            {/* <div className={styles['add-question-container']}>
-              <Button
-                onClickHandler={() => {}}
-                location="addQuestion"
-                text="Añadir Pregunta"
-              />
-            </div> */}
             <div className={styles['number-of-questions']}>
               {`${numberOfQuestions.open + numberOfQuestions.closed} Preguntas`}
             </div>
