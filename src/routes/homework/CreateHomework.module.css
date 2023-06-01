@@ -104,6 +104,7 @@
 }
 
 .question-container {
+  height: 100%;
   list-style: none;
   overflow-y: auto;
   border: 1px solid #b2b3b7;
