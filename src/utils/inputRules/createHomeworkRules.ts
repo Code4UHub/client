@@ -70,6 +70,8 @@ function numberOfQuestions(questions: number) {
 
   if (questions % 1 !== 0) return NumberError.noDecimal;
 
+  if (questions > 5) return NumberError.max;
+
   return correctState;
 }
 
