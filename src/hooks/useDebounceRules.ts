@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { authRules } from 'utils/inputRules/authRules';
+import { inputRules } from 'utils/inputRules/groupRules';
 
 // Implemention idea inspired on: https://www.tiktok.com/@cosdensolutions/video/7225961986532674842?_r=1&_t=8c9FwTf8ETN&social_sharing=v2
 
@@ -15,7 +16,7 @@ function findDifferentKey(obj1: StringsObject, obj2: StringsObject): string {
 
 export const useDebounceRules = (
   inputValue: StringsObject,
-  caller: 'auth' | 'other'
+  caller: 'auth' | 'joinGroup' | 'other'
 ) => {
   // Registry of the previous value of inputValue (to check changes)
   const [tracker, setTracker] = useState(inputValue);
@@ -45,21 +46,28 @@ export const useDebounceRules = (
 
   // Update errors according to rules
   const onCheckRules = (id: string, value: string, password?: string) => {
-    const rule = authRules.find((r) => r.id === id);
-    let validationResult = '';
-    if (rule) {
-      switch (id) {
-        case 'passwordConfirmation':
-          validationResult = rule.validate(value, password);
-          break;
-        default:
-          validationResult = rule.validate(value);
-          break;
+    if (caller === 'auth') {
+      const rule = authRules.find((r) => r.id === id);
+      let validationResult = '';
+      if (rule) {
+        switch (id) {
+          case 'passwordConfirmation':
+            validationResult = rule.validate(value, password);
+            break;
+          default:
+            validationResult = rule.validate(value);
+            break;
+        }
+        setInputErrors((previousErrors) => ({
+          ...previousErrors,
+          [id]: validationResult,
+        }));
       }
-      setInputErrors((previousErrors) => ({
-        ...previousErrors,
-        [id]: validationResult,
-      }));
+    }
+    if (caller === 'joinGroup') {
+      const classCodeRules = inputRules.find((rule) => rule.id === 'class_id');
+      const validationResult = classCodeRules?.validate(inputValue.classCode);
+      setInputErrors({ classCode: validationResult });
     }
   };
 
