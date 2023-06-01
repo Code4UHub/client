@@ -186,13 +186,19 @@
 
 /* MODULES */
 .modules {
-  margin: 2rem 0 0 0;
   background-color: var(--light-blue-color);
   color: var(--white-color);
   font-size: var(--fs-small-small-text);
   height: 4rem;
   padding: 0 2rem;
   width: 18rem;
+}
+
+@media (max-width: 30em) {
+  .modules {
+    width: 16rem;
+    padding: 0 1rem;
+  }
 }
 
 /* GROUP GRAPHS */
@@ -221,6 +227,26 @@
   border-radius: 1rem;
 }
 
+/* TOPIC CARDS */
+.topic-card {
+  background-color: var(--light-blue-color);
+  font-size: var(--fs-small-small-text);
+  color: var(--white-color);
+  height: 2.5rem;
+  width: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 1rem;
+}
+
+@media (max-width: 30em) {
+  .topic-card {
+    height: 2rem;
+    font-size: var(--fs-xsmall-text);
+    width: 8rem;
+  }
+}
 /* HOME TEACHER */
 .carousel {
   width: 4.8rem;
