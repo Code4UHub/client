@@ -28,11 +28,26 @@
     grid-gap: 2rem 4rem;
 }
 
+.controllers {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 2rem;
+}
+
 .button-container {
     display: flex;
     gap: 1rem;
     align-items: center;
     justify-content: flex-start;
+}
+
+.instructions {
+    font-size: var(--fs-small-text);
+    text-align: right;
+    font-style: italic;
 }
 
 @media (max-width : 60em) {
@@ -44,6 +59,9 @@
 @media (max-width : 30em) {
     .modules {
         grid-template-columns: 1fr;
+    }
+    .controllers {
+        flex-direction: column;
     }
 }
 

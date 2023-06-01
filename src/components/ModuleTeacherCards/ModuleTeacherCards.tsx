@@ -78,21 +78,28 @@ export function ModuleTeacherCards({
 
   return (
     <div className={style['modules-container']}>
-      <div className={style['button-container']}>
-        <Button
-          location="modules"
-          text={editing ? 'Guardar cambios' : 'Editar visibilidad'}
-          isDisable={editing ? !hasChanges : false}
-          onClickHandler={() => onClickHandler()}
-        />
-        {editing && (
+      <div className={style.controllers}>
+        <div className={style['button-container']}>
           <Button
             location="modules"
-            className={style.cancel}
-            text="Cancelar"
-            isDisable={false}
-            onClickHandler={() => onCancel()}
+            text={editing ? 'Guardar' : 'Habilitar / Bloquear'}
+            isDisable={editing ? !hasChanges : false}
+            onClickHandler={() => onClickHandler()}
           />
+          {editing && (
+            <Button
+              location="modules"
+              className={style.cancel}
+              text="Cancelar"
+              isDisable={false}
+              onClickHandler={() => onCancel()}
+            />
+          )}
+        </div>
+        {editing && (
+          <span className={style.instructions}>
+            Da click en el candado para hacer cambios
+          </span>
         )}
       </div>
       <div className={style.modules}>
