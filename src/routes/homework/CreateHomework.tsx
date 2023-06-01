@@ -8,150 +8,27 @@ import { InputField } from 'components/InputField/InputField';
 import AutocompleteField, {
   ItemList,
 } from 'components/AutocompleteField/AutocompleteField';
-import Card from 'components/Card/Card';
 import { Button } from 'components/Button/Button';
-
-import { HomeworkRequest } from 'types/Homework/Homework';
+import QuestionCard from 'components/QuestionCard/QuestionCard';
 
 import { correctState } from 'utils/inputRules/generalRules';
 import { createHomeworkRules } from 'utils/inputRules/createHomeworkRules';
 
 import { formatDifficulty } from 'utils/format/formatDifficulty';
 
-import { Question, questionList } from './dummyData';
+import {
+  INITIAL_HOMEWORK,
+  homeworkRequestReducer,
+  QuestionDifficulty,
+} from './reducers/homeworkReducer';
+import {
+  INITIAL_INPUT_ERRORS,
+  inputErrorsReducer,
+} from './reducers/inputErrors';
+
+import { Question } from './dummyData';
 import { ReactComponent as IconBack } from './ArrowBack.svg';
-import { ReactComponent as IconDelete } from './Delete.svg';
 import styles from './CreateHomework.module.css';
-
-type QuestionCardProps = {
-  question: Question;
-  onDelete: Function;
-};
-
-function QuestionCard({ question, onDelete }: QuestionCardProps) {
-  return (
-    <Card className={styles['question-card']}>
-      <span className={styles['question-id']}>{question.id}.</span>
-      <div>
-        <div className={styles['question-tags']}>
-          <span className={`${styles.tag} ${styles.module}`}>
-            {question.module}
-          </span>
-          <span className={`${styles.tag} ${styles.type}`}>
-            {question.type}
-          </span>
-        </div>
-        <span
-          className={styles['question-title']}
-          title={question.title}
-        >
-          {question.title}
-        </span>
-      </div>
-      <button
-        type="button"
-        className={styles['question-delete']}
-        onClick={() => onDelete(question)}
-      >
-        <IconDelete />
-      </button>
-    </Card>
-  );
-}
-
-const INITIAL_INPUT_ERRORS = {
-  class_id: '',
-  difficulty_id: '',
-  title: '',
-  open_questions: '',
-  closed_questions: '',
-  deadline: '',
-  questions_ids: '',
-};
-
-type InputErrors = typeof INITIAL_INPUT_ERRORS;
-
-type UpdateInputError = {
-  type: 'update';
-  payload: { [Key in keyof InputErrors]?: string };
-};
-type ResetInputErrors = { type: 'reset'; payload: InputErrors };
-type InputErrorActions = UpdateInputError | ResetInputErrors;
-
-function inputErrorsReducer(state: InputErrors, action: InputErrorActions) {
-  switch (action.type) {
-    case 'update':
-      return { ...state, ...action.payload };
-    case 'reset':
-      return { ...action.payload };
-    default:
-      return state;
-  }
-}
-
-type Difficulty = 1 | 2 | 3;
-
-const INITIAL_HOMEWORK = (
-  class_id: ItemList | undefined,
-  difficulty: Difficulty
-): HomeworkRequest => ({
-  class_id: class_id || '',
-  difficulty_id: difficulty,
-  title: '',
-  open_questions: undefined,
-  closed_questions: undefined,
-  deadline: '',
-  questions_ids: [...questionList],
-});
-
-type UpdateClass = { type: 'class'; payload: string | ItemList };
-type UpdateDifficulty = { type: 'difficulty'; payload: Difficulty };
-type UpdateTitle = { type: 'title'; payload: string };
-type UpdateOpenQuestions = { type: 'open_questions'; payload: number };
-type UpdateClosedQuestions = { type: 'closed_questions'; payload: number };
-type UpdateDeadline = { type: 'deadline'; payload: string };
-type UpdateQuestions = { type: 'questions'; payload: Question[] };
-type ResetHomework = { type: 'reset'; payload: HomeworkRequest };
-type ReducerActions =
-  | UpdateClass
-  | UpdateDifficulty
-  | UpdateTitle
-  | UpdateOpenQuestions
-  | UpdateClosedQuestions
-  | UpdateDeadline
-  | UpdateQuestions
-  | ResetHomework;
-
-function homeworkRequestReducer(
-  state: HomeworkRequest,
-  action: ReducerActions
-): HomeworkRequest {
-  switch (action.type) {
-    case 'class':
-      return { ...state, class_id: action.payload };
-
-    case 'title':
-      return { ...state, title: action.payload };
-
-    case 'open_questions':
-      return { ...state, open_questions: action.payload };
-
-    case 'closed_questions':
-      return { ...state, closed_questions: action.payload };
-
-    case 'deadline':
-      return { ...state, deadline: action.payload };
-
-    case 'questions':
-      return { ...state, questions_ids: action.payload };
-
-    case 'reset':
-      return { ...action.payload };
-
-    default:
-      return state;
-  }
-}
 
 export default function CreateHomework() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -166,7 +43,7 @@ export default function CreateHomework() {
     homeworkRequestReducer,
     INITIAL_HOMEWORK(
       id ? (data as ItemList) : undefined,
-      Number(difficulty) as Difficulty
+      Number(difficulty) as QuestionDifficulty
     )
   );
 
@@ -256,7 +133,7 @@ export default function CreateHomework() {
       type: 'reset',
       payload: INITIAL_HOMEWORK(
         id ? (data as ItemList) : undefined,
-        Number(difficulty) as Difficulty
+        Number(difficulty) as QuestionDifficulty
       ),
     });
   };
@@ -377,7 +254,7 @@ export default function CreateHomework() {
     <>
       <SectionHeader
         title={`Crear Tarea ${formatDifficulty(
-          Number(difficulty) as Difficulty
+          Number(difficulty) as QuestionDifficulty
         )}`}
         childType="backButton"
       >
