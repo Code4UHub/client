@@ -4,6 +4,7 @@ import { InputField } from 'components/InputField/InputField';
 
 import styles from './AutoCompleteField.module.css';
 
+// TODO: Define this somewhere else
 export type ItemList = {
   id: string;
   value: string;
