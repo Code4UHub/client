@@ -28,10 +28,8 @@ export default function JoinGroupForm() {
   const [classInfo, setClassInfo] = useState<Class | null>(null);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
-  const { inputErrors, onRestartIdValue } = useDebounceRules(
-    { classCode },
-    'joinGroup'
-  );
+  const { inputErrors, onRestartIdValue, restartAllInputErrors } =
+    useDebounceRules({ classCode }, 'joinGroup');
 
   const dispatch = useDispatch();
 
@@ -39,6 +37,12 @@ export default function JoinGroupForm() {
 
   const classCodeRef = useRef<HTMLInputElement>(null);
   const submitRef = useRef<HTMLButtonElement>(null);
+
+  // Created so that when switching between find class and confirmation screen, the rules don't apply
+  useEffect(() => {
+    restartAllInputErrors([STATE_NAME]);
+    // eslint-disable-next-line
+  }, [classInfo]);
 
   useEffect(() => {
     if (isFormSubmitted) setIsFormSubmitted(false);
