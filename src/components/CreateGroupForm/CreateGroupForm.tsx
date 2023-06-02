@@ -10,7 +10,6 @@ import NoResultsError from 'components/NoResultsError/NoResultsError';
 import { useDebounceRules } from 'hooks/useDebounceRules';
 
 import { correctState } from 'utils/inputRules/generalRules';
-// import { inputRules } from 'utils/inputRules/groupRules';
 import { createClass, getSubjects } from 'utils/db/db.utils';
 
 import { Subject } from 'types/Subject/Subject';
@@ -24,33 +23,9 @@ import { updateSubjects } from 'store/subject/subjectSlice';
 import { createGroupInputData } from './createGroupData';
 import styles from './CreateGroupFom.module.css';
 
-// const INPUT_ERRORES_INITIAL = createGroupInputData.reduce(
-//   (acc: { [key: string]: string }, { id }) => {
-//     if (id !== 'days') {
-//       acc[id] = '';
-//     }
-//     return acc;
-//   },
-//   {}
-// );
-
 const INPUT_ERRORS_KEYS = createGroupInputData
   .filter(({ id }) => id !== 'days')
   .map((element) => element.id);
-
-// const inputErrorsReducer = (
-//   state: typeof INPUT_ERRORES_INITIAL,
-//   action: { type: string; payload: {} }
-// ): typeof INPUT_ERRORES_INITIAL => {
-//   const { type, payload } = action;
-//   switch (type) {
-//     case 'UPDATE_ERRORS':
-//       return { ...state, ...payload };
-
-//     default:
-//       throw Error('Type not defined');
-//   }
-// };
 
 type InputValuesType = {
   [key: string]:
@@ -76,28 +51,15 @@ const INPUT_VALUES_INITIAL = createGroupInputData.reduce(
   {}
 );
 
-// const inputValuesReducer = (
-//   state: typeof INPUT_VALUES_INITIAL,
-//   action: { type: string; payload: {} }
-// ): typeof INPUT_VALUES_INITIAL => {
-//   const { type, payload } = action;
-
-//   switch (type) {
-//     case 'UPDATE_VALUES':
-//       return { ...state, ...payload };
-
-//     default:
-//       throw Error('Type not defined');
-//   }
-// };
-
 export default function CreateGroupForm() {
   const [isListOpen, setIsListOpen] = useState(false);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [filteredSubjects, setFilteredSubjects] = useState<Subject[]>([]);
-  const [inputValues, setInputValues] =
-    useState<InputValuesType>(INPUT_VALUES_INITIAL);
+  // To avoid passing value by reference, since we have nested objects
+  const [inputValues, setInputValues] = useState<InputValuesType>(
+    JSON.parse(JSON.stringify(INPUT_VALUES_INITIAL))
+  );
   const { inputErrors, onRestartIdValue, restartAllInputErrors } =
     useDebounceRules(inputValues, 'createGroup');
 
@@ -122,6 +84,7 @@ export default function CreateGroupForm() {
 
   useEffect(() => {
     restartAllInputErrors(INPUT_ERRORS_KEYS);
+    // eslint-disable-next-line
   }, []);
 
   const resetValues = () => {
@@ -153,6 +116,7 @@ export default function CreateGroupForm() {
 
   useEffect(() => {
     checkFormValidation();
+    // eslint-disable-next-line
   }, [inputErrors, inputValues]);
 
   // filters autocomplete results based on user input
@@ -163,30 +127,27 @@ export default function CreateGroupForm() {
         subject_name.includes(value.trim()) ||
         `${subject_id}`.includes(value.trim())
     );
-
     setFilteredSubjects(newSubjects);
   };
 
   // Updates input values every time a field changes
   const onChangeHandler = (id: string, value: string | number) => {
-    if (id !== 'days') onRestartIdValue(id);
     setIsSubmitDisabled(true);
-
+    // Days doesn't have an inputError, so no need to track it down
+    if (id !== 'days') {
+      onRestartIdValue(id);
+    }
     if (id === 'subject') {
       filterSubjects(value as string);
     }
-
     if (id === 'days') {
       const newDays = inputValues.days;
-
       const selectedDayVal = (newDays as { dayName: string; dayVal: string }[])[
         value as number
       ].dayVal;
-
       (newDays as { dayName: string; dayVal: string }[])[
         value as number
       ].dayVal = selectedDayVal === 'on' ? 'off' : 'on';
-
       setInputValues((current) => ({ ...current, [id]: newDays }));
     } else {
       setInputValues((current) => ({ ...current, [id]: value as string }));
@@ -204,7 +165,6 @@ export default function CreateGroupForm() {
     if (inputErrors.subject) {
       onRestartIdValue('subject');
     }
-
     filterSubjects(subjectValue);
     setIsListOpen(false);
   };
@@ -250,7 +210,7 @@ export default function CreateGroupForm() {
     } catch (error) {
       dispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
     }
-
+    resetValues();
     dispatch(removeLoading());
   };
 
