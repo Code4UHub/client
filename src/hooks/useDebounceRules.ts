@@ -6,13 +6,36 @@ import { correctState } from 'utils/inputRules/generalRules';
 
 // Implemention idea inspired on: https://www.tiktok.com/@cosdensolutions/video/7225961986532674842?_r=1&_t=8c9FwTf8ETN&social_sharing=v2
 
-const DELAY = 500;
+const DELAY = 400;
 
 type StringsObject = { [key: string]: string };
 
-function findDifferentKey(obj1: StringsObject, obj2: StringsObject): string {
-  const key = Object.keys(obj1).find((k: string) => obj1[k] !== obj2[k]);
-  return key || '';
+/* To find the differennce between the tracker (used to check previous changes) 
+and the inputValues (up-to-date), considering that they could have nested objects, 
+just like in CreateGroupForm on subject and days
+*/
+function findDifferentKey(
+  obj1: { [key: string]: any },
+  obj2: { [key: string]: any },
+  currentKey: string
+): string {
+  const keys = Object.keys(obj1);
+  const diffKey = keys.find((key) => {
+    const val1 = obj1[key];
+    const val2 = obj2[key];
+    const nestedKey = currentKey ? `${currentKey}.${key}` : key;
+
+    if (typeof val1 === 'object' && typeof val2 === 'object') {
+      return findDifferentKey(val1, val2, nestedKey) !== '';
+    }
+    return val1 !== val2;
+  });
+
+  if (diffKey !== undefined) {
+    return currentKey ? `${currentKey}.${diffKey}` : diffKey;
+  }
+
+  return '';
 }
 
 export const useDebounceRules = (
@@ -24,24 +47,22 @@ export const useDebounceRules = (
   // Current value on inputs
   const [inputErrors, setInputErrors] = useState<StringsObject>({});
 
-  useEffect(() => {
-    console.log(inputErrors);
-  }, [inputErrors]);
-
   // To restart all input errors according to the provided keys
   const restartAllInputErrors = (keys: string[]) => {
-    console.log('restarting input errors, keys: ', keys);
     setInputErrors({});
     setTracker({});
+    // setTracker(inputValue);
+
     keys.forEach((key) => {
       setInputErrors((error) => ({ ...error, [key]: '' }));
-      setTracker((val: any) => ({ ...val, [key]: '' }));
+      if (key === 'subject' && caller === 'createGroup') {
+        setTracker((val: any) => ({ ...val, [key]: { id: '', name: '' } }));
+      } else setTracker((val: any) => ({ ...val, [key]: '' }));
     });
   };
 
   // To set error to '' if the input on a given is changed
   const onRestartIdValue = (id: string) => {
-    console.log('restarting idValue, with id:', id);
     setInputErrors((previousErrors) => ({ ...previousErrors, [id]: '' }));
     // Special case for password on auth, a change on password restarts passwordConfirmation error
     if (caller === 'auth' && id === 'password')
@@ -52,7 +73,7 @@ export const useDebounceRules = (
   };
 
   // Update errors according to rules
-  const onCheckRules = (id: string, value: string, password?: string) => {
+  const onCheckRules = (id: string, value: string) => {
     // For authentication form
     if (caller === 'auth') {
       const rule = authRules.find((r) => r.id === id);
@@ -60,7 +81,7 @@ export const useDebounceRules = (
       if (rule) {
         switch (id) {
           case 'passwordConfirmation':
-            validationResult = rule.validate(value, password);
+            validationResult = rule.validate(value, inputValue.password);
             break;
           default:
             validationResult = rule.validate(value);
@@ -102,14 +123,11 @@ export const useDebounceRules = (
     }
   };
 
-  // Everytime inputValue changes from the tracker, it should check rules
+  // Everytime inputValue changes from the tracker (prev state), it should check rules
   useEffect(() => {
-    const id = findDifferentKey(tracker, inputValue);
+    const id = findDifferentKey(tracker, inputValue, '');
     const timeout = setTimeout(() => {
-      console.log('id', id);
       if (id) {
-        if (id === 'passwordConfirmation')
-          onCheckRules(id, inputValue[id], inputValue.password);
         if (caller === 'createGroup' && id !== 'days') {
           onCheckRules(id, inputValue[id]);
         }
