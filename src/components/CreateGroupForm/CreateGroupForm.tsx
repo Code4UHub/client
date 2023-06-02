@@ -89,7 +89,8 @@ export default function CreateGroupForm() {
 
   const resetValues = () => {
     setFilteredSubjects(subjects);
-    setInputValues(INPUT_VALUES_INITIAL);
+    // To avoid passing by reference
+    setInputValues(JSON.parse(JSON.stringify(INPUT_VALUES_INITIAL)));
     restartAllInputErrors(INPUT_ERRORS_KEYS);
   };
 
