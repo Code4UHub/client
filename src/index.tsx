@@ -19,7 +19,8 @@ import { Root } from 'routes/root/Root';
 import Authentication from 'routes/authentication/Authentication';
 import StudentRequests from 'routes/StudentRequests/StudentRequests';
 import Classes from 'routes/classes/Classes';
-import Modules from 'routes/modules/modules';
+import ModuleTeachers from 'routes/modules/ModuleTeachers';
+import ModuleStudents from 'routes/modules/ModuleStudents';
 import Group from 'routes/group/Group';
 import GroupGraphController from 'routes/groupGraphController/GroupGraphController';
 import { Class } from 'routes/class/Class';
@@ -37,6 +38,11 @@ import './index.css';
 function Index() {
   const user = useSelector((state: RootState) => state.user.currentUser);
 
+  const noChecking = async (): Promise<TypePromise<string>> =>
+    new Promise((resolve) => {
+      setTimeout(() => resolve({ status: 'success', data: '' }), 100);
+    });
+
   const loaderWrapper = async (
     fn: () => Promise<TypePromise<any>>,
     allowedUsers?: 'student' | 'teacher'
@@ -52,7 +58,6 @@ function Index() {
     if (data.status === 'success') {
       return data.data;
     }
-
     throw new Error();
   };
 
@@ -88,7 +93,19 @@ function Index() {
                   path: '',
                   element: <Home />,
                 },
-                { path: 'modules', element: <Modules /> },
+                {
+                  path: 'modules/teacher',
+                  element: <ModuleTeachers />,
+                  loader: async () =>
+                    await loaderWrapper(() => noChecking(), 'teacher'),
+                },
+                {
+                  path: 'modules/student',
+                  element: <ModuleStudents />,
+                  loader: async () =>
+                    await loaderWrapper(() => noChecking(), 'student'),
+                },
+
                 { path: 'homework', element: 'Tareas' },
                 { path: 'leaderboard', element: 'Leaderboard' },
                 { path: 'group', element: <Group /> },
