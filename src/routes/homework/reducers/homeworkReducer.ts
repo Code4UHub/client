@@ -1,5 +1,5 @@
 import { HomeworkRequest } from 'types/Homework/Homework';
-import { ItemList } from 'components/AutocompleteField/AutocompleteField';
+import { ListItem } from 'types/ListItem/ListItem';
 
 // TODO: Remove dummyData
 import { Question, questionList } from '../dummyData';
@@ -7,7 +7,7 @@ import { Question, questionList } from '../dummyData';
 export type QuestionDifficulty = 1 | 2 | 3;
 
 export const INITIAL_HOMEWORK = (
-  class_id: ItemList | undefined,
+  class_id: ListItem | undefined,
   difficulty: QuestionDifficulty
 ): HomeworkRequest => ({
   class_id: class_id || '',
@@ -19,7 +19,7 @@ export const INITIAL_HOMEWORK = (
   questions_ids: [...questionList],
 });
 
-type UpdateClass = { type: 'class'; payload: string | ItemList };
+type UpdateClass = { type: 'class'; payload: string | ListItem };
 type UpdateDifficulty = { type: 'difficulty'; payload: QuestionDifficulty };
 type UpdateTitle = { type: 'title'; payload: string };
 type UpdateOpenQuestions = { type: 'open_questions'; payload: number };
