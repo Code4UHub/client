@@ -13,7 +13,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import { TypePromise } from 'types/TypePromise/TypePromise';
 
-import { getClass, getGraphData } from 'utils/db/db.utils';
+import { getClass, getGraphData, getTeacherClassList } from 'utils/db/db.utils';
 
 import { Root } from 'routes/root/Root';
 import Authentication from 'routes/authentication/Authentication';
@@ -27,6 +27,9 @@ import { Class } from 'routes/class/Class';
 import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
 import Test from 'routes/test/Test';
+import CreateHomework from 'routes/homework/CreateHomework';
+
+import { TeacherClass } from 'types/Class/Class';
 
 import { Toast } from 'components/Toast/Toast';
 import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
@@ -42,12 +45,12 @@ function Index() {
 
   const loaderWrapper = async (
     fn: () => Promise<TypePromise<any>>,
-    allowedUsers: 'student' | 'teacher' | 'all'
+    allowedUsers?: 'student' | 'teacher'
   ) => {
     if (!user) {
       return redirect('/auth');
     }
-    if (allowedUsers !== 'all' && allowedUsers !== user.role) {
+    if (allowedUsers && allowedUsers !== user.role) {
       throw new Error();
     }
 
@@ -81,10 +84,8 @@ function Index() {
             {
               path: 'classes/:id',
               loader: async ({ params }) =>
-                await loaderWrapper(
-                  () =>
-                    getClass(user?.authToken as string, params.id as string),
-                  'all'
+                await loaderWrapper(() =>
+                  getClass(user?.authToken as string, params.id as string)
                 ),
               element: <Class />,
               children: [
@@ -105,7 +106,7 @@ function Index() {
                     await loaderWrapper(() => noChecking(), 'student'),
                 },
 
-                { path: 'assignment', element: 'Actividades' },
+                { path: 'homework', element: 'Tareas' },
                 { path: 'leaderboard', element: 'Leaderboard' },
                 { path: 'group', element: <Group /> },
                 {
@@ -124,11 +125,59 @@ function Index() {
                 },
               ],
             },
+            {
+              path: 'classes/:id/homework/create/:difficulty',
+              element: <CreateHomework />,
+              loader: async ({ params }) => {
+                if (
+                  params.difficulty === '1' ||
+                  params.difficulty === '2' ||
+                  params.difficulty === '3'
+                ) {
+                  const data = (await loaderWrapper(
+                    () =>
+                      getClass(user?.authToken as string, params.id as string),
+                    'teacher'
+                  )) as TeacherClass;
+
+                  return { id: data.class_id, value: data.subject_name };
+                }
+
+                throw new Error();
+              },
+            },
           ],
         },
         {
-          path: 'assignment',
+          path: 'homework',
           element: <Assignment />,
+        },
+        {
+          path: 'homework/create/:difficulty',
+          element: <CreateHomework />,
+          loader: async ({ params }) => {
+            if (
+              params.difficulty === '1' ||
+              params.difficulty === '2' ||
+              params.difficulty === '3'
+            ) {
+              const data = (await loaderWrapper(
+                () =>
+                  getTeacherClassList(
+                    user?.id as string,
+                    user?.authToken as string
+                  ),
+                'teacher'
+              )) as TeacherClass[];
+
+              return data.map((classItem) => ({
+                id: classItem.class_id,
+                value: `[${classItem.class_id}] - ${classItem.subject_name}`,
+              }));
+            }
+
+            throw new Error();
+          },
         },
         {
           path: 'report',

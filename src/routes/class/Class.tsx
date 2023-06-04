@@ -31,7 +31,7 @@ function ClassNav({ isStudent }: ClassNavProps) {
           </NavLink>
         </li>
         <li>
-          <NavLink to="activities">Actividades</NavLink>
+          <NavLink to="homework">Tareas</NavLink>
         </li>
         <li>
           <NavLink to={isStudent ? 'leaderboard' : 'group'}>
