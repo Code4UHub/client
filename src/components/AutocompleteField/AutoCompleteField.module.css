@@ -21,6 +21,8 @@
   padding-bottom: 0.6rem;
   padding-top: 0.6rem;
   cursor: pointer;
+  z-index: 1;
+  background-color: var(--light-gray);
 }
 
 .autocomplete-list li:first-child {
