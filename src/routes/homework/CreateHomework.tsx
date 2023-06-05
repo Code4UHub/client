@@ -335,18 +335,16 @@ export default function CreateHomework() {
           <div className={styles['question-container']}>{questionNodes}</div>
         </div>
       </div>
-      <div>
+      <div className={styles.section}>
         <div className={styles['header-container']}>
           <span className={styles.header}>Selección de Preguntas</span>
         </div>
-        <div className={styles['question-selector-container']}>
-          <HomeworkQuestionListTable
-            questionList={data.questionListDb}
-            selectedQuestions={homeworkRequest.questions}
-            onChecked={addQuestion}
-            onUnchecked={removeQuestion}
-          />
-        </div>
+        <HomeworkQuestionListTable
+          questionList={data.questionListDb}
+          selectedQuestions={homeworkRequest.questions}
+          onChecked={addQuestion}
+          onUnchecked={removeQuestion}
+        />
       </div>
     </>
   );
