@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useReducer } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { RootState } from 'store/store';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -7,13 +7,14 @@ import { Button } from 'components/Button/Button';
 import Modal from 'components/Modal/Modal';
 import NoResultsError from 'components/NoResultsError/NoResultsError';
 
+import { useDebounceRules } from 'hooks/useDebounceRules';
+
 import { correctState } from 'utils/inputRules/generalRules';
-import { inputRules } from 'utils/inputRules/groupRules';
+import { createClass, getSubjects } from 'utils/db/db.utils';
 
 import { Subject } from 'types/Subject/Subject';
 import { days } from 'types/Days/Days';
 import { ClassRequest } from 'types/Class/Class';
-import { createClass, getSubjects } from 'utils/db/db.utils';
 
 import { setLoading, removeLoading } from 'store/loading/loadingSlice';
 import { updateToast, TOAST_GENERAL_ERRORS } from 'store/toast/toastSlice';
@@ -22,40 +23,19 @@ import { updateSubjects } from 'store/subject/subjectSlice';
 import { createGroupInputData } from './createGroupData';
 import styles from './CreateGroupFom.module.css';
 
-const INPUT_ERRORES_INITIAL = createGroupInputData.reduce(
-  (acc: { [key: string]: string }, { id }) => {
-    if (id !== 'days') {
-      acc[id] = '';
-    }
-    return acc;
-  },
-  {}
-);
+const INPUT_ERRORS_KEYS = createGroupInputData
+  .filter(({ id }) => id !== 'days')
+  .map((element) => element.id);
 
-const inputErrorsReducer = (
-  state: typeof INPUT_ERRORES_INITIAL,
-  action: { type: string; payload: {} }
-): typeof INPUT_ERRORES_INITIAL => {
-  const { type, payload } = action;
-  switch (type) {
-    case 'UPDATE_ERRORS':
-      return { ...state, ...payload };
-
-    default:
-      throw Error('Type not defined');
-  }
+type InputValuesType = {
+  [key: string]:
+    | string
+    | { id: string; name: string }
+    | { dayName: string; dayVal: string }[];
 };
 
 const INPUT_VALUES_INITIAL = createGroupInputData.reduce(
-  (
-    acc: {
-      [key: string]:
-        | string
-        | { id: string; name: string }
-        | { dayName: string; dayVal: string }[];
-    },
-    { id }
-  ) => {
+  (acc: InputValuesType, { id }) => {
     if (id === 'subject') {
       acc[id] = { id: '', name: '' };
     } else if (id === 'days') {
@@ -71,42 +51,24 @@ const INPUT_VALUES_INITIAL = createGroupInputData.reduce(
   {}
 );
 
-const inputValuesReducer = (
-  state: typeof INPUT_VALUES_INITIAL,
-  action: { type: string; payload: {} }
-): typeof INPUT_VALUES_INITIAL => {
-  const { type, payload } = action;
-
-  switch (type) {
-    case 'UPDATE_VALUES':
-      return { ...state, ...payload };
-
-    default:
-      throw Error('Type not defined');
-  }
-};
-
 export default function CreateGroupForm() {
   const [isListOpen, setIsListOpen] = useState(false);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [filteredSubjects, setFilteredSubjects] = useState<Subject[]>([]);
+  // To avoid passing value by reference, since we have nested objects
+  const [inputValues, setInputValues] = useState<InputValuesType>(
+    JSON.parse(JSON.stringify(INPUT_VALUES_INITIAL))
+  );
+  const { inputErrors, onRestartIdValue, restartAllInputErrors } =
+    useDebounceRules(inputValues, 'createGroup');
+
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.user.currentUser);
   const subjects = useSelector((state: RootState) => state.subject.subjects);
 
   let timeOutId: NodeJS.Timeout;
-
-  const [inputValues, dispatchInputValues] = useReducer(
-    inputValuesReducer,
-    JSON.parse(JSON.stringify(INPUT_VALUES_INITIAL))
-  );
-
-  const [inputErrors, dispatchError] = useReducer(
-    inputErrorsReducer,
-    INPUT_ERRORES_INITIAL
-  );
 
   const lastInputRef = useRef<HTMLInputElement>(null);
   const submitRef = useRef<HTMLButtonElement>(null);
@@ -120,30 +82,32 @@ export default function CreateGroupForm() {
     setFilteredSubjects(subjects);
   }, [subjects, setFilteredSubjects]);
 
+  useEffect(() => {
+    restartAllInputErrors(INPUT_ERRORS_KEYS);
+    // eslint-disable-next-line
+  }, []);
+
   const resetValues = () => {
     setFilteredSubjects(subjects);
-    dispatchInputValues({
-      type: 'UPDATE_VALUES',
-      payload: JSON.parse(JSON.stringify(INPUT_VALUES_INITIAL)),
-    });
-    dispatchError({ type: 'UPDATE_ERRORS', payload: INPUT_ERRORES_INITIAL });
+    // To avoid passing by reference
+    setInputValues(JSON.parse(JSON.stringify(INPUT_VALUES_INITIAL)));
+    restartAllInputErrors(INPUT_ERRORS_KEYS);
   };
 
   const checkFormValidation = () => {
-    const errors = Object.values(inputErrors);
-
-    for (let i = 0; i < errors.length; i += 1) {
-      if (errors[i] !== correctState) {
-        setIsSubmitDisabled(true);
-        return;
-      }
+    const isCorrect = Object.values(inputErrors).every(
+      (errorMessage) => errorMessage === correctState
+    );
+    if (!isCorrect) {
+      setIsSubmitDisabled(true);
+      return;
     }
 
-    const checkActiveDays = (
+    const noActiveDays = (
       inputValues.days as { dayName: string; dayVal: string }[]
     ).every(({ dayVal }) => dayVal === 'off');
 
-    if (checkActiveDays) {
+    if (noActiveDays) {
       setIsSubmitDisabled(true);
       return;
     }
@@ -153,6 +117,7 @@ export default function CreateGroupForm() {
 
   useEffect(() => {
     checkFormValidation();
+    // eslint-disable-next-line
   }, [inputErrors, inputValues]);
 
   // filters autocomplete results based on user input
@@ -163,63 +128,31 @@ export default function CreateGroupForm() {
         subject_name.includes(value.trim()) ||
         `${subject_id}`.includes(value.trim())
     );
-
     setFilteredSubjects(newSubjects);
   };
 
   // Updates input values every time a field changes
   const onChangeHandler = (id: string, value: string | number) => {
     setIsSubmitDisabled(true);
-    if (inputErrors[id])
-      dispatchError({ type: 'UPDATE_ERRORS', payload: { [id]: '' } });
-
+    // Days doesn't have an inputError, so no need to track it down
+    if (id !== 'days') {
+      onRestartIdValue(id);
+    }
     if (id === 'subject') {
       filterSubjects(value as string);
     }
-
     if (id === 'days') {
       const newDays = inputValues.days;
-
       const selectedDayVal = (newDays as { dayName: string; dayVal: string }[])[
         value as number
       ].dayVal;
-
       (newDays as { dayName: string; dayVal: string }[])[
         value as number
       ].dayVal = selectedDayVal === 'on' ? 'off' : 'on';
-
-      dispatchInputValues({
-        type: 'UPDATE_VALUES',
-        payload: { [id]: newDays },
-      });
+      setInputValues((current) => ({ ...current, [id]: newDays }));
     } else {
-      dispatchInputValues({ type: 'UPDATE_VALUES', payload: { [id]: value } });
+      setInputValues((current) => ({ ...current, [id]: value as string }));
     }
-  };
-
-  const onCheckRules = (
-    id: string,
-    value: string | { id: string; name: string }
-  ) => {
-    const rule = inputRules.find((r) => r.id === id);
-    let validationResult = '';
-    if (rule) {
-      if (id === 'end_time')
-        validationResult = rule.validate(value, inputValues.start_time);
-      else validationResult = rule.validate(value);
-    }
-
-    dispatchError({
-      type: 'UPDATE_ERRORS',
-      payload: { [id]: validationResult },
-    });
-
-    if (
-      id === 'start_time' &&
-      validationResult === correctState &&
-      inputErrors.end_time
-    )
-      onCheckRules('end_time', inputValues.end_time as string);
   };
 
   // Updates subject on item click
@@ -228,30 +161,13 @@ export default function CreateGroupForm() {
 
     if (autoComplete.current) autoComplete.current.value = subjectValue;
 
-    dispatchInputValues({
-      type: 'UPDATE_VALUES',
-      payload: { subject: { id, name } },
-    });
+    setInputValues((current) => ({ ...current, subject: { id, name } }));
 
     if (inputErrors.subject) {
-      dispatchError({
-        type: 'UPDATE_ERRORS',
-        payload: { subject: '' },
-      });
+      onRestartIdValue('subject');
     }
-
     filterSubjects(subjectValue);
     setIsListOpen(false);
-  };
-
-  const onBlurHandler = () => {
-    timeOutId = setTimeout(() => {
-      setIsListOpen(false);
-      onCheckRules(
-        'subject',
-        inputValues.subject as { id: string; name: string }
-      );
-    });
   };
 
   const onFocusHandler = () => {
@@ -293,10 +209,9 @@ export default function CreateGroupForm() {
         );
       }
     } catch (error) {
-      console.log(error);
       dispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
     }
-
+    resetValues();
     dispatch(removeLoading());
   };
 
@@ -318,7 +233,7 @@ export default function CreateGroupForm() {
             key={inputData.id}
             className={`${styles.autocomplete}`}
             tabIndex={-1}
-            onBlur={onBlurHandler}
+            onBlur={() => []}
             onFocus={onFocusHandler}
           >
             <InputField
@@ -395,7 +310,7 @@ export default function CreateGroupForm() {
             error={inputErrors[inputData.id]}
             required
             handleChange={onChangeHandler}
-            handleBlur={onCheckRules}
+            handleBlur={() => []}
             ref={
               index === createGroupInputData.length - 1 ? lastInputRef : null
             }

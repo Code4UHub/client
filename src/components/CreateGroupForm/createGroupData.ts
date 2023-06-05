@@ -11,7 +11,7 @@ export const createGroupInputData: InputData = [
     id: 'subject',
   },
   {
-    label: 'Código de la clase',
+    label: 'Código para inscripción',
     type: 'text',
     id: 'class_id',
   },
