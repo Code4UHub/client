@@ -1,8 +1,6 @@
 import { HomeworkRequest } from 'types/Homework/Homework';
 import { ListItem } from 'types/ListItem/ListItem';
-
-// TODO: Remove dummyData
-import { Question, questionList } from '../dummyData';
+import { HomeworkQuestionList } from 'types/Questions/Question';
 
 export type QuestionDifficulty = 1 | 2 | 3;
 
@@ -16,7 +14,7 @@ export const INITIAL_HOMEWORK = (
   open_questions: undefined,
   closed_questions: undefined,
   deadline: '',
-  questions_ids: [...questionList],
+  questions: [],
 });
 
 type UpdateClass = { type: 'class'; payload: string | ListItem };
@@ -25,7 +23,7 @@ type UpdateTitle = { type: 'title'; payload: string };
 type UpdateOpenQuestions = { type: 'open_questions'; payload: number };
 type UpdateClosedQuestions = { type: 'closed_questions'; payload: number };
 type UpdateDeadline = { type: 'deadline'; payload: string };
-type UpdateQuestions = { type: 'questions'; payload: Question[] };
+type UpdateQuestions = { type: 'questions'; payload: HomeworkQuestionList };
 type ResetHomework = { type: 'reset'; payload: HomeworkRequest };
 type ReducerActions =
   | UpdateClass
@@ -58,7 +56,7 @@ export function homeworkRequestReducer(
       return { ...state, deadline: action.payload };
 
     case 'questions':
-      return { ...state, questions_ids: action.payload };
+      return { ...state, questions: action.payload };
 
     case 'reset':
       return { ...action.payload };
