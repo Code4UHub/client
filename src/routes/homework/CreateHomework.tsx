@@ -1,15 +1,19 @@
-import React, { useReducer, useState, useMemo, useRef } from 'react';
+import React, { useReducer, useMemo, useRef } from 'react';
 import { Link, useParams, useLoaderData } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateToast } from 'store/toast/toastSlice';
 
 import SectionHeader from 'components/SectionHeader/SectionHeader';
 import { InputField } from 'components/InputField/InputField';
-import AutocompleteField, {
-  ItemList,
-} from 'components/AutocompleteField/AutocompleteField';
 import { Button } from 'components/Button/Button';
 import QuestionCard from 'components/QuestionCard/QuestionCard';
+import HomeworkQuestionListTable from 'components/HomeworkQuestionListTable/HomeworkQuestionListTable';
+
+import { ListItem } from 'types/ListItem/ListItem';
+import {
+  HomeworkQuestion,
+  HomeworkQuestionList as HomeworkQuestionListType,
+} from 'types/Questions/Question';
 
 import { correctState } from 'utils/inputRules/generalRules';
 import { createHomeworkRules } from 'utils/inputRules/createHomeworkRules';
@@ -26,7 +30,6 @@ import {
   inputErrorsReducer,
 } from './reducers/inputErrors';
 
-import { Question } from './dummyData';
 import { ReactComponent as IconBack } from './ArrowBack.svg';
 import styles from './CreateHomework.module.css';
 
@@ -35,14 +38,15 @@ export default function CreateHomework() {
 
   const { id, difficulty } = useParams();
   const toastDispatch = useDispatch();
-  const data = useLoaderData() as ItemList[] | ItemList;
-
-  const [autocompleteKey, setAutocompleteKey] = useState(0);
+  const data = useLoaderData() as {
+    class: ListItem;
+    questionListDb: HomeworkQuestionListType;
+  };
 
   const [homeworkRequest, homeworkRequestDispatch] = useReducer(
     homeworkRequestReducer,
     INITIAL_HOMEWORK(
-      id ? (data as ItemList) : undefined,
+      id ? data.class : undefined,
       Number(difficulty) as QuestionDifficulty
     )
   );
@@ -54,9 +58,9 @@ export default function CreateHomework() {
 
   const numberOfQuestions = useMemo(
     () =>
-      homeworkRequest.questions_ids.reduce(
+      homeworkRequest.questions.reduce(
         (acc, question) => {
-          if (question.type === 'Open') {
+          if (question.type === 'open') {
             acc.open += 1;
           } else {
             acc.closed += 1;
@@ -66,16 +70,8 @@ export default function CreateHomework() {
         },
         { open: 0, closed: 0 }
       ),
-    [homeworkRequest.questions_ids]
+    [homeworkRequest.questions]
   );
-
-  const autocompleteOnChangeHandler = (item: ItemList | string) => {
-    inputErrorsDispatch({ type: 'update', payload: { class_id: '' } });
-    homeworkRequestDispatch({
-      type: 'class',
-      payload: item,
-    });
-  };
 
   const onInputChangeHandler = (idInput: string, value: string) => {
     switch (idInput) {
@@ -115,16 +111,22 @@ export default function CreateHomework() {
     }
   };
 
-  const deleteQuestionNode = (questionNode: Question) => {
-    const newQuestionList = [...homeworkRequest.questions_ids].filter(
-      (question) => question.id !== questionNode.id
+  const addQuestion = (question: HomeworkQuestion) => {
+    homeworkRequestDispatch({
+      type: 'questions',
+      payload: [...homeworkRequest.questions, question],
+    });
+  };
+
+  const removeQuestion = (questionId: number) => {
+    const newQuestionList = [...homeworkRequest.questions].filter(
+      (question) => question.question_h_id !== questionId
     );
 
     homeworkRequestDispatch({ type: 'questions', payload: newQuestionList });
   };
 
   const resetValues = () => {
-    setAutocompleteKey((key) => key + 1);
     inputErrorsDispatch({
       type: 'reset',
       payload: INITIAL_INPUT_ERRORS,
@@ -132,7 +134,7 @@ export default function CreateHomework() {
     homeworkRequestDispatch({
       type: 'reset',
       payload: INITIAL_HOMEWORK(
-        id ? (data as ItemList) : undefined,
+        id ? data.class : undefined,
         Number(difficulty) as QuestionDifficulty
       ),
     });
@@ -214,38 +216,11 @@ export default function CreateHomework() {
     });
   };
 
-  const classElement = !id ? (
-    <AutocompleteField
-      key={autocompleteKey}
-      label="Clase"
-      id="class_id"
-      className={`${styles.input} ${styles.autocomplete}`}
-      error={inputErrors.class_id}
-      handleBlur={() => {}}
-      handleChange={autocompleteOnChangeHandler}
-      list={data as ItemList[]}
-    />
-  ) : (
-    <InputField
-      label="Clase"
-      type="text"
-      id="class_id"
-      required
-      className={`${styles.input} ${styles.autocomplete}`}
-      error=""
-      value=""
-      defaultValue={`[${(data as ItemList).id}] - ${(data as ItemList).value}`}
-      handleBlur={() => {}}
-      handleChange={() => {}}
-      readOnly
-    />
-  );
-
-  const questionNodes = homeworkRequest.questions_ids.map((question) => (
-    <li key={question.id}>
+  const questionNodes = homeworkRequest.questions.map((question) => (
+    <li key={question.question_h_id}>
       <QuestionCard
         question={question}
-        onDelete={deleteQuestionNode}
+        onDelete={removeQuestion}
       />
     </li>
   ));
@@ -286,7 +261,19 @@ export default function CreateHomework() {
               handleBlur={() => {}}
               handleChange={onInputChangeHandler}
             />
-            {classElement}
+            <InputField
+              label="Clase"
+              type="text"
+              id="class_id"
+              required
+              className={`${styles.input} ${styles.autocomplete}`}
+              error=""
+              value=""
+              defaultValue={`[${data.class.id}] - ${data.class.value}`}
+              handleBlur={() => {}}
+              handleChange={() => {}}
+              readOnly
+            />
             <div className={styles['days-container']}>
               <InputField
                 label="Preguntas abiertas"
@@ -346,6 +333,19 @@ export default function CreateHomework() {
             </div>
           </div>
           <div className={styles['question-container']}>{questionNodes}</div>
+        </div>
+      </div>
+      <div>
+        <div className={styles['header-container']}>
+          <span className={styles.header}>Selección de Preguntas</span>
+        </div>
+        <div className={styles['question-selector-container']}>
+          <HomeworkQuestionListTable
+            questionList={data.questionListDb}
+            selectedQuestions={homeworkRequest.questions}
+            onChecked={addQuestion}
+            onUnchecked={removeQuestion}
+          />
         </div>
       </div>
     </>
