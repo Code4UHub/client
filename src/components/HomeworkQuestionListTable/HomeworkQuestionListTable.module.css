@@ -1,0 +1,31 @@
+.table {
+  width: 100%;
+  background-color: var(--white-color);
+  padding: 1rem;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 1.5rem;
+  max-width: 15rem;
+}
+
+.table th,
+.table tr {
+  text-align: left;
+}
+
+.table th {
+  background-color: #f3f3f3;
+  font-size: var(--fs-small-text);
+  color: var(--dark-dark-gray);
+  font-weight: 500;
+}
+
+.table td {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--fs-small-text);
+}
