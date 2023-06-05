@@ -1,5 +1,5 @@
 import { TypePromise } from 'types/TypePromise/TypePromise';
-import { Question } from 'routes/homework/dummyData';
+import { HomeworkQuestionList } from 'types/Questions/Question';
 
 export type Homework = {
   homework_id: string;
@@ -15,7 +15,7 @@ export type HomeworkRequest = {
   open_questions: number | undefined;
   closed_questions: number | undefined;
   deadline: string;
-  questions_ids: Question[];
+  questions: HomeworkQuestionList;
 };
 
 export interface HomeworkPromise extends TypePromise<Homework[][]> {}
