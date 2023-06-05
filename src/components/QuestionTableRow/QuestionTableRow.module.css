@@ -1,0 +1,8 @@
+.table-row:nth-of-type(2n) {
+  background-color: rgb(247 248 250);
+}
+
+.table-row.selected {
+  background-color: var(--light-blue-color);
+  color: var(--white-color);
+}
