@@ -1,0 +1,112 @@
+.container {
+  position: relative;
+  border-radius: 5px;
+  border: 1px solid var(--sec-blue-color);
+  background-color: var(--white-color);
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 1.6rem;
+  column-gap: 2.4rem;
+  cursor: pointer;
+}
+
+.container span {
+  display: inline-block;
+  width: 10rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--fs-small-text);
+}
+
+.buttons-container button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.buttons-container button:hover,
+.buttons-container button:focus {
+  background-color: var(--light-gray);
+}
+
+.buttons-container button svg {
+  height: 2.4rem;
+  width: 2.4rem;
+  fill: var(--main-blue-color);
+}
+
+#clear-btn {
+  visibility: hidden;
+}
+
+#clear-btn.clear {
+  visibility: visible;
+}
+
+#expand {
+  transition: transform 0.23s ease-in-out;
+}
+
+.open #expand {
+  transform: rotate(180deg);
+}
+
+.list {
+  list-style: none;
+  width: 25rem;
+  max-height: 35rem;
+  overflow-y: auto;
+  background-color: var(--white-color);
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  animation: open 0.23s ease-in-out forwards;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  font-size: var(--fs-small-text);
+}
+
+.list-item:hover {
+  background-color: var(--light-gray);
+}
+
+.list-item svg {
+  width: 1.6rem;
+  height: 1.6rem;
+  visibility: hidden;
+}
+
+.active svg {
+  visibility: visible;
+}
+
+.focused,
+.focused:hover {
+  background-color: var(--sec-blue-color);
+  color: var(--white-color);
+}
+
+@keyframes open {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
