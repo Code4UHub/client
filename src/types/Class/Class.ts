@@ -21,6 +21,7 @@ export interface Class extends BaseClass {
   finished_date: string;
   subject_id: string;
   teacher_name: string;
+  teacher_id: string;
 }
 
 export interface StudentClass extends BaseClass {
