@@ -15,6 +15,7 @@ import {
 import { leaderboardData } from 'routes/groupGraphController/leaderboardDummyData';
 import { GroupGraphPromise } from 'types/GroupGraph/GroupGraphType';
 import { ModulePromise, UpdateModule } from 'types/Module/Module';
+import { HomeworkQuestionListPromise } from 'types/Questions/Question';
 
 // http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
 // http://10.147.20.218:65534/v1
@@ -40,6 +41,8 @@ const ENDPOINTS = {
   TEACHER_CLASSES: (id: string) => `${BASE_URL}/teacher/${id}/class`,
   STUDENT_CLASSES: (id: string) => `${BASE_URL}/student/${id}/class`,
   TIME: `${BASE_URL}/configuration/time`,
+  HOMEWORK_QUESTIONS: (subject_id: string, difficulty: 1 | 2 | 3) =>
+    `${BASE_URL}/homework/question/subject/${subject_id}/difficulty/${difficulty}`,
 };
 
 export const createStudent = async (user: {
@@ -384,4 +387,24 @@ export const getGraphData = async (
   return new Promise((resolve) => {
     setTimeout(() => resolve({ status: 'success', data }), 100);
   });
+};
+
+// ====== GET HOMEWORK QUESTIONS BY SUBJECT AND DIFFICULTY   =======
+export const getSubjectHomeworkQuestions = async (
+  auth_token: string,
+  subject_id: string,
+  difficulty: 1 | 2 | 3
+): Promise<HomeworkQuestionListPromise> => {
+  const options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+
+  const request = await fetch(
+    ENDPOINTS.HOMEWORK_QUESTIONS(subject_id, difficulty),
+    options
+  );
+
+  return request.json();
 };
