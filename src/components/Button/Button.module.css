@@ -238,3 +238,54 @@
   
 }
 
+/* CREATE QUESTION */
+
+.onChangeQuestionActive, .onChangeQuestion {
+  width: 20rem;
+  height: 6rem;
+  font-size: var(--fs-small-text);
+  padding: 0;
+  margin-right: 1rem;
+  transition: background-color 0.4s, transform 0.3s;
+}
+
+@media (max-width: 40em) {
+  .onChangeQuestionActive, .onChangeQuestion {
+    font-size: var(--fs-small-small-text);
+  }
+}
+
+.onChangeQuestionActive {
+  background-color: #1176d5;
+  color: white;
+}
+
+.onChangeQuestion {
+  background-color: #E9E9E9;
+  color: black;
+}
+
+.createQuestion {
+  background-color: var(--main-blue-color);
+  color: white;
+  width: 20rem;
+  height: 6rem;
+  padding: 0 0 ;
+}
+
+/* CODE QUESTION CONFIGURATION */
+
+.addTestCase {
+  background-color: white;
+  font-size: var(--fs-small-text);
+  font-style: italic;
+  margin: 1rem 1rem 1rem;
+}
+
+.addTestCase:hover:not(:disabled) {
+  transform: scale(1);
+  background-color: white;
+  filter: brightness(1);
+  cursor: pointer;
+}
+
