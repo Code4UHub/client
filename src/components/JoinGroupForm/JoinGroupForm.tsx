@@ -12,19 +12,25 @@ import { getClass, joinClass } from 'utils/db/db.utils';
 import { updateToast, TOAST_GENERAL_ERRORS } from 'store/toast/toastSlice';
 import { setLoading, removeLoading } from 'store/loading/loadingSlice';
 
+import { useDebounceRules } from 'hooks/useDebounceRules';
+
 import { formatTime } from 'utils/format/formatTime';
 import { formatDays } from 'utils/format/formatDays';
-import { inputRules } from 'utils/inputRules/groupRules';
 
 import { correctState } from 'utils/inputRules/generalRules';
+
 import styles from './JoinGroupForm.module.css';
 
 export default function JoinGroupForm() {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [classCode, setClassCode] = useState('');
-  const [inputError, setInputError] = useState('');
+  const STATE_NAME = 'classCode';
   const [classInfo, setClassInfo] = useState<Class | null>(null);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+
+  const { inputErrors, onRestartIdValue, restartAllInputErrors } =
+    useDebounceRules({ classCode }, 'joinGroup');
+
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.user.currentUser);
@@ -32,34 +38,33 @@ export default function JoinGroupForm() {
   const classCodeRef = useRef<HTMLInputElement>(null);
   const submitRef = useRef<HTMLButtonElement>(null);
 
+  // Created so that when switching between find class and confirmation screen, the rules don't apply
+  useEffect(() => {
+    restartAllInputErrors([STATE_NAME]);
+    // eslint-disable-next-line
+  }, [classInfo]);
+
   useEffect(() => {
     if (isFormSubmitted) setIsFormSubmitted(false);
   }, [isFormSubmitted]);
 
-  const checkClasscode = () => {
-    const classCodeRules = inputRules.find((rule) => rule.id === 'class_id');
-
-    const validationResult = classCodeRules?.validate(classCode);
-
-    setInputError(validationResult);
-
-    if (validationResult === correctState) {
+  useEffect(() => {
+    if (inputErrors[STATE_NAME] === correctState) {
       setIsSubmitDisabled(false);
       return;
     }
-
     setIsSubmitDisabled(true);
-  };
+  }, [inputErrors]);
 
-  const handleChange = (id: string, value: string) => {
-    setInputError('');
+  const handleChange = (_id: string, value: string) => {
     setClassCode(value);
+    onRestartIdValue(STATE_NAME);
     setIsSubmitDisabled(true);
   };
 
   const resetValues = () => {
-    setInputError('');
     setClassCode('');
+    onRestartIdValue(STATE_NAME);
     setIsSubmitDisabled(true);
     setClassInfo(null);
   };
@@ -83,7 +88,6 @@ export default function JoinGroupForm() {
         );
       }
     } catch (error) {
-      console.log(error);
       dispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
     }
     dispatch(removeLoading());
@@ -121,7 +125,6 @@ export default function JoinGroupForm() {
         );
       }
     } catch (error) {
-      console.log(error);
       dispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
     }
     dispatch(removeLoading());
@@ -143,9 +146,9 @@ export default function JoinGroupForm() {
               label=""
               type="text"
               required
-              error={inputError}
+              error={inputErrors.classCode}
               value=""
-              handleBlur={checkClasscode}
+              handleBlur={() => []}
               handleChange={handleChange}
             />
           </div>

@@ -28,6 +28,8 @@ const ENDPOINTS = {
   CLASS: `${BASE_URL}/class`,
   CLASS_CREATE: `${BASE_URL}/class/create`,
   CLASS_MODULES: (id_class: string) => `${BASE_URL}/class/${id_class}/modules`,
+  PROGRESS_MODULES: (id_class: string, id_student: string) =>
+    `${BASE_URL}/challenge/class/${id_class}/student/${id_student}`,
   UPDATE_MODULES: (id_class: string) => `${BASE_URL}/class/${id_class}/modules`,
   SUBJECT: `${BASE_URL}/subject`,
   STUDENT_REQUESTS: `${BASE_URL}/teacher`,
@@ -317,6 +319,25 @@ export const getClassModules = async (
   };
 
   const request = await fetch(ENDPOINTS.CLASS_MODULES(class_id), options);
+
+  return request.json();
+};
+
+export const getStudentModuleProgress = async (
+  class_id: string,
+  auth_token: string,
+  student_id: string
+): Promise<ModulePromise> => {
+  const options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+
+  const request = await fetch(
+    ENDPOINTS.PROGRESS_MODULES(class_id, student_id),
+    options
+  );
 
   return request.json();
 };

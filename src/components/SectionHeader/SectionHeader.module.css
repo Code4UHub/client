@@ -23,3 +23,12 @@
 .nav + hr {
   margin-top: 0;
 }
+
+.backButton {
+  justify-content: start;
+  column-gap: 1.2rem;
+}
+
+.backButton h1 {
+  order: 1;
+}

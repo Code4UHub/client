@@ -1,0 +1,9 @@
+.loading {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.container {
+    padding-top: 2rem;
+}

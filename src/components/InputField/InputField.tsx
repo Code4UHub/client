@@ -14,6 +14,8 @@ type Props = {
   handleChange: (id: string, value: string) => void;
   handleFocus?: () => void;
   handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  readOnly?: boolean;
+  defaultValue?: string;
 };
 
 function decideSpanClass(error: string) {
@@ -34,12 +36,16 @@ export const InputField = forwardRef<HTMLInputElement, Props>((props, ref) => (
       id={props.id}
       ref={ref}
       type={props.type}
-      className={style.inputHero}
+      className={`${style.inputHero} ${props.readOnly ? style.readOnly : ''}`}
       required={props.required}
       onBlur={() => props.handleBlur(props.id, props.value)}
       onChange={(e) => props.handleChange(props.id, e.target.value)}
       onFocus={props.handleFocus}
       onKeyDown={props.handleKeyDown}
+      readOnly={props.readOnly}
+      value={props.defaultValue ? props.defaultValue : undefined}
+      min={props.type === 'number' ? 0 : undefined}
+      max={props.type === 'number' ? 5 : undefined}
     />
   </div>
 ));
@@ -47,4 +53,6 @@ export const InputField = forwardRef<HTMLInputElement, Props>((props, ref) => (
 InputField.defaultProps = {
   handleFocus: () => {},
   handleKeyDown: () => {},
+  readOnly: false,
+  defaultValue: '',
 };

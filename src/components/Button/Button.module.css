@@ -125,7 +125,10 @@
 
 /*  WINDOW TEACHER HANDLES STUDENT REQUESTS TO JOIN CLASS */
 
-.select-request, .selected-request, .not-all-requests, .all-requests {
+.select-request,
+.selected-request,
+.not-all-requests,
+.all-requests {
   width: 2rem;
   height: 2rem;
   padding: 0;
@@ -135,11 +138,13 @@
   background-color: white;
 }
 
-.selected-request, .all-requests {
+.selected-request,
+.all-requests {
   background-color: var(--light-blue-color);
 }
 
-.accept-request, .decline-request {
+.accept-request,
+.decline-request {
   padding: 0.2rem 0.5rem;
   height: 2.5rem;
   display: flex;
@@ -149,7 +154,8 @@
   width: 100%;
 }
 
-.accept-selected, .decline-selected {
+.accept-selected,
+.decline-selected {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -158,18 +164,21 @@
   padding: 1rem 2rem;
 }
 
-.accept-request, .accept-selected {
+.accept-request,
+.accept-selected {
   background-color: var(--light-green);
   color: var(--dark-green);
 }
 
-.decline-request, .decline-selected {
+.decline-request,
+.decline-selected {
   background-color: var(--light-red);
   color: var(--dark-red);
 }
 
 @media (max-width: 60em) {
-  .accept-request, .decline-request {
+  .accept-request,
+  .decline-request {
     width: 90%;
   }
 }
@@ -186,7 +195,6 @@
 
 /* MODULES */
 .modules {
-  margin: 2rem 0 0 0;
   background-color: var(--light-blue-color);
   color: var(--white-color);
   font-size: var(--fs-small-small-text);
@@ -195,8 +203,16 @@
   width: 18rem;
 }
 
+@media (max-width: 30em) {
+  .modules {
+    width: 16rem;
+    padding: 0 1rem;
+  }
+}
+
 /* GROUP GRAPHS */
-.groupChange, .groupAll {
+.groupChange,
+.groupAll {
   background-color: var(--light-blue-color);
   color: white;
   display: flex;
@@ -221,6 +237,26 @@
   border-radius: 1rem;
 }
 
+/* TOPIC CARDS */
+.topic-card {
+  background-color: var(--light-blue-color);
+  font-size: var(--fs-small-small-text);
+  color: var(--white-color);
+  height: 2.5rem;
+  width: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 1rem;
+}
+
+@media (max-width: 30em) {
+  .topic-card {
+    height: 2rem;
+    font-size: var(--fs-xsmall-text);
+    width: 8rem;
+  }
+}
 /* HOME TEACHER */
 .carousel {
   width: 4.8rem;
@@ -235,7 +271,6 @@
 
 .carousel:hover:not(:disabled) {
   transform: translateY(-50%) scale(1.05);
-  
 }
 
 /* CREATE QUESTION */
@@ -289,3 +324,44 @@
   cursor: pointer;
 }
 
+/* CREATE HOMEWORK */
+
+.addQuestion {
+  height: auto;
+  width: auto;
+  padding: 0.8rem 1.6rem;
+  background-color: var(--light-blue-color);
+  border-radius: 5px;
+  color: var(--white-color);
+  transition: filter 0.23s linear;
+}
+
+.addQuestion:hover:not(:disabled) {
+  transform: none;
+  filter: brightness(1.3);
+}
+
+.createHomework,
+.resetHomework {
+  height: 4.8rem;
+  width: auto;
+  border-radius: 5px;
+  padding: 0.8rem 2.4rem;
+  transition: filter 0.23s linear;
+}
+
+.createHomework:hover:not(:disabled),
+.resetHomework:hover:not(:disabled) {
+  transform: none;
+}
+
+.createHomework {
+  background-color: var(--sec-blue-color);
+  color: var(--white-color);
+}
+
+.resetHomework {
+  background-color: var(--white-color);
+  outline: 1px solid var(--sec-blue-color);
+  color: var(--main-blue-color);
+}

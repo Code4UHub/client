@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react';
 import style from './ProgressBar.module.css';
 
 const COLORS = {
-  lightBlue: '#57A7F1',
+  red: '#D76B65',
   blue: '#2D689F',
   green: '#37A169',
 };
 
 export function BarLegend() {
-  const description = ['Menor a 70', 'Menor a 90', '90 o más'];
+  const description = ['Menor a 70%', 'Menor a 90%', '90% o más'];
   return (
     <div className={style.legend}>
       {Object.keys(COLORS).map((color, i) => (
@@ -22,7 +22,7 @@ export function BarLegend() {
 }
 
 function getColor(percentage: number) {
-  if (percentage < 70) return COLORS.lightBlue;
+  if (percentage < 70) return COLORS.red;
   if (percentage < 90) return COLORS.blue;
   return COLORS.green;
 }
@@ -38,7 +38,6 @@ export default function ProgressBar({
   textPosition,
   textAdded,
 }: Props) {
-  const text = ` ${textAdded}`;
   const [progress, setProgress] = useState(0);
   useEffect(() => {
     setTimeout(() => {
@@ -53,14 +52,16 @@ export default function ProgressBar({
   return (
     <div className={style.container}>
       {textPosition === 'up' && (
-        <div>
+        <div className={style['up-text-container']}>
           <span
             className={style[`${textPosition}-percentage`]}
             style={{ color }}
           >
             {`${percentage}% `}
           </span>
-          <span className={style[`${textPosition}-text`]}>{text}</span>
+          <span className={style[`${textPosition}-text`]}>
+            &nbsp;{textAdded}
+          </span>
         </div>
       )}
       <div className={style['bar-background']}>
@@ -76,7 +77,9 @@ export default function ProgressBar({
               <span className={style[`${textPosition}-percentage`]}>
                 {`${percentage}% `}
               </span>
-              <span className={style[`${textPosition}-text`]}>{text}</span>
+              <span className={style[`${textPosition}-text`]}>
+                &nbsp;{textAdded}
+              </span>
             </>
           )}
           <div />
