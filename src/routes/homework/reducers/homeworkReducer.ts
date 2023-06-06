@@ -1,11 +1,14 @@
 import { HomeworkRequest } from 'types/Homework/Homework';
 import { ListItem } from 'types/ListItem/ListItem';
-import { HomeworkQuestionList } from 'types/Questions/Question';
+import {
+  HomeworkQuestionList,
+  QuestionDifficulty,
+} from 'types/Questions/Question';
 
-export type QuestionDifficulty = 1 | 2 | 3;
+export type ClassId = Pick<ListItem, 'value'> & { id: string };
 
 export const INITIAL_HOMEWORK = (
-  class_id: ListItem | undefined,
+  class_id: ClassId | undefined,
   difficulty: QuestionDifficulty
 ): HomeworkRequest => ({
   class_id: class_id || '',
@@ -17,7 +20,7 @@ export const INITIAL_HOMEWORK = (
   questions: [],
 });
 
-type UpdateClass = { type: 'class'; payload: string | ListItem };
+type UpdateClass = { type: 'class'; payload: string | ClassId };
 type UpdateDifficulty = { type: 'difficulty'; payload: QuestionDifficulty };
 type UpdateTitle = { type: 'title'; payload: string };
 type UpdateOpenQuestions = { type: 'open_questions'; payload: number };
