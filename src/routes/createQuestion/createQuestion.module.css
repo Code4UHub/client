@@ -29,3 +29,9 @@
     flex-direction: row;
     padding: 0.5rem 0;
 }
+
+.main-button {
+    display: flex;
+    flex-direction: row-reverse;
+    margin: 2rem 0;
+}

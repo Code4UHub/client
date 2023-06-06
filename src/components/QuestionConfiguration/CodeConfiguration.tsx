@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { InputField } from 'components/InputField/InputField';
 import { Button } from 'components/Button/Button';
 
 import { TestCase } from 'types/CreateQuestion/CreateQuestion';
+import { QuestionHeaderType } from 'routes/createQuestion/createQuestion';
 
 import { ReactComponent as DeleteIcon } from './delete.svg';
 import style from './CodeConfiguration.module.css';
@@ -11,7 +11,7 @@ import style from './CodeConfiguration.module.css';
 type Props = {
   options: TestCase[];
   changeOptions: Function;
-  editOptions: (key: string, value: string) => void;
+  editOptions: (index: number, type: QuestionHeaderType, value: string) => void;
 };
 
 export default function CodeConfiguration({
@@ -26,47 +26,30 @@ export default function CodeConfiguration({
         <h3 className={style.header}>Input</h3>
         <h3 className={style.header}>Output</h3>
         <span />
-        {options.map((option, index) => {
-          console.log(option);
-          return (
-            <>
-              <InputField
-                label=""
-                id={`${index} input`}
-                key={`${index} input`}
-                type="text"
-                error=""
-                value={option.input}
-                className={style.input}
-                // eslint-disable-next-line
-                required={true}
-                handleBlur={() => []}
-                handleChange={editOptions}
-              />
-              <InputField
-                label=""
-                id={`${index} output`}
-                key={`${index} output`}
-                type="text"
-                error=""
-                value={option.output}
-                className={style.input}
-                // eslint-disable-next-line
-                required={true}
-                handleBlur={() => []}
-                handleChange={editOptions}
-              />
-              <DeleteIcon
-                key={`${index} icon`}
-                className={style.icon}
-                onClick={() => changeOptions('delete', index)}
-              />
-            </>
-          );
-        })}
+        {options.map((option, index) => (
+          <>
+            <input
+              type="text"
+              className={style.input}
+              value={option.input}
+              onChange={(e) => editOptions(index, 'input', e.target.value)}
+            />
+            <input
+              type="text"
+              className={style.input}
+              value={option.output}
+              onChange={(e) => editOptions(index, 'output', e.target.value)}
+            />
+            <DeleteIcon
+              key={`${index} icon`}
+              className={style.icon}
+              onClick={() => changeOptions('delete', index)}
+            />
+          </>
+        ))}
         <Button
           location="addTestCase"
-          text="Añadir caso de prueba"
+          text="Añadir test case"
           onClickHandler={() => changeOptions('add', 0)}
         />
       </div>

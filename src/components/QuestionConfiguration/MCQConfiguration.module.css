@@ -1,0 +1,48 @@
+.title {
+    font-size: var(--fs-mid-small-text);
+    margin: 2rem 1.5rem;
+    display: block;
+}
+
+.container .input, .container .explanation {
+    margin: 1rem 1rem;
+    background-color: white;
+    border: none;
+    border-radius: 2rem;
+    padding: 0 2rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: var(--fs-mid-small-text)
+}
+
+.container .explanation {
+    grid-column: 2/4;
+    margin: 1rem 1rem 4rem;
+}
+
+@media (max-width: 45em) {
+    .container .explanation {
+        margin: 1rem 1rem 3rem;
+    }
+}
+
+.options {
+    display: grid;
+    grid-template-columns: 1fr 8fr 1fr;
+    gap: 0rem 2rem;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 2rem;
+    border-radius: 2rem;
+    background-color: var(--light-gray);
+}
+
+.icon {
+    justify-self: center;
+    align-self: center;
+    width: 3.5rem;
+    height: 3.5rem
+}
+
+.icon:hover {
+    cursor: pointer;
+}

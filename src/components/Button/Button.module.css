@@ -306,7 +306,49 @@
   width: 20rem;
   height: 6rem;
   padding: 0 0 ;
+  position: relative;
+  left: 0;
 }
+
+/* MCQ CONFIGURATION */
+
+.activeMCQ, .inactiveMCQ {
+  width: 4rem;
+  height: 4rem;
+  padding: 0;
+  font-size: 0;
+  border-radius: 10rem;
+  border: 0.2rem solid #1176D5;
+  background-color: white;
+  justify-self: center;
+}
+
+.activeMCQ {
+  background-color: #1176D5;
+  color: white;
+  font-size: var(--fs-small-small-text);
+}
+
+.addOption {
+  background-color: white;
+  font-size: var(--fs-small-text);
+  font-style: italic;
+  margin: 3rem 1rem 1rem;
+  grid-column: 2/3;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: filter 0.4s;
+}
+
+.addOption:hover:not(:disabled) {
+  transform: scale(1);
+  background-color: white;
+  filter: brightness(0.90);
+  cursor: pointer;
+}
+
 
 /* CODE QUESTION CONFIGURATION */
 
@@ -315,13 +357,28 @@
   font-size: var(--fs-small-text);
   font-style: italic;
   margin: 1rem 1rem 1rem;
+  width: 100%;
+  transition: filter 0.4s;
 }
 
 .addTestCase:hover:not(:disabled) {
   transform: scale(1);
-  background-color: white;
-  filter: brightness(1);
+  /* background-color: white; */
+  filter: brightness(0.90);
   cursor: pointer;
+}
+
+@media (max-width: 60em) {
+  .addTestCase {
+    padding: 0;
+    font-size: var(--fs-small-small-text);
+  }
+}
+
+@media (max-width: 40em) {
+  .addTestCase {
+    font-size: var(--fs-xsmall-text);
+  }
 }
 
 /* CREATE HOMEWORK */

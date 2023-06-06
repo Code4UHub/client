@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import SectionHeader from 'components/SectionHeader/SectionHeader';
 import { Button } from 'components/Button/Button';
 import { InputField } from 'components/InputField/InputField';
 import AutocompleteField from 'components/AutocompleteField/AutocompleteField';
 import CodeConfiguration from 'components/QuestionConfiguration/CodeConfiguration';
+import MCQConfiguration from 'components/QuestionConfiguration/MCQConfiguraction';
 
 import { QuestionOption, TestCase } from 'types/CreateQuestion/CreateQuestion';
 
@@ -17,6 +18,8 @@ import style from './createQuestion.module.css';
 type InputType = {
   [key: string]: string | { id: string; value: string };
 };
+
+export type QuestionHeaderType = 'input' | 'output' | 'option' | 'explanation';
 
 const INITIAL_INPUT_VALUES = createQuestionInputData.reduce(
   (acc: InputType, element) => {
@@ -52,33 +55,33 @@ export default function CreateQuestion() {
   );
   const [configuration, setConfiguration] = useState<
     (QuestionOption | TestCase)[]
-  >([]);
+  >([{ ...emptyQuestionOption }]);
 
-  useEffect(() => {
-    console.log(inputValues);
-  }, [inputValues]);
-
-  useEffect(() => {
-    console.log(configuration);
-  }, [configuration]);
-
+  // Update values on general form
   const onChangeInputHandler = (id: string, value: string) => {
     setInputValues((current) => ({ ...current, [id]: value }));
   };
+
+  // Special for autocomplete on general form
   const onChangeAutoCompleteHandler = (
     key: string,
     val: { id: string; value: string }
   ) => {
     setInputValues((current) => ({ ...current, [key]: val }));
   };
+
+  // Change current question type and restart options to have only one empty option
   const onChangeQuestionType = () => {
     if (inputValues.questionType === 'mcq') {
       setInputValues((current) => ({ ...current, questionType: 'code' }));
+      setConfiguration([{ ...emptyQuestionOption }]);
     } else {
       setInputValues((current) => ({ ...current, questionType: 'mcq' }));
+      setConfiguration([{ ...emptyTestCase }]);
     }
   };
 
+  // Do a modification according to type and index
   const changeOptions = (
     action: 'add' | 'delete' | 'setAsCorrect',
     index: number
@@ -103,10 +106,11 @@ export default function CreateQuestion() {
       if (inputValues.questionType === 'mcq') {
         setConfiguration(updatedConfiguration as QuestionOption[]);
       } else {
-        setConfiguration(updatedConfiguration as QuestionOption[]);
+        setConfiguration(updatedConfiguration as TestCase[]);
       }
     }
     if (action === 'setAsCorrect') {
+      console.log('correct: ', index);
       const updatedConfiguration = (configuration as QuestionOption[]).map(
         ({ option, explanation }, i) => ({
           option,
@@ -118,26 +122,27 @@ export default function CreateQuestion() {
     }
   };
 
-  const editOptions = (key: string, value: string) => {
-    const [rawIndex, type] = key.split(' ');
-    const index = parseInt(rawIndex, 10);
-    if (inputValues.questionType === 'code') {
-      const newConfiguration = configuration.map((item) => ({ ...item })); // Create a deep copy of the objects
-      if (type === 'input') {
-        (newConfiguration as TestCase[])[index].input = value;
-      } else {
-        (newConfiguration as TestCase[])[index].output = value;
-      }
-      setConfiguration(newConfiguration);
-    } else {
-      const newConfiguration = [...configuration];
-      if (type === 'option') {
-        (newConfiguration as QuestionOption[])[index].option = value;
-      } else {
-        (newConfiguration as QuestionOption[])[index].explanation = value;
-      }
-      setConfiguration(newConfiguration);
+  // To modify the actual values of the options
+  const editOptions = (
+    index: number,
+    type: QuestionHeaderType,
+    value: string
+  ) => {
+    const newConfiguration = configuration.map((item) => ({ ...item }));
+    if (type === 'input') {
+      (newConfiguration as TestCase[])[index].input = value;
     }
+    if (type === 'output') {
+      (newConfiguration as TestCase[])[index].output = value;
+    }
+    setConfiguration(newConfiguration);
+    if (type === 'option') {
+      (newConfiguration as QuestionOption[])[index].option = value;
+    }
+    if (type === 'explanation') {
+      (newConfiguration as QuestionOption[])[index].explanation = value;
+    }
+    setConfiguration(newConfiguration);
   };
 
   return (
@@ -209,21 +214,33 @@ export default function CreateQuestion() {
           })}
         </div>
         {inputValues.questionType === 'mcq' ? (
-          <h2>Multiple choice question</h2>
+          <MCQConfiguration
+            options={configuration as QuestionOption[]}
+            changeOptions={changeOptions}
+            editOptions={(
+              index: number,
+              type: QuestionHeaderType,
+              value: string
+            ) => editOptions(index, type, value)}
+          />
         ) : (
           <CodeConfiguration
             options={configuration as TestCase[]}
             changeOptions={changeOptions}
-            editOptions={(key: string, value: string) =>
-              editOptions(key, value)
-            }
+            editOptions={(
+              index: number,
+              type: QuestionHeaderType,
+              value: string
+            ) => editOptions(index, type, value)}
           />
         )}
-        <Button
-          location="createQuestion"
-          text="Crear tarea"
-          onClickHandler={() => []}
-        />
+        <div className={style['main-button']}>
+          <Button
+            location="createQuestion"
+            text="Crear tarea"
+            onClickHandler={() => []}
+          />
+        </div>
       </form>
     </div>
   );
