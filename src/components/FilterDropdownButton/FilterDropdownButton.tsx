@@ -6,14 +6,12 @@ import { ReactComponent as CloseIcon } from './Close.svg';
 import { ReactComponent as ExpandIcon } from './Expand.svg';
 import { ReactComponent as DoneIcon } from './Done.svg';
 
-import { itemList } from './dummyData';
-
 import styles from './FilterDropdownButton.module.css';
 
 type Props = {
   placeholder: string;
-  value: ListItem | undefined;
-  list?: ListItem[];
+  value: string;
+  list: ListItem[];
   onChange: (item: ListItem | undefined) => void;
 };
 
@@ -78,7 +76,7 @@ export default function FilterDropdownButton({
       onKeyDown={keyDownHandler}
       role="menu"
     >
-      <span>{value ? value.value : placeholder}</span>
+      <span>{value || placeholder}</span>
       <div className={styles['buttons-container']}>
         <button
           type="button"
@@ -129,6 +127,3 @@ export default function FilterDropdownButton({
     </div>
   );
 }
-FilterDropdownButton.defaultProps = {
-  list: itemList,
-};
