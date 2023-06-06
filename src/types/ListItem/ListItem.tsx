@@ -1,4 +1,4 @@
 export type ListItem = {
-  id: string;
+  id: string | number;
   value: string;
 };
