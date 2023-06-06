@@ -14,11 +14,14 @@ import { Provider, useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import { TypePromise } from 'types/TypePromise/TypePromise';
+import { Class as ClassType } from 'types/Class/Class';
+import { SubjectModule } from 'types/Module/Module';
 
 import {
   getClass,
   getGraphData,
   getSubjectHomeworkQuestions,
+  getsSubjectModules,
 } from 'utils/db/db.utils';
 
 import { Root } from 'routes/root/Root';
@@ -34,8 +37,6 @@ import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
 import Test from 'routes/test/Test';
 import CreateHomework from 'routes/homework/CreateHomework';
-
-import { Class as ClassType } from 'types/Class/Class';
 
 import { Toast } from 'components/Toast/Toast';
 import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
@@ -88,10 +89,22 @@ function Index() {
         );
 
         if (questions.status === 'success') {
-          return {
-            class: { id: data.class_id, value: data.subject_name },
-            questionListDb: questions.data,
-          };
+          const modules = await getsSubjectModules(
+            user.authToken,
+            data.subject_id
+          );
+
+          if (modules.status === 'success') {
+            const modulesList = (modules.data as SubjectModule[]).map(
+              (module) => ({ id: module.module_id, value: module.title })
+            );
+
+            return {
+              class: { id: data.class_id, value: data.subject_name },
+              questionListDb: questions.data,
+              modulesList,
+            };
+          }
         }
       }
     }
