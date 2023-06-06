@@ -22,7 +22,7 @@ export default function QuestionCard({
       <div>
         <div className={styles['question-tags']}>
           <span className={`${styles.tag} ${styles.module}`}>
-            {question.question.topic}
+            {question.title}
           </span>
           <span className={`${styles.tag} ${styles.type}`}>
             {question.type}
