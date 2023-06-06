@@ -22,6 +22,7 @@ import Classes from 'routes/classes/Classes';
 import Modules from 'routes/modules/modules';
 import Group from 'routes/group/Group';
 import GroupGraphController from 'routes/groupGraphController/GroupGraphController';
+import CreateQuestion from 'routes/createQuestion/createQuestion';
 import { Class } from 'routes/class/Class';
 import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
@@ -112,6 +113,10 @@ function Index() {
         {
           path: 'assignment',
           element: <Assignment />,
+        },
+        {
+          path: 'new-question',
+          element: <CreateQuestion />,
         },
         {
           path: 'report',
