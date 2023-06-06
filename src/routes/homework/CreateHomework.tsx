@@ -1,7 +1,9 @@
 import React, { useReducer, useMemo, useRef } from 'react';
 import { Link, useParams, useLoaderData } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { RootState } from 'store/store';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateToast } from 'store/toast/toastSlice';
+import { setLoading, removeLoading } from 'store/loading/loadingSlice';
 
 import SectionHeader from 'components/SectionHeader/SectionHeader';
 import { InputField } from 'components/InputField/InputField';
@@ -9,21 +11,23 @@ import { Button } from 'components/Button/Button';
 import QuestionCard from 'components/QuestionCard/QuestionCard';
 import HomeworkQuestionListTable from 'components/HomeworkQuestionListTable/HomeworkQuestionListTable';
 
-import { ListItem } from 'types/ListItem/ListItem';
 import {
   HomeworkQuestion,
-  HomeworkQuestionList as HomeworkQuestionListType,
+  HomeworkQuestionList,
+  QuestionDifficulty,
 } from 'types/Questions/Question';
+import { ListItem } from 'types/ListItem/ListItem';
 
 import { correctState } from 'utils/inputRules/generalRules';
 import { createHomeworkRules } from 'utils/inputRules/createHomeworkRules';
-
 import { formatDifficulty } from 'utils/format/formatDifficulty';
+
+import { createHomework } from 'utils/db/db.utils';
 
 import {
   INITIAL_HOMEWORK,
   homeworkRequestReducer,
-  QuestionDifficulty,
+  ClassId,
 } from './reducers/homeworkReducer';
 import {
   INITIAL_INPUT_ERRORS,
@@ -34,13 +38,16 @@ import { ReactComponent as IconBack } from './ArrowBack.svg';
 import styles from './CreateHomework.module.css';
 
 export default function CreateHomework() {
+  const user = useSelector((state: RootState) => state.user.currentUser);
+
   const formRef = useRef<HTMLFormElement>(null);
 
   const { id, difficulty } = useParams();
-  const toastDispatch = useDispatch();
+  const reduxDispatch = useDispatch();
   const data = useLoaderData() as {
-    class: ListItem;
-    questionListDb: HomeworkQuestionListType;
+    class: ClassId;
+    questionListDb: HomeworkQuestionList;
+    modulesList: ListItem[];
   };
 
   const [homeworkRequest, homeworkRequestDispatch] = useReducer(
@@ -160,7 +167,7 @@ export default function CreateHomework() {
       homeworkRequest.open_questions > numberOfQuestions.open
     ) {
       isValid = false;
-      toastDispatch(
+      reduxDispatch(
         updateToast({
           title: 'Error',
           type: 'error',
@@ -172,7 +179,7 @@ export default function CreateHomework() {
       homeworkRequest.closed_questions > numberOfQuestions.closed
     ) {
       isValid = false;
-      toastDispatch(
+      reduxDispatch(
         updateToast({
           title: 'Error',
           type: 'error',
@@ -188,32 +195,49 @@ export default function CreateHomework() {
     event.preventDefault();
 
     if (checkRules()) {
-      console.log('Submit!!');
+      reduxDispatch(setLoading());
 
-      inputErrorsDispatch({
-        type: 'reset',
-        payload: INITIAL_INPUT_ERRORS,
-      });
-
-      resetValues();
-
-      formRef.current?.reset();
-
-      toastDispatch(
-        updateToast({
-          title: 'Éxito',
-          type: 'success',
-          message: 'Se ha creado la tarea',
-        })
+      const response = await createHomework(
+        user?.authToken as string,
+        homeworkRequest
       );
 
-      return;
-    }
+      if (response.status === 'success') {
+        inputErrorsDispatch({
+          type: 'reset',
+          payload: INITIAL_INPUT_ERRORS,
+        });
 
-    inputErrorsDispatch({
-      type: 'update',
-      payload: { title: createHomeworkRules.title(homeworkRequest.title) },
-    });
+        resetValues();
+
+        formRef.current?.reset();
+
+        reduxDispatch(
+          updateToast({
+            title: 'Éxito',
+            type: 'success',
+            message: 'Se ha creado la tarea',
+          })
+        );
+      } else {
+        inputErrorsDispatch({
+          type: 'update',
+          payload: { title: createHomeworkRules.title(homeworkRequest.title) },
+        });
+
+        console.log(response);
+
+        reduxDispatch(
+          updateToast({
+            title: response.status,
+            type: 'error',
+            message: response.data as string,
+          })
+        );
+      }
+
+      reduxDispatch(removeLoading());
+    }
   };
 
   const questionNodes = homeworkRequest.questions.map((question) => (
@@ -340,6 +364,7 @@ export default function CreateHomework() {
           <span className={styles.header}>Selección de Preguntas</span>
         </div>
         <HomeworkQuestionListTable
+          modules={data.modulesList}
           questionList={data.questionListDb}
           selectedQuestions={homeworkRequest.questions}
           onChecked={addQuestion}
