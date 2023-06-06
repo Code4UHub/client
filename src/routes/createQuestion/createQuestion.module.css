@@ -1,0 +1,31 @@
+.container input {
+    background-color: #E9E9E9;
+    height: 6rem;
+}
+
+.general-configuration {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 2rem;
+    padding: 2rem 0 1rem;
+}
+
+.full {
+    grid-column: 1/3;
+}
+
+.controllers {
+    margin: 1rem 0;
+}
+
+.type {
+    margin: 1rem 1.5rem;
+    font-size: var(--fs-mid-small-text);
+    display: block;
+}
+
+.question-changers {
+    display: flex;
+    flex-direction: row;
+    padding: 0.5rem 0;
+}
