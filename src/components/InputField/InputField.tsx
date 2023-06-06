@@ -27,7 +27,7 @@ function decideSpanClass(error: string) {
 export const InputField = forwardRef<HTMLInputElement, Props>((props, ref) => (
   <div className={`${props.className} ${style.inputField}`}>
     <div className={style['label-container']}>
-      <label htmlFor={props.id}>{props.label}</label>
+      {props.label && <label htmlFor={props.id}>{props.label}</label>}
       <span className={decideSpanClass(props.error)}>{props.error}</span>
     </div>
     <input
