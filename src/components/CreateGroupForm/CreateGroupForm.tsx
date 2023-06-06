@@ -336,7 +336,7 @@ export default function CreateGroupForm() {
               handleBlur={() => {}}
             />
             {isListOpen &&
-              (subjects.length > 1 ? (
+              (subjects.length > 0 ? (
                 <ul className={styles['autocomplete-list']}>
                   {filteredSubjects.map(({ subject_id, subject_name }) => (
                     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
