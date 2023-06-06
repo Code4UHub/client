@@ -2,6 +2,7 @@ import { TypePromise } from 'types/TypePromise/TypePromise';
 
 // TODO: Define Difficulty type
 export type Difficulty = 'Fácil' | 'Medio' | 'Difícil';
+export type QuestionDifficulty = 1 | 2 | 3;
 
 export interface Question {
   id: string;
@@ -34,7 +35,9 @@ interface ClosedQuestion extends QuestionData {
 
 interface HomeworkQuestionBase {
   question_h_id: number;
-  difficulty_id: 1 | 2 | 3;
+  difficulty_id: QuestionDifficulty;
+  module_id: number;
+  title: string;
 }
 
 export interface OpenHomeworkQuestion extends HomeworkQuestionBase {
