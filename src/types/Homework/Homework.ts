@@ -18,4 +18,23 @@ export type HomeworkRequest = {
   questions: HomeworkQuestionList;
 };
 
+type HomeworkObj = {
+  homework_id: number;
+  class_id: string;
+  difficulty_id: number;
+  title: string;
+  open_questions: number;
+  closed_questions: number;
+  deadline: string;
+  total_points: number;
+};
+
+export type HomeworkResponse = {
+  message: string;
+  homework: HomeworkObj;
+  question_ids: number[];
+};
+
 export interface HomeworkPromise extends TypePromise<Homework[][]> {}
+export interface HomeworkResponsePromise
+  extends TypePromise<HomeworkResponse> {}
