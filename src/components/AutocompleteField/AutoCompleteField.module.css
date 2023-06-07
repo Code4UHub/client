@@ -17,6 +17,7 @@
   overflow-y: auto;
   border: 0.063rem solid #b2b3b7;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 20;
 }
 
 .autocomplete-list li {

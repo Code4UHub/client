@@ -5,6 +5,8 @@ import {
   RouterProvider,
   Navigate,
   redirect,
+  LoaderFunction,
+  LoaderFunctionArgs,
 } from 'react-router-dom';
 
 import { store, persistor, RootState } from 'store/store';
@@ -12,8 +14,15 @@ import { Provider, useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import { TypePromise } from 'types/TypePromise/TypePromise';
+import { Class as ClassType } from 'types/Class/Class';
+import { SubjectModule } from 'types/Module/Module';
 
-import { getClass, getGraphData, getTeacherClassList } from 'utils/db/db.utils';
+import {
+  getClass,
+  getGraphData,
+  getSubjectHomeworkQuestions,
+  getsSubjectModules,
+} from 'utils/db/db.utils';
 
 import { Root } from 'routes/root/Root';
 import Authentication from 'routes/authentication/Authentication';
@@ -28,8 +37,6 @@ import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
 import Test from 'routes/test/Test';
 import CreateHomework from 'routes/homework/CreateHomework';
-
-import { TeacherClass } from 'types/Class/Class';
 
 import { Toast } from 'components/Toast/Toast';
 import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
@@ -58,6 +65,50 @@ function Index() {
     if (data.status === 'success') {
       return data.data;
     }
+    throw new Error();
+  };
+
+  const createHomeworkLoader: LoaderFunction = async ({
+    params,
+  }: LoaderFunctionArgs) => {
+    if (
+      params.difficulty === '1' ||
+      params.difficulty === '2' ||
+      params.difficulty === '3'
+    ) {
+      const data = (await loaderWrapper(
+        () => getClass(user?.authToken as string, params.id as string),
+        'teacher'
+      )) as ClassType;
+
+      if (data.teacher_id === user?.id) {
+        const questions = await getSubjectHomeworkQuestions(
+          user?.authToken as string,
+          data.subject_id,
+          Number(params.difficulty) as 1 | 2 | 3
+        );
+
+        if (questions.status === 'success') {
+          const modules = await getsSubjectModules(
+            user.authToken,
+            data.subject_id
+          );
+
+          if (modules.status === 'success') {
+            const modulesList = (modules.data as SubjectModule[]).map(
+              (module) => ({ id: module.module_id, value: module.title })
+            );
+
+            return {
+              class: { id: data.class_id, value: data.subject_name },
+              questionListDb: questions.data,
+              modulesList,
+            };
+          }
+        }
+      }
+    }
+
     throw new Error();
   };
 
@@ -128,23 +179,7 @@ function Index() {
             {
               path: 'classes/:id/homework/create/:difficulty',
               element: <CreateHomework />,
-              loader: async ({ params }) => {
-                if (
-                  params.difficulty === '1' ||
-                  params.difficulty === '2' ||
-                  params.difficulty === '3'
-                ) {
-                  const data = (await loaderWrapper(
-                    () =>
-                      getClass(user?.authToken as string, params.id as string),
-                    'teacher'
-                  )) as TeacherClass;
-
-                  return { id: data.class_id, value: data.subject_name };
-                }
-
-                throw new Error();
-              },
+              loader: createHomeworkLoader,
             },
           ],
         },
@@ -153,31 +188,9 @@ function Index() {
           element: <Assignment />,
         },
         {
-          path: 'homework/create/:difficulty',
+          path: 'homework/:id/create/:difficulty',
           element: <CreateHomework />,
-          loader: async ({ params }) => {
-            if (
-              params.difficulty === '1' ||
-              params.difficulty === '2' ||
-              params.difficulty === '3'
-            ) {
-              const data = (await loaderWrapper(
-                () =>
-                  getTeacherClassList(
-                    user?.id as string,
-                    user?.authToken as string
-                  ),
-                'teacher'
-              )) as TeacherClass[];
-
-              return data.map((classItem) => ({
-                id: classItem.class_id,
-                value: `[${classItem.class_id}] - ${classItem.subject_name}`,
-              }));
-            }
-
-            throw new Error();
-          },
+          loader: createHomeworkLoader,
         },
         {
           path: 'report',

@@ -1,0 +1,71 @@
+.table-row {
+  cursor: pointer;
+}
+
+.table-row input {
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+.table-row:nth-of-type(2n) {
+  background-color: rgb(247 248 250);
+}
+
+.table-row:hover,
+.table-row:focus {
+  background-color: var(--light-light-blue-color);
+}
+
+.table-row.selected {
+  background-color: var(--light-blue-color);
+  color: var(--white-color);
+}
+
+.preview-container {
+  display: flex;
+  flex-direction: column;
+  width: 65rem;
+}
+
+.preview-title,
+.preview-description-title {
+  display: block;
+}
+
+.preview-title {
+  font-size: var(--fs-big-text);
+  font-weight: 500;
+  margin-bottom: 1.6rem;
+}
+
+.preview-description-title {
+  font-size: var(--fs-mid-text);
+  font-weight: 500;
+  margin-bottom: 0.8rem;
+}
+
+.preview-description {
+  font-size: var(--fs-mid-text);
+  color: var(--dark-dark-gray);
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+  margin-bottom: 2.4rem;
+  white-space: pre-wrap;
+}
+
+.preview-close {
+  margin-right: 2.4rem;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--light-blue-color);
+  color: var(--white-color);
+  font-size: var(--fs-mid-text);
+  padding: 0.6rem 1.4rem;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+.preview-close:hover {
+  background-color: var(--sec-blue-color);
+}
