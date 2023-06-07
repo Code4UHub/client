@@ -57,7 +57,7 @@ export default function CodeEditor({
     return function destroyEditor() {
       codeEditorRef.current?.destroy();
     };
-  }, [code]);
+  }, []);
 
   return (
     <div

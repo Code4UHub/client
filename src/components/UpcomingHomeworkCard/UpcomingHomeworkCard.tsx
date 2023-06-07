@@ -28,7 +28,7 @@ export default function UpcomingHomeworkCard({ className }: Props) {
     <Card className={`${styles.container} ${className}`}>
       <div className={styles['section-header']}>
         <h2>Tareas próximas</h2>
-        <Link to="activities">Ver tareas</Link>
+        <Link to="homework">Ver tareas</Link>
       </div>
       <HomeworkList homeworkList={homeworkList} />
     </Card>

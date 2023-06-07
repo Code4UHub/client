@@ -12,11 +12,6 @@ import {
   RequestAnswer,
 } from 'types/StudentRequest/StudentRequest';
 import {
-  ModulePromise,
-  SubjectModuleListPromise,
-  UpdateModule,
-} from 'types/Module/Module';
-import {
   HomeworkRequest,
   HomeworkResponsePromise,
 } from 'types/Homework/Homework';
@@ -24,6 +19,11 @@ import {
 // TODO: Delete when backend has this information
 import { leaderboardData } from 'routes/groupGraphController/leaderboardDummyData';
 import { GroupGraphPromise } from 'types/GroupGraph/GroupGraphType';
+import {
+  ModulePromise,
+  UpdateModule,
+  SubjectModuleListPromise,
+} from 'types/Module/Module';
 import { HomeworkQuestionListPromise } from 'types/Questions/Question';
 
 // http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
@@ -51,10 +51,13 @@ const ENDPOINTS = {
   TEACHER_CLASSES: (id: string) => `${BASE_URL}/teacher/${id}/class`,
   STUDENT_CLASSES: (id: string) => `${BASE_URL}/student/${id}/class`,
   TIME: `${BASE_URL}/configuration/time`,
-  HOMEWORK_QUESTIONS: (subject_id: string, difficulty: 1 | 2 | 3) =>
+  HOMEWORK_QUESTIONS_DIFFICULTY: (subject_id: string, difficulty: 1 | 2 | 3) =>
     `${BASE_URL}/homework/question/subject/${subject_id}/difficulty/${difficulty}`,
   SUBJECT_MODULES: (id: string) => `${BASE_URL}/subject/${id}/modules`,
   HOMEWORK: `${BASE_URL}/homework`,
+  HOMEWORK_QUESTIONS: (idHomework: string, idStudent: string) =>
+    `${BASE_URL}/homework/${idHomework}/student/${idStudent}/questions`,
+  EXECUTE_CODE: `${BASE_URL}/run`,
 };
 
 export const createStudent = async (user: {
@@ -409,12 +412,35 @@ export const getSubjectHomeworkQuestions = async (
 ): Promise<HomeworkQuestionListPromise> => {
   const options: RequestInit = {
     headers: {
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${auth_token}`,
     },
   };
 
   const request = await fetch(
-    ENDPOINTS.HOMEWORK_QUESTIONS(subject_id, difficulty),
+    ENDPOINTS.HOMEWORK_QUESTIONS_DIFFICULTY(subject_id, difficulty),
+    options
+  );
+
+  return request.json();
+};
+
+// ====== QUESTIONS FROM A HOMEWORK =======
+
+export const getQuestionFromHomework = async (
+  auth_token: string,
+  id_homework: string,
+  id_student: string
+): Promise<HomeworkQuestionListPromise> => {
+  const options: RequestInit = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+
+  const request = await fetch(
+    ENDPOINTS.HOMEWORK_QUESTIONS(id_homework, id_student),
     options
   );
 
@@ -461,6 +487,25 @@ export const createHomework = async (
   };
 
   const request = await fetch(ENDPOINTS.HOMEWORK, options);
+
+  return request.json();
+};
+
+/// Run Code
+export const executeCode = async (
+  auth_token: string,
+  code: any
+): Promise<any> => {
+  const options: RequestInit = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify(code),
+  };
+
+  const request = await fetch(ENDPOINTS.EXECUTE_CODE, options);
 
   return request.json();
 };

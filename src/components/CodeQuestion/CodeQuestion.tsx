@@ -1,36 +1,36 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { RootState } from 'store/store';
+import { useSelector } from 'react-redux';
 import {
   PanelGroup,
   Panel,
   PanelResizeHandle,
   ImperativePanelHandle,
 } from 'react-resizable-panels';
+
+import { OpenHomeworkQuestion } from 'types/Questions/Question';
+
+import { executeCode } from 'utils/db/db.utils';
+
 import { Button } from 'components/Button/Button';
 import QuestionTags from 'components/QuestionTags/QuestionTags';
 import CodeEditor from 'components/CodeEditor/CodeEditor';
+
 import { ReactComponent as VertDots } from './vert-dots.svg';
 import styles from './CodeQuestion.module.css';
 
-const createInitialCode = (driver: string) =>
-  `\ndef _${driver} -> None:\n # TODO: fixme.\n pass\n\nif __name__ == '__main__':\n _${driver}\n\n`;
+type CodeAnswer = {
+  isCorrect: boolean;
+  code: string;
+};
 
 type QuestionProps = {
-  questionData: any;
-  cachedData: any;
+  questionData: OpenHomeworkQuestion;
+  cachedData: CodeAnswer;
   questionIndex: number;
   updateCode: Function;
   updateCorrect: Function;
 };
-
-const dummyPromise = () =>
-  new Promise((resolve) => {
-    setTimeout(() => {
-      const option = Math.round(Math.random());
-
-      if (option === 0) resolve(null);
-      resolve('Respuesta Correcta');
-    }, 5000);
-  });
 
 export default function CodeQuestion({
   questionData,
@@ -39,7 +39,8 @@ export default function CodeQuestion({
   updateCode,
   updateCorrect,
 }: QuestionProps) {
-  const [code, setCode] = useState('');
+  const user = useSelector((root: RootState) => root.user.currentUser);
+
   const [isPanelVertical, setPanelVertical] = useState(window.innerWidth < 800);
   const [compilerResults, setCompilerResults] = useState('');
   const [isTerminalOpen, setTerminalOpen] = useState(false);
@@ -48,12 +49,6 @@ export default function CodeQuestion({
     const updatePanelOrientation = () => {
       setPanelVertical(window.innerWidth < 800);
     };
-
-    if (cachedData.code === null) {
-      setCode(createInitialCode(questionData.driver));
-    } else {
-      setCode(cachedData.code);
-    }
 
     window.addEventListener('resize', updatePanelOrientation);
 
@@ -74,8 +69,14 @@ export default function CodeQuestion({
     setTerminalOpen(true);
 
     try {
-      const data = await dummyPromise();
-      if (data) {
+      const data = await executeCode(user?.authToken as string, {
+        source_code: cachedData.code,
+        shown_tests: [...questionData.question.tests],
+      });
+
+      console.log(data);
+
+      if (data.status === 'success') {
         updateCorrect(questionIndex, true);
         setCompilerResults('Todo Bien');
       } else {
@@ -95,12 +96,14 @@ export default function CodeQuestion({
       >
         <Panel maxSize={60}>
           <div className={styles['code-question-info-container']}>
-            <h3 className={styles.title}>{questionData.title}</h3>
+            <h3 className={styles.title}>{questionData.question.title}</h3>
             <QuestionTags
-              topic={questionData.topic}
-              difficulty={questionData.difficulty}
+              topic={questionData.title}
+              difficulty={questionData.difficulty_id}
             />
-            <p className={styles.description}>{questionData.description}</p>
+            <p className={styles.description}>
+              {questionData.question.description}
+            </p>
           </div>
         </Panel>
         <PanelResizeHandle
@@ -121,7 +124,7 @@ export default function CodeQuestion({
               <CodeEditor
                 questionIndex={questionIndex}
                 onChange={updateCode}
-                code={code}
+                code={cachedData.code}
               />
             </Panel>
             {isTerminalOpen && (

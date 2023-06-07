@@ -27,7 +27,7 @@ type HomeworkItemProps = {
 function HomeWorkItem({ homework }: HomeworkItemProps) {
   return (
     <Link
-      to="/assignment"
+      to="homework"
       className={styles['item-container']}
     >
       <span>{homework.homework_name}</span>
