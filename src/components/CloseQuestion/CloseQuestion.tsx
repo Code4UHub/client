@@ -1,4 +1,10 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
+import { EditorState } from '@codemirror/state';
+import { EditorView } from '@codemirror/view';
+import { python } from '@codemirror/lang-python';
+import { basicSetup } from 'codemirror';
+import { tomorrow } from 'thememirror';
+
 import RadioInput from 'components/RadioInput/RadioInput';
 // TODO: Move to Question
 import { Option } from 'types/Questions/CloseQuestion';
@@ -27,6 +33,30 @@ export default function CloseQuestion({
   rightAnswer,
   isSubmitted,
 }: Props) {
+  const parentRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<EditorView>();
+
+  // TODO replace carriage return with new line
+  const [description, ...code] = questionData.question.description.split('\r');
+
+  useEffect(() => {
+    editorRef.current = new EditorView({
+      doc: code.join('\r').trim(),
+      extensions: [
+        basicSetup,
+        python(),
+        EditorView.lineWrapping,
+        tomorrow,
+        EditorState.readOnly.of(true),
+      ],
+      parent: parentRef.current as Element,
+    });
+
+    return function destroyEditor() {
+      editorRef.current?.destroy();
+    };
+  }, [editorRef]);
+
   const onClickHandler = (indexOption: number) => {
     onChoose(questionIndex, indexOption);
   };
@@ -37,7 +67,18 @@ export default function CloseQuestion({
         topic={questionData.title}
         difficulty={questionData.difficulty_id}
       />
-      <code>{questionData.question.description.replace(/\r/g, '\n')}</code>
+      <h3 className={style.title}>{questionData.question.title}</h3>
+      {code ? (
+        <div>
+          <p className={style.description}>{description}</p>
+          <div
+            ref={parentRef}
+            className={style['code-editor']}
+          />
+        </div>
+      ) : (
+        <p>{questionData.question.description}</p>
+      )}
       <div className={style.options}>
         {options.map((option, index) => (
           <RadioInput
