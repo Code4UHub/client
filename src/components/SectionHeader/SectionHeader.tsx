@@ -3,7 +3,7 @@ import styles from './SectionHeader.module.css';
 
 type Props = {
   title: string;
-  childType?: 'nav' | 'backButton' | '';
+  childType?: 'nav' | 'backButton' | 'loading' | '';
   children?: ReactNode;
 };
 
