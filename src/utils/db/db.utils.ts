@@ -24,7 +24,11 @@ import {
   UpdateModule,
   SubjectModuleListPromise,
 } from 'types/Module/Module';
-import { HomeworkQuestionListPromise } from 'types/Questions/Question';
+import {
+  CachedCodeQuestion,
+  HomeworkQuestionListPromise,
+} from 'types/Questions/Question';
+import { CompiledCodeResultsPromise } from 'types/CompiledCodeResults/CompiledCodeResults';
 
 // http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
 // http://10.147.20.218:65534/v1
@@ -58,6 +62,12 @@ const ENDPOINTS = {
   HOMEWORK_QUESTIONS: (idHomework: string, idStudent: string) =>
     `${BASE_URL}/homework/${idHomework}/student/${idStudent}/questions`,
   EXECUTE_CODE: `${BASE_URL}/run`,
+  SAVE_ASSIGNMENT_PROGRESS: (
+    homework_id: number,
+    student_id: string,
+    question_id: number
+  ) =>
+    `${BASE_URL}/homework/${homework_id}/student/${student_id}/question/${question_id}`,
 };
 
 export const createStudent = async (user: {
@@ -495,7 +505,7 @@ export const createHomework = async (
 export const executeCode = async (
   auth_token: string,
   code: any
-): Promise<any> => {
+): Promise<CompiledCodeResultsPromise> => {
   const options: RequestInit = {
     method: 'PUT',
     headers: {
@@ -506,6 +516,33 @@ export const executeCode = async (
   };
 
   const request = await fetch(ENDPOINTS.EXECUTE_CODE, options);
+
+  return request.json();
+};
+
+// Save progress
+export const saveAssignmentProgress = async (
+  auth_token: string,
+  homework_id: number,
+  question_id: number,
+  student_id: string,
+  user_input: number | CachedCodeQuestion
+): Promise<TypePromise<string>> => {
+  const options: RequestInit = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify({
+      user_input,
+    }),
+  };
+
+  const request = await fetch(
+    ENDPOINTS.SAVE_ASSIGNMENT_PROGRESS(homework_id, student_id, question_id),
+    options
+  );
 
   return request.json();
 };
