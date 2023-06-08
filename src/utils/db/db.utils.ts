@@ -7,6 +7,7 @@ import {
   TeacherClassListPromise,
 } from 'types/Class/Class';
 import { SubjectPromise } from 'types/Subject/Subject';
+import { SubjectModulePromise } from 'types/SubjectModule/SubjectModule';
 import {
   StudentRequestPromise,
   RequestAnswer,
@@ -40,6 +41,8 @@ const ENDPOINTS = {
   TEACHER_CLASSES: (id: string) => `${BASE_URL}/teacher/${id}/class`,
   STUDENT_CLASSES: (id: string) => `${BASE_URL}/student/${id}/class`,
   TIME: `${BASE_URL}/configuration/time`,
+  SUBJECT_MODULES: (class_id: string) =>
+    `${BASE_URL}/subject/${class_id}/modules`,
 };
 
 export const createStudent = async (user: {
@@ -182,6 +185,22 @@ export const getSubjects = async (
   };
 
   const request = await fetch(ENDPOINTS.SUBJECT, options);
+
+  return request.json();
+};
+
+// ======= ALL MODULES GIVEN A SUBJECT =========
+export const getSubjectModules = async (
+  auth_token: string,
+  class_id: string
+): Promise<SubjectModulePromise> => {
+  const options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+
+  const request = await fetch(ENDPOINTS.SUBJECT_MODULES(class_id), options);
 
   return request.json();
 };

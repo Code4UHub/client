@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 
 import { authRules } from 'utils/inputRules/authRules';
 import { inputRules } from 'utils/inputRules/groupRules';
+import { questionOptionRules } from 'utils/inputRules/questionOptionRules';
+import { questionRules } from 'utils/inputRules/questionRules';
 import { correctState } from 'utils/inputRules/generalRules';
 
 // Implemention idea inspired on: https://www.tiktok.com/@cosdensolutions/video/7225961986532674842?_r=1&_t=8c9FwTf8ETN&social_sharing=v2
@@ -19,7 +21,7 @@ function findDifferentKey(
   obj2: { [key: string]: any },
   currentKey: string
 ): string {
-  const keys = Object.keys(obj1);
+  const keys = Object.keys(obj2);
   const diffKey = keys.find((key) => {
     const val1 = obj1[key];
     const val2 = obj2[key];
@@ -38,9 +40,24 @@ function findDifferentKey(
   return '';
 }
 
+export type DebounceObject = {
+  inputErrors: StringsObject;
+  restartAllInputErrors: (keys: string[]) => void;
+  onRestartIdValue: (id: string) => void;
+  onPassError: (id: string) => void;
+  onSetError: (id: string, error: string) => void;
+  onCheckAllInputValues: () => void;
+};
+
 export const useDebounceRules = (
   inputValue: any,
-  caller: 'auth' | 'joinGroup' | 'createGroup'
+  caller:
+    | 'auth'
+    | 'joinGroup'
+    | 'createGroup'
+    | 'createQuestion'
+    | 'mcqConfig'
+    | 'codeConfig'
 ) => {
   // Registry of the previous value of inputValue (to check changes)
   const [tracker, setTracker] = useState(inputValue);
@@ -51,18 +68,27 @@ export const useDebounceRules = (
   const restartAllInputErrors = (keys: string[]) => {
     setInputErrors({});
     setTracker({});
-    // setTracker(inputValue);
-
     keys.forEach((key) => {
       setInputErrors((error) => ({ ...error, [key]: '' }));
       if (key === 'subject' && caller === 'createGroup') {
         setTracker((val: any) => ({ ...val, [key]: { id: '', name: '' } }));
+      } else if (caller === 'mcqConfig') {
+        setTracker((val: any) => ({
+          ...val,
+          [key]: { option: '', explanation: '' },
+        }));
+      } else if (caller === 'codeConfig') {
+        setTracker((val: any) => ({
+          ...val,
+          [key]: { input: '', output: '' },
+        }));
       } else setTracker((val: any) => ({ ...val, [key]: '' }));
     });
   };
 
   // To set error to '' if the input on a given is changed
   const onRestartIdValue = (id: string) => {
+    console.log('restarting id:', id);
     setInputErrors((previousErrors) => ({ ...previousErrors, [id]: '' }));
     // Special case for password on auth, a change on password restarts passwordConfirmation error
     if (caller === 'auth' && id === 'password')
@@ -70,6 +96,26 @@ export const useDebounceRules = (
         ...previousErrors,
         passwordConfirmation: '',
       }));
+  };
+
+  // Used on autocomplete, so when selecting an option it can be set as correct
+  const onPassError = (id: string) => {
+    const timeout = setTimeout(() => {
+      setInputErrors((previousErrors) => ({
+        ...previousErrors,
+        [id]: correctState,
+      }));
+    }, DELAY);
+
+    return () => clearTimeout(timeout);
+  };
+
+  const onSetError = (id: string, error: string) => {
+    const timeout = setTimeout(() => {
+      setInputErrors((previousErrors) => ({ ...previousErrors, [id]: error }));
+    }, DELAY);
+
+    return () => clearTimeout(timeout);
   };
 
   // Update errors according to rules
@@ -121,11 +167,107 @@ export const useDebounceRules = (
         }
       }
     }
+    if (caller === 'createQuestion') {
+      if (
+        id !== 'subject' &&
+        id !== 'module' &&
+        id !== 'difficulty' &&
+        id !== 'questionType'
+      ) {
+        const questionRule = questionRules.find((rule) => rule.id === id);
+        if (questionRule) {
+          const result = questionRule.validate(inputValue[id]);
+          setInputErrors((previousErrors) => ({
+            ...previousErrors,
+            [id]: result,
+          }));
+        }
+      }
+    }
+    if (
+      caller === 'mcqConfig' &&
+      Object.keys(inputValue).length > 0 &&
+      parseInt(id, 10) < Object.keys(inputValue).length
+    ) {
+      console.log('checking rules on', id);
+      const optionRule = questionOptionRules.find(
+        (rule) => rule.id === 'option'
+      );
+      const explanationRule = questionOptionRules.find(
+        (rule) => rule.id === 'explanation'
+      );
+      const { option, explanation } = inputValue[id];
+      console.log('option', option);
+      console.log('explanation', explanation);
+      if (optionRule && explanationRule && option !== undefined) {
+        const optionResult = optionRule.validate(option);
+        const explanationResult = explanationRule.validate(explanation);
+        console.log('result option', optionResult);
+        console.log('exp result', explanationResult);
+        if (
+          optionResult === correctState &&
+          explanationResult === correctState
+        ) {
+          setInputErrors((previousErrors) => ({
+            ...previousErrors,
+            [id]: correctState,
+          }));
+        } else if (optionResult !== correctState) {
+          setInputErrors((previousErrors) => ({
+            ...previousErrors,
+            [id]: `Opción: ${optionResult}`,
+          }));
+        } else {
+          setInputErrors((previousErrors) => ({
+            ...previousErrors,
+            [id]: `Explicación: ${explanationResult}`,
+          }));
+        }
+      }
+    }
+    if (caller === 'codeConfig' && Object.keys(inputValue).length > 0) {
+      const inputRule = questionOptionRules.find((rule) => rule.id === 'input');
+      const outputRule = questionOptionRules.find(
+        (rule) => rule.id === 'output'
+      );
+      const { input, output } = inputValue[id];
+      if (inputRule && outputRule && input !== undefined) {
+        const inputResult = inputRule.validate(input);
+        const outputResult = outputRule.validate(output);
+        if (inputResult === correctState && outputResult === correctState) {
+          setInputErrors((previousErrors) => ({
+            ...previousErrors,
+            [id]: correctState,
+          }));
+        } else if (inputResult !== correctState) {
+          setInputErrors((previousErrors) => ({
+            ...previousErrors,
+            [id]: `Input: ${inputResult}`,
+          }));
+        } else {
+          setInputErrors((previousErrors) => ({
+            ...previousErrors,
+            [id]: `Output: ${outputResult}`,
+          }));
+        }
+      }
+    }
+  };
+
+  // Specific for mcq and code question
+  const onCheckAllInputValues = () => {
+    Object.values(inputValue).forEach((value: any, i) => {
+      onCheckRules(`${i}`, value);
+    });
   };
 
   // Everytime inputValue changes from the tracker (prev state), it should check rules
   useEffect(() => {
     const id = findDifferentKey(tracker, inputValue, '');
+    console.log('--------------');
+    console.log('difference on:', id);
+    console.log('tracker', tracker);
+    console.log('inputValue', inputValue);
     const timeout = setTimeout(() => {
       if (id) {
         if (caller === 'createGroup' && id !== 'days') {
@@ -142,5 +284,12 @@ export const useDebounceRules = (
     // eslint-disable-next-line
   }, [inputValue]);
 
-  return { inputErrors, onRestartIdValue, restartAllInputErrors };
+  return {
+    inputErrors,
+    onRestartIdValue,
+    restartAllInputErrors,
+    onCheckAllInputValues,
+    onPassError,
+    onSetError,
+  };
 };

@@ -31,7 +31,7 @@ export const createQuestionInputData: InputData = [
     width: 'single',
   },
   {
-    label: 'Descripción',
+    label: 'Pregunta',
     type: 'text',
     id: 'description',
     width: 'full',

@@ -5,6 +5,29 @@
     display: block;
 }
 
+.hint-container {
+    margin: 1rem 3rem;
+}
+
+.passed-hint, .missing-hint {
+    font-size: var(--fs-small-text);
+    padding: 0rem 2rem;
+    font-weight: 500;
+    border-radius: 1rem;
+    transition: all 2s;
+}
+
+.passed-hint {
+    color: var(--dark-green);
+    background-color: var(--light-green);
+    display: none;
+}
+
+.missing-hint {
+    color: var(--dark-red);
+    background-color: var(--light-red);
+}
+
 .options {
     padding: 2rem 2rem;
     border-radius: 2rem;
@@ -31,7 +54,49 @@
     border-radius: 2rem;
     padding: 0 2rem;
     font-family: 'Montserrat', sans-serif;
+    font-size: var(--fs-mid-small-text);
     width: 100%;
+}
+
+.input:active {
+    outline: none;
+}
+.input:focus-visible {
+    outline: 0.2rem solid var(--light-blue-color);
+}
+.container .input-Error {
+    outline: 0.2rem solid var(--middle-red);
+}
+
+.feedback-container {
+    margin: 2rem 0;
+    grid-column: 1/4;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.no-error {
+    transition: background-color 0s;
+    padding: 0rem 2rem;
+    background-color: var(--light-gray);
+}
+
+.correct {
+    font-size: var(--fs-mid-small-text);
+    color: var(--dark-green);
+    background-color: var(--light-green);
+    padding: 1rem 2rem;
+    margin: 0rem 4rem;
+    border-radius: 1rem;
+}
+
+.error {
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    font-size: var(--fs-mid-small-text);
+    color: var(--dark-red);
+    background-color: var(--light-red);
+    transition: all 0.4s ease-in-out
 }
 
 .icon {

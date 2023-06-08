@@ -6,5 +6,4 @@ export type TestCase = {
 export type QuestionOption = {
   option: string;
   explanation: string;
-  isCorrect: boolean;
 };
