@@ -32,11 +32,19 @@ export interface ClosedQuestion extends QuestionData {
   options: { text: string; explanation: string }[];
 }
 
+export type CachedCodeQuestion = {
+  isCorrect: boolean;
+  code: string;
+};
+
 interface HomeworkQuestionBase {
   question_h_id: number;
   difficulty_id: QuestionDifficulty;
   module_id: number;
   title: string;
+  solution: {
+    user_input?: number | CachedCodeQuestion;
+  };
 }
 
 export interface OpenHomeworkQuestion extends HomeworkQuestionBase {
