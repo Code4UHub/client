@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { RootState } from 'store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+
 import { updateToast } from 'store/toast/toastSlice';
+
+import { saveAssignmentProgress } from 'utils/db/db.utils';
 
 import {
   HomeworkQuestionList,
@@ -14,6 +19,7 @@ import CodeQuestion from 'components/CodeQuestion/CodeQuestion';
 import CloseQuestion from 'components/CloseQuestion/CloseQuestion';
 import { Button } from 'components/Button/Button';
 import Timer from 'components/Timer/Timer';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 
 import { useIndex } from 'hooks/useIndex';
 
@@ -36,7 +42,12 @@ type Props = {
   assignment: HomeworkQuestionList;
 };
 
+// TODO: Save Time, and time out of focus
+// TODO: Submit Process
 export default function Assignment({ assignment }: Props) {
+  const user = useSelector((root: RootState) => root.user.currentUser);
+  const { homeworkId } = useParams();
+
   const { index, next, prev, jumpTo, setMaxIndex, max } = useIndex({
     initial: 0,
   });
@@ -46,9 +57,12 @@ export default function Assignment({ assignment }: Props) {
   }>(
     assignment.reduce((acc, question, i) => {
       if (question.type === 'open') {
-        acc[i] = { isCorrect: false, code: '' };
+        acc[i] = question.solution.user_input || { isCorrect: false, code: '' };
       } else {
-        acc[i] = -1;
+        acc[i] =
+          typeof question.solution.user_input === 'number'
+            ? question.solution.user_input
+            : -1;
       }
       return acc;
     }, {} as { [key: number]: number | CodeAnswer })
@@ -61,6 +75,7 @@ export default function Assignment({ assignment }: Props) {
     {}
   );
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [isSavingProcess, setIsSavingProcess] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -89,8 +104,31 @@ export default function Assignment({ assignment }: Props) {
   }, [isSubmitted, seconds]);
 
   // Update values on answer registry for ClosedQuestions
-  const onChooseAnswer = (i: number, option: number) => {
-    setAnswers((ans) => ({ ...ans, [i]: option }));
+  const onChooseAnswer = async (i: number, option: number | boolean) => {
+    if (typeof option === 'number') {
+      setAnswers((ans) => ({ ...ans, [i]: option }));
+    } else {
+      setAnswers((ans) => ({
+        ...ans,
+        [i]: { ...(ans[i] as CodeAnswer), isCorrect: option },
+      }));
+    }
+
+    setIsSavingProcess(true);
+    try {
+      await saveAssignmentProgress(
+        user?.authToken as string,
+        Number(homeworkId),
+        assignment[i].question_h_id,
+        user?.id as string,
+        typeof option === 'number'
+          ? option
+          : { ...(answers[i] as CodeAnswer), isCorrect: option }
+      );
+    } catch (error) {
+      // TODO: Catch Error
+    }
+    setIsSavingProcess(false);
   };
 
   // Total time on assignemnt - total registry = time on current question
@@ -139,13 +177,6 @@ export default function Assignment({ assignment }: Props) {
     }));
   };
 
-  const updateCodeCorrect = (i: number, value: boolean) => {
-    setAnswers((ans) => ({
-      ...ans,
-      [i]: { ...(ans[i] as CodeAnswer), isCorrect: value },
-    }));
-  };
-
   // On Submit Assignment
   const onSubmitAssignment = () => {
     // Update time of that last question
@@ -188,7 +219,11 @@ export default function Assignment({ assignment }: Props) {
 
   return (
     <div className={style.assignment}>
-      <SectionHeader title="Condicionales">
+      <SectionHeader
+        title="Examen"
+        childType={isSavingProcess ? 'loading' : ''}
+      >
+        {isSavingProcess && <LoadingSpinner className={style.loading} />}
         <Button
           location="assignmentSubmit"
           text="Terminar examen"
@@ -255,7 +290,7 @@ export default function Assignment({ assignment }: Props) {
           ) : (
             <CodeQuestion
               key={assignment[index].question_h_id}
-              updateCorrect={updateCodeCorrect}
+              updateCorrect={onChooseAnswer}
               questionIndex={index}
               cachedData={answers[index] as CodeAnswer}
               questionData={assignment[index] as OpenHomeworkQuestion}
