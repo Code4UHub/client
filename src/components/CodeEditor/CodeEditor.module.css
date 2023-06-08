@@ -21,6 +21,11 @@
   background-color: var(--white-color);
 }
 
+.editor-container :global(.cm-line)::selection,
+.editor-container :global(.cm-line) span::selection {
+  background-color: #d7d4f0 !important;
+}
+
 @media (max-width: 50em) {
   .editor-container {
     border-top-right-radius: 0;
