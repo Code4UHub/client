@@ -4,7 +4,7 @@ import { GeneralError } from 'utils/errorMessage/generalErrorMessage';
 export const inputsMinLength = {
   option: 1,
   explanation: 4,
-  input: 1,
+  input: 0,
   output: 1,
 };
 
@@ -24,7 +24,9 @@ export function runGeneralRules(
   id: 'option' | 'explanation' | 'input' | 'output',
   input: string
 ) {
-  if (isEmptyInput(input)) return GeneralError.noEmpty;
+  if (id !== 'input') {
+    if (isEmptyInput(input)) return GeneralError.noEmpty;
+  }
   if (input.length < inputsMinLength[id])
     return `${GeneralError.minCharError} ${inputsMinLength[id]} char`;
   if (input.length > inputsMaxLength[id])

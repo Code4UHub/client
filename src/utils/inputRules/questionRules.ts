@@ -1,4 +1,5 @@
-import { generalRules } from 'utils/inputRules/generalRules';
+import { correctState, generalRules } from 'utils/inputRules/generalRules';
+import { GeneralError } from 'utils/errorMessage/generalErrorMessage';
 
 export const inputsMinLengthAuth = {
   title: 3,
@@ -22,6 +23,11 @@ export function runGeneralRules(idInput: string, inputValue: string) {
     inputsMinLengthAuth,
     inputsMaxLengthAuth
   );
+  if (
+    (idInput === 'description' || idInput === 'title') &&
+    generalResults === GeneralError.noSpecialChar
+  )
+    return correctState;
   return generalResults;
 }
 

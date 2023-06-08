@@ -71,7 +71,7 @@
 }
 
 .feedback-container {
-    margin: 2rem 0;
+    margin: 0;
     grid-column: 1/4;
     display: flex;
     justify-content: flex-start;

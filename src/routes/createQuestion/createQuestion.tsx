@@ -7,14 +7,16 @@ import AutocompleteField from 'components/AutocompleteField/AutocompleteField';
 import CodeConfiguration from 'components/QuestionConfiguration/CodeConfiguration';
 import MCQConfiguration from 'components/QuestionConfiguration/MCQConfiguraction';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setLoading, removeLoading } from 'store/loading/loadingSlice';
+import { updateToast } from 'store/toast/toastSlice';
 import { RootState } from 'store/store';
 
 import { QuestionOption, TestCase } from 'types/CreateQuestion/CreateQuestion';
 import { SubjectModule } from 'types/SubjectModule/SubjectModule';
 import { Subject } from 'types/Subject/Subject';
 
-import { getSubjectModules } from 'utils/db/db.utils';
+import { getSubjectModules, createQuestion } from 'utils/db/db.utils';
 import { correctState } from 'utils/inputRules/generalRules';
 
 import { useLoaderData } from 'react-router-dom';
@@ -34,6 +36,7 @@ import { createQuestionInputData } from './createQuestionData';
 import style from './createQuestion.module.css';
 
 export default function CreateQuestion() {
+  const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.currentUser);
 
   const subjects = useLoaderData() as Subject[];
@@ -49,15 +52,9 @@ export default function CreateQuestion() {
 
   const generalDebounce = useDebounceRules(inputValues, 'createQuestion');
   // eslint-disable-next-line
-  const mcqDebounce = useDebounceRules(
-    { ...configuration},
-    'mcqConfig'
-  );
+  const mcqDebounce = useDebounceRules({ ...configuration }, 'mcqConfig');
   // eslint-disable-next-line
-  const codeDebounce = useDebounceRules(
-    { ...configuration},
-    'codeConfig'
-  );
+  const codeDebounce = useDebounceRules({ ...configuration }, 'codeConfig');
 
   useEffect(() => {
     const headers = createQuestionInputData
@@ -80,7 +77,7 @@ export default function CreateQuestion() {
           configuration.length > 1
         : Object.values(codeDebounce.inputErrors).every(
             (error) => error === correctState
-          ) && configuration.length > 1;
+          ) && configuration.length > 0;
 
     return isGeneralCorrect && isConfigCorrect;
   }, [
@@ -205,15 +202,12 @@ export default function CreateQuestion() {
     if (action === 'delete') {
       const updatedConfiguration = [...configuration];
       updatedConfiguration.splice(index, 1);
-      console.log('configuration:', configuration);
       if (inputValues.questionType === 'mcq' && configuration.length > 2) {
-        console.log('deleting');
         setConfiguration(updatedConfiguration as QuestionOption[]);
         if (index === MCQanswer) setMCQAnswer(-1);
       }
       if (inputValues.questionType === 'code' && configuration.length > 1) {
         setConfiguration(updatedConfiguration as TestCase[]);
-        console.log('deleting');
       }
     }
     if (action === 'setAsCorrect') {
@@ -235,6 +229,29 @@ export default function CreateQuestion() {
       (newConfiguration as QuestionOption[])[index][type] = value;
     }
     setConfiguration(newConfiguration);
+  };
+
+  const onCreate = async () => {
+    dispatch(setLoading());
+    const response = await createQuestion(
+      user?.authToken as string,
+      inputValues,
+      configuration,
+      MCQanswer,
+      user?.first_name as string,
+      user?.last_name as string
+    );
+    dispatch(
+      updateToast({
+        type: response.status,
+        title: response.status,
+        message:
+          response.status === 'success'
+            ? 'Pregunta creada'
+            : 'Intente nuevamente',
+      })
+    );
+    dispatch(removeLoading());
   };
 
   return (
@@ -334,9 +351,9 @@ export default function CreateQuestion() {
         <div className={style['main-button']}>
           <Button
             location="createQuestion"
-            text="Crear tarea"
+            text="Crear Pregunta"
             isDisable={!canCreateQuestion}
-            onClickHandler={() => []}
+            onClickHandler={onCreate}
           />
         </div>
       </form>

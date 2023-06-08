@@ -16,6 +16,9 @@ import {
 import { leaderboardData } from 'routes/groupGraphController/leaderboardDummyData';
 import { GroupGraphPromise } from 'types/GroupGraph/GroupGraphType';
 import { ModulePromise, UpdateModule } from 'types/Module/Module';
+import { QuestionOption, TestCase } from 'types/CreateQuestion/CreateQuestion';
+
+import { formatCreateQuestionBody } from 'utils/format/formatCreateQuestion';
 
 // http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
 // http://10.147.20.218:65534/v1
@@ -43,6 +46,7 @@ const ENDPOINTS = {
   TIME: `${BASE_URL}/configuration/time`,
   SUBJECT_MODULES: (class_id: string) =>
     `${BASE_URL}/subject/${class_id}/modules`,
+  CREATE_QUESTION: `${BASE_URL}/homework/question`,
 };
 
 export const createStudent = async (user: {
@@ -403,4 +407,37 @@ export const getGraphData = async (
   return new Promise((resolve) => {
     setTimeout(() => resolve({ status: 'success', data }), 100);
   });
+};
+
+// ======== CREATE QUESTION ============
+export const createQuestion = async (
+  auth_token: string,
+  general_config: { [key: string]: any },
+  options_config: (QuestionOption | TestCase)[],
+  answer: number,
+  firstName: string,
+  lastName: string
+): Promise<TypePromise<string>> => {
+  const bodyContent = formatCreateQuestionBody(
+    general_config,
+    options_config,
+    answer,
+    firstName,
+    lastName
+  );
+
+  console.log('creating question with the following body content:');
+  console.log(bodyContent);
+  const options: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify(bodyContent),
+  };
+
+  const request = await fetch(`${ENDPOINTS.CREATE_QUESTION}`, options);
+
+  return request.json();
 };

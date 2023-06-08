@@ -88,7 +88,6 @@ export const useDebounceRules = (
 
   // To set error to '' if the input on a given is changed
   const onRestartIdValue = (id: string) => {
-    console.log('restarting id:', id);
     setInputErrors((previousErrors) => ({ ...previousErrors, [id]: '' }));
     // Special case for password on auth, a change on password restarts passwordConfirmation error
     if (caller === 'auth' && id === 'password')
@@ -189,7 +188,6 @@ export const useDebounceRules = (
       Object.keys(inputValue).length > 0 &&
       parseInt(id, 10) < Object.keys(inputValue).length
     ) {
-      console.log('checking rules on', id);
       const optionRule = questionOptionRules.find(
         (rule) => rule.id === 'option'
       );
@@ -197,13 +195,9 @@ export const useDebounceRules = (
         (rule) => rule.id === 'explanation'
       );
       const { option, explanation } = inputValue[id];
-      console.log('option', option);
-      console.log('explanation', explanation);
       if (optionRule && explanationRule && option !== undefined) {
         const optionResult = optionRule.validate(option);
         const explanationResult = explanationRule.validate(explanation);
-        console.log('result option', optionResult);
-        console.log('exp result', explanationResult);
         if (
           optionResult === correctState &&
           explanationResult === correctState
@@ -264,10 +258,6 @@ export const useDebounceRules = (
   // Everytime inputValue changes from the tracker (prev state), it should check rules
   useEffect(() => {
     const id = findDifferentKey(tracker, inputValue, '');
-    console.log('--------------');
-    console.log('difference on:', id);
-    console.log('tracker', tracker);
-    console.log('inputValue', inputValue);
     const timeout = setTimeout(() => {
       if (id) {
         if (caller === 'createGroup' && id !== 'days') {
