@@ -9,12 +9,14 @@ import {
 } from 'react-resizable-panels';
 
 import { OpenHomeworkQuestion } from 'types/Questions/Question';
+import { CompiledCodeResultsPromise } from 'types/CompiledCodeResults/CompiledCodeResults';
 
 import { executeCode } from 'utils/db/db.utils';
 
 import { Button } from 'components/Button/Button';
 import QuestionTags from 'components/QuestionTags/QuestionTags';
 import CodeEditor from 'components/CodeEditor/CodeEditor';
+import CompilerResults from 'components/CompilerResults/CompilerResults';
 
 import { ReactComponent as VertDots } from './vert-dots.svg';
 import styles from './CodeQuestion.module.css';
@@ -42,8 +44,11 @@ export default function CodeQuestion({
   const user = useSelector((root: RootState) => root.user.currentUser);
 
   const [isPanelVertical, setPanelVertical] = useState(window.innerWidth < 800);
-  const [compilerResults, setCompilerResults] = useState('');
+  const [compilerResults, setCompilerResults] = useState<
+    CompiledCodeResultsPromise | undefined | 'error'
+  >(undefined);
   const [isTerminalOpen, setTerminalOpen] = useState(false);
+  const [isCompilerLoading, setIsCompilerLoading] = useState(false);
 
   useEffect(() => {
     const updatePanelOrientation = () => {
@@ -60,12 +65,16 @@ export default function CodeQuestion({
   const ref = useRef<ImperativePanelHandle>(null);
 
   const submitCode = async () => {
-    if (compilerResults) setCompilerResults('');
+    if (isCompilerLoading) return;
+
+    if (compilerResults) setCompilerResults(undefined);
 
     if (isTerminalOpen) {
       ref.current?.resize(50);
     }
 
+    setIsCompilerLoading(true);
+    setCompilerResults(undefined);
     setTerminalOpen(true);
 
     try {
@@ -74,18 +83,18 @@ export default function CodeQuestion({
         shown_tests: [...questionData.question.tests],
       });
 
-      console.log(data);
-
-      if (data.status === 'success') {
-        updateCorrect(questionIndex, true);
-        setCompilerResults('Todo Bien');
-      } else {
+      if (data.status === 'error') {
         updateCorrect(questionIndex, false);
-        setCompilerResults('Todo mal');
+      } else {
+        updateCorrect(questionIndex, true);
       }
+      setCompilerResults(data);
     } catch (e) {
-      console.error(e);
+      updateCorrect(questionIndex, false);
+      setCompilerResults('error');
     }
+
+    setIsCompilerLoading(false);
   };
 
   return (
@@ -96,11 +105,11 @@ export default function CodeQuestion({
       >
         <Panel maxSize={60}>
           <div className={styles['code-question-info-container']}>
-            <h3 className={styles.title}>{questionData.question.title}</h3>
             <QuestionTags
               topic={questionData.title}
               difficulty={questionData.difficulty_id}
             />
+            <h3 className={styles.title}>{questionData.question.title}</h3>
             <p className={styles.description}>
               {questionData.question.description}
             </p>
@@ -137,8 +146,9 @@ export default function CodeQuestion({
                 <Panel
                   ref={ref}
                   collapsible
+                  className={styles['compiler-container']}
                 >
-                  <div>{compilerResults}</div>
+                  <CompilerResults results={compilerResults} />
                 </Panel>
               </>
             )}

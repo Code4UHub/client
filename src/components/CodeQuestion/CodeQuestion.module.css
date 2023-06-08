@@ -62,8 +62,8 @@
 }
 
 .title {
-  font-size: var(--fs-mid-text);
-  margin: 1.2rem 0;
+  font-size: var(--fs-big-text);
+  margin-bottom: 1.6rem;
   font-weight: 500;
 }
 
@@ -99,7 +99,11 @@
 
 .description {
   font-size: var(--fs-small-text);
-  font-style: italic;
+  line-height: 1.6;
+}
+
+.compiler-container {
+  background-color: var(--white-color);
 }
 
 @media (max-width: 50em) {
