@@ -13,7 +13,12 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import { TypePromise } from 'types/TypePromise/TypePromise';
 
-import { getClass, getGraphData, getTeacherClassList } from 'utils/db/db.utils';
+import {
+  getClass,
+  getGraphData,
+  getTeacherClassList,
+  getSubjects,
+} from 'utils/db/db.utils';
 
 import { Root } from 'routes/root/Root';
 import Authentication from 'routes/authentication/Authentication';
@@ -156,6 +161,11 @@ function Index() {
         {
           path: 'new-question',
           element: <CreateQuestion />,
+          loader: async () =>
+            await loaderWrapper(
+              () => getSubjects(user?.authToken as string),
+              'teacher'
+            ),
         },
         {
           path: 'homework/create/:difficulty',
