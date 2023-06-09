@@ -21,8 +21,6 @@ import {
   HomeworkResponsePromise,
 } from 'types/Homework/Homework';
 
-// TODO: Delete when backend has this information
-import { leaderboardData } from 'routes/groupGraphController/leaderboardDummyData';
 import { GroupGraphPromise } from 'types/GroupGraph/GroupGraphType';
 import { HomeworkQuestionListPromise } from 'types/Questions/Question';
 
@@ -39,6 +37,8 @@ const ENDPOINTS = {
   CLASS: `${BASE_URL}/class`,
   CLASS_CREATE: `${BASE_URL}/class/create`,
   CLASS_MODULES: (id_class: string) => `${BASE_URL}/class/${id_class}/modules`,
+  CLASS_LEADERBOARD: (id_class: string) =>
+    `${BASE_URL}/class/${id_class}/leaderboard`,
   PROGRESS_MODULES: (id_class: string, id_student: string) =>
     `${BASE_URL}/challenge/class/${id_class}/student/${id_student}`,
   UPDATE_MODULES: (id_class: string) => `${BASE_URL}/class/${id_class}/modules`,
@@ -381,13 +381,14 @@ export const getGraphData = async (
   graph_id: number
 ): Promise<GroupGraphPromise> => {
   // Information for leaderboard
-  if (graph_id < 1) {
-    return new Promise((resolve) => {
-      setTimeout(
-        () => resolve({ status: 'success', data: leaderboardData }),
-        100
-      );
-    });
+  if (graph_id === 0) {
+    const options: RequestInit = {
+      headers: {
+        Authorization: `Bearer ${auth_token}`,
+      },
+    };
+    const request = await fetch(ENDPOINTS.CLASS_LEADERBOARD(id_class), options);
+    return request.json();
   }
   // Information for every other graph
   const data = Array.from({ length: 10 }, () => {

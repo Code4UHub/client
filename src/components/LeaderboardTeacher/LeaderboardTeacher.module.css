@@ -8,8 +8,13 @@
 
 
 
+@media (max-width: 45em) {
+    .leaderboard-container {
+        padding: 2rem 2.5rem;
+    }
+}
 @media (max-width: 30em) {
     .leaderboard-container {
-        padding: 2rem 0;
+        padding: 2rem 1;
     }
 }
