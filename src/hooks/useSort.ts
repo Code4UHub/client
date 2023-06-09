@@ -61,14 +61,11 @@ export const useSort = ({
     }
     if (caller === 'groupGraphs') {
       if (data.length > 0 && (data[0] as GroupGraphType).id) {
-        console.log('sort by', ruleElement);
-        console.log('dir', ruleDirection);
         const newArray: GroupGraphType[] = sortGraphs(
           [...data],
           ruleElement as GraphCategory | GraphEvaluate,
           ruleDirection
         );
-        console.log(newArray);
         setSortedData(newArray as GroupGraphType[]);
       }
     }
