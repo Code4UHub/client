@@ -49,6 +49,7 @@ export default function CreateQuestion() {
     (QuestionOption | TestCase)[]
   >([{ ...emptyQuestionOption }, { ...emptyQuestionOption }]);
   const [MCQanswer, setMCQAnswer] = useState(-1);
+  const [autoCompleteKey, setAutocompleteKey] = useState(0);
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -269,6 +270,7 @@ export default function CreateQuestion() {
     if (formRef.current) {
       formRef.current.reset();
     }
+    setAutocompleteKey((current) => current + 1);
   };
 
   return (
@@ -284,7 +286,7 @@ export default function CreateQuestion() {
             if (type === 'autocomplete')
               return (
                 <AutocompleteField
-                  key={id}
+                  key={`${id} ${autoCompleteKey}`}
                   id={id}
                   label={label}
                   list={getAutocompleteList(id)}
