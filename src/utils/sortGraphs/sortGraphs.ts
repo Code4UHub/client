@@ -4,7 +4,9 @@ import { GraphCategory, GraphEvaluate } from 'types/GroupOptions/GroupOptions';
 function isGraphCategory(
   element: GraphCategory | GraphEvaluate
 ): element is GraphCategory {
-  return ['Leaderboard', 'Módulo', 'Tema'].includes(element as GraphCategory);
+  return ['Leaderboard', 'Módulo', 'Challenge'].includes(
+    element as GraphCategory
+  );
 }
 
 export function sortGraphs(

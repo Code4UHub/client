@@ -1,4 +1,4 @@
-export type GraphCategory = 'Leaderboard' | 'Módulo' | 'Actividad';
+export type GraphCategory = 'Leaderboard' | 'Módulo' | 'Challenge';
 
 export type GraphEvaluate = 'Puntaje' | 'Promedio' | 'Progreso';
 

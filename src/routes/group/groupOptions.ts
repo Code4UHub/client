@@ -26,11 +26,19 @@ export const groupOptions: GroupOptions[] = [
     evaluate: 'Progreso',
   },
   {
-    title: 'Promedio por actividad',
-    description: 'Analiza los resultados de tus actividades creadas',
+    title: 'Promedio por challenge',
+    description: 'Revisa en promedio cómo han avanzado en cada nivel',
     information:
-      'Promedio de las calificaciones de todos los estudiantes, dividido en actividades.',
-    category: 'Actividad',
+      'Promedio de las calificaciones de todos los estudiantes, dividido en challenges.',
+    category: 'Challenge',
     evaluate: 'Promedio',
+  },
+  {
+    title: 'Progreso por challenge',
+    description: '¿Sabes cuántos estudiantes han pasado cada nivel?',
+    information:
+      'Porcentaje de estudiantes que han obtenido una calificación global de 70 o superior, por cada challenge.',
+    category: 'Challenge',
+    evaluate: 'Progreso',
   },
 ];
