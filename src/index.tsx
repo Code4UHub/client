@@ -42,6 +42,7 @@ import CreateHomework from 'routes/homework/CreateHomework';
 
 import { Toast } from 'components/Toast/Toast';
 import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
+import NotFound from 'components/NotFound/NotFound';
 import './index.css';
 
 function Index() {
@@ -212,7 +213,7 @@ function Index() {
           element: <Test />,
         },
       ],
-      errorElement: <h1>Error</h1>,
+      errorElement: <NotFound />,
     },
     {
       path: '/auth',
