@@ -28,10 +28,10 @@ import { QuestionOption, TestCase } from 'types/CreateQuestion/CreateQuestion';
 import { formatCreateQuestionBody } from 'utils/format/formatCreateQuestion';
 import { HomeworkQuestionListPromise } from 'types/Questions/Question';
 
-// http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
-// http://10.147.20.218:65534/v1
-const BASE_URL =
-  'http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1';
+// const BASE_URL = http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
+const BASE_URL = 'http://10.147.20.218:65534/v1';
+// const BASE_URL =
+// 'http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1';
 
 const ENDPOINTS = {
   STUDENT_REGISTER: `${BASE_URL}/student/register`,
@@ -64,6 +64,10 @@ const ENDPOINTS = {
   HOMEWORK: `${BASE_URL}/homework`,
   MODULE_GRAPH: (class_id: string, i: number) =>
     `${BASE_URL}/class/${class_id}/module_${i === 1 ? 'average' : 'progress'}`,
+  CHALLENGE_GRAPH: (class_id: string, i: number) =>
+    `${BASE_URL}/class/${class_id}/challenge_${
+      i === 3 ? 'average' : 'progress'
+    }`,
 };
 
 export const createStudent = async (user: {
@@ -416,28 +420,23 @@ export const getGraphData = async (
     return request.json();
   }
   // Information for every other graph
+  const options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
   if (graph_id < 3) {
-    const options: RequestInit = {
-      headers: {
-        Authorization: `Bearer ${auth_token}`,
-      },
-    };
     const request = await fetch(
       ENDPOINTS.MODULE_GRAPH(id_class, graph_id),
       options
     );
     return request.json();
   }
-  const data = Array.from({ length: 10 }, () => {
-    const title = 'Modulo de aprendizaje';
-    const average = Math.floor(Math.random() * 101);
-    // eslint-disable-next-line
-    const module_id = Math.floor(Math.random() * 101);
-    return { title, average, module_id };
-  });
-  return new Promise((resolve) => {
-    setTimeout(() => resolve({ status: 'success', data }), 100);
-  });
+  const request = await fetch(
+    ENDPOINTS.CHALLENGE_GRAPH(id_class, graph_id),
+    options
+  );
+  return request.json();
 };
 
 // ======== CREATE QUESTION ============
