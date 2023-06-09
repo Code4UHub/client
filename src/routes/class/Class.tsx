@@ -34,8 +34,8 @@ function ClassNav({ isStudent }: ClassNavProps) {
           <NavLink to="homework">Tareas</NavLink>
         </li>
         <li>
-          <NavLink to={isStudent ? 'leaderboard' : 'group'}>
-            {isStudent ? 'Leaderboard' : 'Grupo'}
+          <NavLink to={isStudent ? 'leaderboard' : 'graphs'}>
+            {isStudent ? 'Leaderboard' : 'Gráficos'}
           </NavLink>
         </li>
       </ul>

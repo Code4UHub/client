@@ -159,9 +159,9 @@ function Index() {
 
                 { path: 'homework', element: 'Tareas' },
                 { path: 'leaderboard', element: 'Leaderboard' },
-                { path: 'group', element: <Group /> },
+                { path: 'graphs', element: <Group /> },
                 {
-                  path: 'group/graph/:graph_id',
+                  path: 'graphs/:graph_id',
                   loader: async ({ params }) =>
                     await loaderWrapper(
                       () =>

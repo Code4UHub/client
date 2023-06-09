@@ -21,7 +21,7 @@ export default function GroupGraphController() {
 
   const onClickHandler = (action: string) => {
     if (action === 'all') {
-      navigate('../../', { relative: 'path' });
+      navigate('../', { relative: 'path' });
     }
     if (action === 'prev' && graphId > 0) {
       navigate(`../${graphId - 1}`, { relative: 'path' });
