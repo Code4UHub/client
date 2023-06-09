@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.container span {
+  font-size: var(--fs-big-text);
+  font-weight: 500;
+}
