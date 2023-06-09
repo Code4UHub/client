@@ -1,4 +1,11 @@
-export function formatDate(date: Date) {
+export function formatDate(fullDateString: string) {
+  const [yearString, monthString, dateString] = fullDateString.split('-');
+
+  const date = new Date();
+  date.setFullYear(Number(yearString));
+  date.setMonth(Number(monthString) - 1);
+  date.setDate(Number(dateString));
+
   const day = new Intl.DateTimeFormat('es-ES', { weekday: 'long' }).format(
     date
   );
@@ -12,4 +19,8 @@ export function formatDate(date: Date) {
   const dayNumber = date.getDate();
 
   return `${capitalDay}, ${dayNumber} de ${month}`;
+}
+
+export function formatDateString(date: Date) {
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }

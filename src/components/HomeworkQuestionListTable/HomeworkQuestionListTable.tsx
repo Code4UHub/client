@@ -73,6 +73,7 @@ export default function HomeworkQuestionListTable({
 
       if (type && question.type !== type) return false;
 
+      setActivePage(1);
       return true;
     });
   }, [tableFilterOptions, questionList]);

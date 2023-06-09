@@ -27,18 +27,19 @@ import {
 
 import { Root } from 'routes/root/Root';
 import Authentication from 'routes/authentication/Authentication';
-import StudentRequests from 'routes/StudentRequests/StudentRequests';
+import StudentRequests from 'routes/requests/StudentRequests';
 import Classes from 'routes/classes/Classes';
-import ModuleTeachers from 'routes/modules/ModuleTeachers';
-import ModuleStudents from 'routes/modules/ModuleStudents';
-import Group from 'routes/group/Group';
-import GroupGraphController from 'routes/groupGraphController/GroupGraphController';
+import ModuleTeachers from 'routes/class/modules/ModuleTeachers';
+import ModuleStudents from 'routes/class/modules/ModuleStudents';
+import Group from 'routes/class/group/Group';
+import GroupGraphController from 'routes/class/groupGraphController/GroupGraphController';
 import CreateQuestion from 'routes/createQuestion/createQuestion';
 import { Class } from 'routes/class/Class';
 import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
 import Test from 'routes/test/Test';
-import CreateHomework from 'routes/homework/CreateHomework';
+import CreateHomework from 'routes/homework/createHomework/CreateHomework';
+import Homework from 'routes/class/homework/Homework';
 
 import { Toast } from 'components/Toast/Toast';
 import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
@@ -160,7 +161,7 @@ function Index() {
                     await loaderWrapper(() => noChecking(), 'student'),
                 },
 
-                { path: 'homework', element: 'Tareas' },
+                { path: 'homework', element: <Homework /> },
                 { path: 'leaderboard', element: 'Leaderboard' },
                 { path: 'graphs', element: <Group /> },
                 {

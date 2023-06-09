@@ -24,3 +24,8 @@
 .section-header a:hover {
   text-decoration: underline;
 }
+
+.card-skeleton {
+  max-height: 35rem;
+  overflow: hidden;
+}

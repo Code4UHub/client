@@ -6,8 +6,8 @@ import { ReactComponent as IconClose } from './x-mark.svg';
 
 type ModalProps = {
   title: string;
-  open: Boolean;
-  onClose: Function;
+  open?: Boolean;
+  onClose?: Function;
   lastFocusableElement: React.RefObject<HTMLElement>;
   children: React.ReactNode;
   current?: string;
@@ -32,7 +32,7 @@ export default function Modal({
 
   const closeModal = () => {
     if (typeof isOpen === 'undefined') setIsModalOpen(false);
-    onClose();
+    if (onClose) onClose();
   };
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function Modal({
 
     const trapFocus = (e: FocusEvent) => {
       if (e.target === topRef.current) {
-        lastFocusableEl.current?.focus();
+        if (lastFocusableEl) lastFocusableEl.current?.focus();
       } else if (e.target === bottomRef.current) {
         closeRef.current?.focus();
       }
@@ -49,7 +49,7 @@ export default function Modal({
     const escapeClose = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (typeof isOpen === 'undefined') setIsModalOpen(false);
-        onClose();
+        if (onClose) onClose();
       }
     };
 
@@ -135,4 +135,6 @@ export default function Modal({
 Modal.defaultProps = {
   current: '',
   isOpen: undefined,
+  open: undefined,
+  onClose: undefined,
 };
