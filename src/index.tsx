@@ -20,6 +20,7 @@ import { SubjectModule } from 'types/Module/Module';
 import {
   getClass,
   getGraphData,
+  getSubjects,
   getSubjectHomeworkQuestions,
   getsSubjectModules,
 } from 'utils/db/db.utils';
@@ -32,6 +33,7 @@ import ModuleTeachers from 'routes/modules/ModuleTeachers';
 import ModuleStudents from 'routes/modules/ModuleStudents';
 import Group from 'routes/group/Group';
 import GroupGraphController from 'routes/groupGraphController/GroupGraphController';
+import CreateQuestion from 'routes/createQuestion/createQuestion';
 import { Class } from 'routes/class/Class';
 import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
@@ -186,6 +188,15 @@ function Index() {
         {
           path: 'homework',
           element: <Assignment />,
+        },
+        {
+          path: 'new-question',
+          element: <CreateQuestion />,
+          loader: async () =>
+            await loaderWrapper(
+              () => getSubjects(user?.authToken as string),
+              'teacher'
+            ),
         },
         {
           path: 'homework/:id/create/:difficulty',
