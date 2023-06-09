@@ -9,8 +9,8 @@ export interface GroupGraphType {
 export interface Leaderboard {
   position: number;
   name: string;
-  points: number;
-  student_id: string;
+  score: number;
+  student: string;
 }
 
 export interface GroupGraphPromise

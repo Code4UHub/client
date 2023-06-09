@@ -11,17 +11,17 @@ type Props = {
 };
 
 export default function LeaderboardTeacher({ data }: Props) {
-  if (data.length === 0 || !(data[0] as Leaderboard)?.student_id)
+  if (data.length === 0 || !(data[0] as Leaderboard)?.student)
     return <h1>Loading</h1>;
 
   return (
     <div className={style['leaderboard-container']}>
-      {data.map((student) => (
+      {data.map(({ student, score, position, name }) => (
         <LeaderboardCard
-          position={student.position}
-          student_id={student.student_id}
-          points={student.points}
-          name={student.name}
+          position={position}
+          student_id={student}
+          points={score}
+          name={name}
         />
       ))}
     </div>
