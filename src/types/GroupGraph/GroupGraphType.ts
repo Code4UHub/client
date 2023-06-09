@@ -2,8 +2,8 @@ import { TypePromise } from 'types/TypePromise/TypePromise';
 
 export interface GroupGraphType {
   title: string;
-  average: number;
-  module_id: number;
+  percentage: number;
+  id: number;
 }
 
 export interface Leaderboard {

@@ -60,7 +60,7 @@ export const useSort = ({
       setSortedData(newArray);
     }
     if (caller === 'groupGraphs') {
-      if (data.length > 0 && (data[0] as GroupGraphType).module_id) {
+      if (data.length > 0 && (data[0] as GroupGraphType).id) {
         const newArray: GroupGraphType[] = sortGraphs(
           [...data],
           ruleElement as GraphCategory | GraphEvaluate,
