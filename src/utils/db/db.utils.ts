@@ -426,8 +426,6 @@ export const createQuestion = async (
     lastName
   );
 
-  console.log('creating question with the following body content:');
-  console.log(bodyContent);
   const options: RequestInit = {
     method: 'POST',
     headers: {

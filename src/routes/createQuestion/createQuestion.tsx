@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 
 import SectionHeader from 'components/SectionHeader/SectionHeader';
 import { Button } from 'components/Button/Button';
@@ -50,6 +50,8 @@ export default function CreateQuestion() {
   >([{ ...emptyQuestionOption }, { ...emptyQuestionOption }]);
   const [MCQanswer, setMCQAnswer] = useState(-1);
 
+  const formRef = useRef<HTMLFormElement>(null);
+
   const generalDebounce = useDebounceRules(inputValues, 'createQuestion');
   // eslint-disable-next-line
   const mcqDebounce = useDebounceRules({ ...configuration }, 'mcqConfig');
@@ -57,6 +59,7 @@ export default function CreateQuestion() {
   const codeDebounce = useDebounceRules({ ...configuration }, 'codeConfig');
 
   useEffect(() => {
+    // To restart input Errors
     const headers = createQuestionInputData
       .filter((item) => item.id !== 'questionType')
       .map(({ id }) => id);
@@ -88,7 +91,6 @@ export default function CreateQuestion() {
   ]);
   const canCreateQuestion = checkCanCreate;
 
-  // To match Autocomplete list requirement
   const getAutocompleteList = (id: string) => {
     if (id === 'subject') {
       return subjects.map(({ subject_id, subject_name }) => ({
@@ -147,27 +149,30 @@ export default function CreateQuestion() {
   // Get modules associated with the chosen subject
   useEffect(() => {
     const fetchModules = async () => {
+      dispatch(setLoading());
       const { data } = await getSubjectModules(
         user?.authToken as string,
         (inputValues.subject as { id: string; value: string }).id
       );
+      dispatch(removeLoading());
       setModules(data as SubjectModule[]);
     };
     if ((inputValues.subject as { id: string; value: string }).id) {
       fetchModules();
     }
-  }, [inputValues.subject, user?.authToken]);
+  }, [inputValues.subject, user?.authToken, dispatch]);
 
   // Change current question type and restart options to have only one empty option
-  const onChangeQuestionType = () => {
-    if (inputValues.questionType === 'mcq') {
+  const onChangeQuestionType = (caller: 'code' | 'mcq') => {
+    if (inputValues.questionType === 'mcq' && caller !== 'mcq') {
       setConfiguration([{ ...emptyTestCase }]);
       setInputValues((current: InputType) => ({
         ...current,
         questionType: 'code',
       }));
       setMCQAnswer(-1);
-    } else {
+    }
+    if (inputValues.questionType === 'code' && caller !== 'code') {
       setConfiguration([
         { ...emptyQuestionOption },
         { ...emptyQuestionOption },
@@ -252,6 +257,18 @@ export default function CreateQuestion() {
       })
     );
     dispatch(removeLoading());
+    setInputValues(avoidReferenceObjects(INITIAL_INPUT_VALUES));
+    setConfiguration([{ ...emptyQuestionOption }, { ...emptyQuestionOption }]);
+    setMCQAnswer(-1);
+    const headers = createQuestionInputData
+      .filter((item) => item.id !== 'questionType')
+      .map(({ id }) => id);
+    generalDebounce.restartAllInputErrors(headers);
+    mcqDebounce.restartAllInputErrors(['0', '1']);
+    codeDebounce.restartAllInputErrors(['0']);
+    if (formRef.current) {
+      formRef.current.reset();
+    }
   };
 
   return (
@@ -260,6 +277,7 @@ export default function CreateQuestion() {
       <form
         className={style.form}
         autoComplete="off"
+        ref={formRef}
       >
         <div className={style['general-configuration']}>
           {createQuestionInputData.map(({ label, type, id, width }) => {
@@ -308,7 +326,7 @@ export default function CreateQuestion() {
                         : 'onChangeQuestion'
                     }
                     text="Opción múltiple"
-                    onClickHandler={onChangeQuestionType}
+                    onClickHandler={() => onChangeQuestionType('mcq')}
                   />
                   <Button
                     location={
@@ -317,7 +335,7 @@ export default function CreateQuestion() {
                         : 'onChangeQuestion'
                     }
                     text="Código"
-                    onClickHandler={onChangeQuestionType}
+                    onClickHandler={() => onChangeQuestionType('code')}
                   />
                 </div>
               </div>

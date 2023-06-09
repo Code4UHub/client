@@ -24,8 +24,8 @@
 }
 
 .missing-hint {
-    color: var(--dark-red);
-    background-color: var(--light-red);
+    color: #2D2D2D;
+    background-color: #f0d17a;
 }
 
 .options {
@@ -76,28 +76,31 @@
 }
 
 .no-error {
-    transition: background-color 0s;
-    padding: 0rem;
+    transition: all 0.4s ease-in-out;
+    transform: scale(0);
+    padding: 0rem 2rem;
     background-color: var(--light-gray);
 }
 
 .correct {
-    font-size: var(--fs-mid-small-text);
+    font-size: var(--fs-small-text);
     color: var(--dark-green);
     background-color: var(--light-green);
     padding: 1rem 2rem;
     margin: 0rem 4rem;
     border-radius: 1rem;
+    transition: all 0.4s ease-in-out;
 }
 
 .error {
     padding: 1rem 2rem;
     border-radius: 1rem;
-    font-size: var(--fs-mid-small-text);
+    font-size: var(--fs-small-text);
     color: var(--dark-red);
     background-color: var(--light-red);
-    transition: all 0.4s ease-in-out
+    transition: all 0.4s ease-in-out;
 }
+
 
 .icon {
     justify-self: center;
