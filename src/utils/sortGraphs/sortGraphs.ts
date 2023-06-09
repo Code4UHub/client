@@ -16,10 +16,10 @@ export function sortGraphs(
 ) {
   if (isGraphCategory(element)) {
     return value === 'Up'
-      ? data.sort((a, b) => a.id - b.id)
-      : data.sort((a, b) => b.id - a.id);
+      ? data.sort((a, b) => a.module_id - b.module_id)
+      : data.sort((a, b) => b.module_id - a.module_id);
   }
   return value === 'Up'
-    ? data.sort((a, b) => b.value - a.value)
-    : data.sort((a, b) => a.value - b.value);
+    ? data.sort((a, b) => b.average - a.average)
+    : data.sort((a, b) => a.average - b.average);
 }

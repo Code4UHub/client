@@ -55,6 +55,8 @@ const ENDPOINTS = {
     `${BASE_URL}/homework/question/subject/${subject_id}/difficulty/${difficulty}`,
   SUBJECT_MODULES: (id: string) => `${BASE_URL}/subject/${id}/modules`,
   HOMEWORK: `${BASE_URL}/homework`,
+  MODULE_GRAPH: (class_id: string, i: number) =>
+    `${BASE_URL}/class/${class_id}/module_${i === 1 ? 'average' : 'progress'}`,
 };
 
 export const createStudent = async (user: {
@@ -391,11 +393,24 @@ export const getGraphData = async (
     return request.json();
   }
   // Information for every other graph
+  if (graph_id < 3) {
+    const options: RequestInit = {
+      headers: {
+        Authorization: `Bearer ${auth_token}`,
+      },
+    };
+    const request = await fetch(
+      ENDPOINTS.MODULE_GRAPH(id_class, graph_id),
+      options
+    );
+    return request.json();
+  }
   const data = Array.from({ length: 10 }, () => {
     const title = 'Modulo de aprendizaje';
-    const value = Math.floor(Math.random() * 101);
-    const id = Math.floor(Math.random() * 101);
-    return { title, value, id };
+    const average = Math.floor(Math.random() * 101);
+    // eslint-disable-next-line
+    const module_id = Math.floor(Math.random() * 101);
+    return { title, average, module_id };
   });
   return new Promise((resolve) => {
     setTimeout(() => resolve({ status: 'success', data }), 100);
