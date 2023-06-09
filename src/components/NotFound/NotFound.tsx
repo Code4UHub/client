@@ -15,7 +15,7 @@ export default function NotFound() {
       />
 
       <Link to="/">
-        <span id={style.link}>Regresar a mis clases</span>
+        <span id={style.link}>Regresar a home</span>
       </Link>
     </div>
   );
