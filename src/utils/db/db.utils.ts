@@ -22,8 +22,6 @@ import {
   HomeworkResponsePromise,
 } from 'types/Homework/Homework';
 
-// TODO: Delete when backend has this information
-import { leaderboardData } from 'routes/groupGraphController/leaderboardDummyData';
 import { GroupGraphPromise } from 'types/GroupGraph/GroupGraphType';
 import { QuestionOption, TestCase } from 'types/CreateQuestion/CreateQuestion';
 
@@ -43,6 +41,8 @@ const ENDPOINTS = {
   CLASS: `${BASE_URL}/class`,
   CLASS_CREATE: `${BASE_URL}/class/create`,
   CLASS_MODULES: (id_class: string) => `${BASE_URL}/class/${id_class}/modules`,
+  CLASS_LEADERBOARD: (id_class: string) =>
+    `${BASE_URL}/class/${id_class}/leaderboard`,
   PROGRESS_MODULES: (id_class: string, id_student: string) =>
     `${BASE_URL}/challenge/class/${id_class}/student/${id_student}`,
   UPDATE_MODULES: (id_class: string) => `${BASE_URL}/class/${id_class}/modules`,
@@ -62,6 +62,8 @@ const ENDPOINTS = {
     `${BASE_URL}/homework/question/subject/${subject_id}/difficulty/${difficulty}`,
   SUBJECT_MODULES2: (id: string) => `${BASE_URL}/subject/${id}/modules`,
   HOMEWORK: `${BASE_URL}/homework`,
+  MODULE_GRAPH: (class_id: string, i: number) =>
+    `${BASE_URL}/class/${class_id}/module_${i === 1 ? 'average' : 'progress'}`,
 };
 
 export const createStudent = async (user: {
@@ -404,20 +406,34 @@ export const getGraphData = async (
   graph_id: number
 ): Promise<GroupGraphPromise> => {
   // Information for leaderboard
-  if (graph_id < 1) {
-    return new Promise((resolve) => {
-      setTimeout(
-        () => resolve({ status: 'success', data: leaderboardData }),
-        100
-      );
-    });
+  if (graph_id === 0) {
+    const options: RequestInit = {
+      headers: {
+        Authorization: `Bearer ${auth_token}`,
+      },
+    };
+    const request = await fetch(ENDPOINTS.CLASS_LEADERBOARD(id_class), options);
+    return request.json();
   }
   // Information for every other graph
+  if (graph_id < 3) {
+    const options: RequestInit = {
+      headers: {
+        Authorization: `Bearer ${auth_token}`,
+      },
+    };
+    const request = await fetch(
+      ENDPOINTS.MODULE_GRAPH(id_class, graph_id),
+      options
+    );
+    return request.json();
+  }
   const data = Array.from({ length: 10 }, () => {
     const title = 'Modulo de aprendizaje';
-    const value = Math.floor(Math.random() * 101);
-    const id = Math.floor(Math.random() * 101);
-    return { title, value, id };
+    const average = Math.floor(Math.random() * 101);
+    // eslint-disable-next-line
+    const module_id = Math.floor(Math.random() * 101);
+    return { title, average, module_id };
   });
   return new Promise((resolve) => {
     setTimeout(() => resolve({ status: 'success', data }), 100);

@@ -34,9 +34,9 @@ export default function GroupGraph({ graphData, category, evaluate }: Props) {
   useEffect(() => {
     onUpdateData(
       graphData.map((graph) => ({
-        title: `${graph.id}. ${graph.title}`,
-        value: graph.value,
-        id: graph.id,
+        title: `${graph.module_id}. ${graph.title}`,
+        average: graph.average,
+        module_id: graph.module_id,
       }))
     );
     // eslint-disable-next-line
@@ -69,13 +69,13 @@ export default function GroupGraph({ graphData, category, evaluate }: Props) {
 
       <div className={style.graphs}>
         {sortedData.map((d) => (
-          <React.Fragment key={`${d.id}${d.value}`}>
+          <React.Fragment key={`${d.module_id}${d.average}`}>
             <span className={style['graph-title']}>{d.title}</span>
             <div className={style['bar-graph']}>
               <ProgressBar
-                percentage={d.value}
+                percentage={d.average}
                 textPosition="in"
-                key={`${d.id}${d.value}${ruleElement}${ruleDirection}graph`}
+                key={`${d.id}${d.average}${ruleElement}${ruleDirection}graph`}
               />
             </div>
           </React.Fragment>
