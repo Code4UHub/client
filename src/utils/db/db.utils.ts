@@ -7,6 +7,7 @@ import {
   TeacherClassListPromise,
 } from 'types/Class/Class';
 import { SubjectPromise } from 'types/Subject/Subject';
+import { SubjectModulePromise } from 'types/SubjectModule/SubjectModule';
 import {
   StudentRequestPromise,
   RequestAnswer,
@@ -22,6 +23,9 @@ import {
 } from 'types/Homework/Homework';
 
 import { GroupGraphPromise } from 'types/GroupGraph/GroupGraphType';
+import { QuestionOption, TestCase } from 'types/CreateQuestion/CreateQuestion';
+
+import { formatCreateQuestionBody } from 'utils/format/formatCreateQuestion';
 import { HomeworkQuestionListPromise } from 'types/Questions/Question';
 
 // http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
@@ -51,9 +55,12 @@ const ENDPOINTS = {
   TEACHER_CLASSES: (id: string) => `${BASE_URL}/teacher/${id}/class`,
   STUDENT_CLASSES: (id: string) => `${BASE_URL}/student/${id}/class`,
   TIME: `${BASE_URL}/configuration/time`,
+  SUBJECT_MODULES: (class_id: string) =>
+    `${BASE_URL}/subject/${class_id}/modules`,
+  CREATE_QUESTION: `${BASE_URL}/homework/question`,
   HOMEWORK_QUESTIONS: (subject_id: string, difficulty: 1 | 2 | 3) =>
     `${BASE_URL}/homework/question/subject/${subject_id}/difficulty/${difficulty}`,
-  SUBJECT_MODULES: (id: string) => `${BASE_URL}/subject/${id}/modules`,
+  SUBJECT_MODULES2: (id: string) => `${BASE_URL}/subject/${id}/modules`,
   HOMEWORK: `${BASE_URL}/homework`,
   MODULE_GRAPH: (class_id: string, i: number) =>
     `${BASE_URL}/class/${class_id}/module_${i === 1 ? 'average' : 'progress'}`,
@@ -199,6 +206,22 @@ export const getSubjects = async (
   };
 
   const request = await fetch(ENDPOINTS.SUBJECT, options);
+
+  return request.json();
+};
+
+// ======= ALL MODULES GIVEN A SUBJECT =========
+export const getSubjectModules = async (
+  auth_token: string,
+  class_id: string
+): Promise<SubjectModulePromise> => {
+  const options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+
+  const request = await fetch(ENDPOINTS.SUBJECT_MODULES(class_id), options);
 
   return request.json();
 };
@@ -417,6 +440,35 @@ export const getGraphData = async (
   });
 };
 
+// ======== CREATE QUESTION ============
+export const createQuestion = async (
+  auth_token: string,
+  general_config: { [key: string]: any },
+  options_config: (QuestionOption | TestCase)[],
+  answer: number,
+  firstName: string,
+  lastName: string
+): Promise<TypePromise<string>> => {
+  const bodyContent = formatCreateQuestionBody(
+    general_config,
+    options_config,
+    answer,
+    firstName,
+    lastName
+  );
+
+  const options: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify(bodyContent),
+  };
+
+  const request = await fetch(`${ENDPOINTS.CREATE_QUESTION}`, options);
+  return request.json();
+};
 // ====== GET HOMEWORK QUESTIONS BY SUBJECT AND DIFFICULTY   =======
 export const getSubjectHomeworkQuestions = async (
   auth_token: string,
@@ -448,7 +500,7 @@ export const getsSubjectModules = async (
     },
   };
 
-  const request = await fetch(ENDPOINTS.SUBJECT_MODULES(subject_id), options);
+  const request = await fetch(ENDPOINTS.SUBJECT_MODULES2(subject_id), options);
 
   return request.json();
 };
