@@ -20,6 +20,7 @@ import { SubjectModule } from 'types/Module/Module';
 import {
   getClass,
   getGraphData,
+  getSubjects,
   getSubjectHomeworkQuestions,
   getsSubjectModules,
 } from 'utils/db/db.utils';
@@ -32,6 +33,7 @@ import ModuleTeachers from 'routes/class/modules/ModuleTeachers';
 import ModuleStudents from 'routes/class/modules/ModuleStudents';
 import Group from 'routes/class/group/Group';
 import GroupGraphController from 'routes/class/groupGraphController/GroupGraphController';
+import CreateQuestion from 'routes/createQuestion/createQuestion';
 import { Class } from 'routes/class/Class';
 import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
@@ -41,6 +43,7 @@ import Homework from 'routes/class/homework/Homework';
 
 import { Toast } from 'components/Toast/Toast';
 import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
+import NotFound from 'components/NotFound/NotFound';
 import './index.css';
 
 function Index() {
@@ -160,9 +163,9 @@ function Index() {
 
                 { path: 'homework', element: <Homework /> },
                 { path: 'leaderboard', element: 'Leaderboard' },
-                { path: 'group', element: <Group /> },
+                { path: 'graphs', element: <Group /> },
                 {
-                  path: 'group/graph/:graph_id',
+                  path: 'graphs/:graph_id',
                   loader: async ({ params }) =>
                     await loaderWrapper(
                       () =>
@@ -189,6 +192,15 @@ function Index() {
           element: <Assignment />,
         },
         {
+          path: 'new-question',
+          element: <CreateQuestion />,
+          loader: async () =>
+            await loaderWrapper(
+              () => getSubjects(user?.authToken as string),
+              'teacher'
+            ),
+        },
+        {
           path: 'homework/:id/create/:difficulty',
           element: <CreateHomework />,
           loader: createHomeworkLoader,
@@ -202,7 +214,7 @@ function Index() {
           element: <Test />,
         },
       ],
-      errorElement: <h1>Error</h1>,
+      errorElement: <NotFound />,
     },
     {
       path: '/auth',

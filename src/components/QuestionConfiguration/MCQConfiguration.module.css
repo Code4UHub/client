@@ -1,0 +1,115 @@
+.title {
+    font-size: var(--fs-mid-small-text);
+    margin: 1.5rem;
+    display: block;
+}
+
+.hint-container {
+    margin: 1rem 3rem;
+}
+
+.passed-hint, .missing-hint {
+    font-size: var(--fs-small-text);
+    padding: 0rem 2rem;
+    font-weight: 500;
+    border-radius: 1rem;
+    transition: all 2s;
+}
+
+.passed-hint {
+    color: var(--dark-green);
+    background-color: var(--light-green);
+    display: none;
+}
+
+.missing-hint {
+    color: #2D2D2D;
+    background-color: #f0d17a;
+}
+
+.container .input, .container .explanation {
+    margin: 1rem 1rem;
+    background-color: white;
+    border: none;
+    border-radius: 2rem;
+    padding: 0 2rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: var(--fs-mid-small-text)
+}
+
+.input:active, .explanation:active {
+    outline: none;
+}
+.input:focus-visible, .explanation:focus-visible {
+    outline: 0.2rem solid var(--light-blue-color);
+}
+
+.container .explanation {
+    grid-column: 2/4;
+    margin: 1rem 1rem 4rem;
+}
+
+.container .input-Error {
+    outline: 0.2rem solid var(--middle-red);
+}
+
+@media (max-width: 45em) {
+    .container .explanation {
+        margin: 1rem 1rem 3rem;
+    }
+}
+
+.options {
+    display: grid;
+    grid-template-columns: 1fr 8fr 1fr;
+    gap: 0rem 2rem;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 2rem;
+    border-radius: 2rem;
+    background-color: var(--light-gray);
+}
+
+.feedback-container {
+    margin: 0;
+    grid-column: 1/4;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.no-error {
+    transition: all 0.4s ease-in-out;
+    transform: scale(0);
+    padding: 0rem 2rem;
+    background-color: var(--light-gray);
+}
+
+.correct {
+    font-size: var(--fs-small-text);
+    color: var(--dark-green);
+    background-color: var(--light-green);
+    padding: 1rem 2rem;
+    margin: 0rem 4rem;
+    border-radius: 1rem;
+    transition: all 0.4s ease-in-out;
+}
+
+.error {
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    font-size: var(--fs-small-text);
+    color: var(--dark-red);
+    background-color: var(--light-red);
+    transition: all 0.4s ease-in-out;
+}
+
+.icon {
+    justify-self: center;
+    align-self: center;
+    width: 3.5rem;
+    height: 3.5rem
+}
+
+.icon:hover {
+    cursor: pointer;
+}

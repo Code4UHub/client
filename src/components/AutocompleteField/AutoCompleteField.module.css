@@ -8,6 +8,7 @@
   max-height: 35rem;
   background-color: var(--light-gray);
   position: absolute;
+  z-index: 5;
   bottom: 0;
   transform: translateY(calc(100% + 5px));
   list-style: none;
@@ -26,6 +27,8 @@
   padding-bottom: 0.6rem;
   padding-top: 0.6rem;
   cursor: pointer;
+  z-index: 10;
+  background-color: var(--light-gray);
 }
 
 .autocomplete-list li:not(:last-child) {

@@ -13,7 +13,10 @@ export function BarLegend() {
   return (
     <div className={style.legend}>
       {Object.keys(COLORS).map((color, i) => (
-        <div className={style[color]}>
+        <div
+          className={style[color]}
+          key={color}
+        >
           <span>{description[i]}</span>
         </div>
       ))}

@@ -7,6 +7,7 @@ import {
   TeacherClassListPromise,
 } from 'types/Class/Class';
 import { SubjectPromise } from 'types/Subject/Subject';
+import { SubjectModulePromise } from 'types/SubjectModule/SubjectModule';
 import {
   StudentRequestPromise,
   RequestAnswer,
@@ -27,13 +28,15 @@ import { ServerTimePromise } from 'types/ServerTime/ServerTime';
 
 import { formatDateString } from 'utils/format/formatDate';
 
-// TODO: Delete when backend has this information
-import { leaderboardData } from 'routes/class/groupGraphController/leaderboardDummyData';
 import { GroupGraphPromise } from 'types/GroupGraph/GroupGraphType';
+import { QuestionOption, TestCase } from 'types/CreateQuestion/CreateQuestion';
 
-// http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
-// http://10.147.20.218:65534/v1
+import { formatCreateQuestionBody } from 'utils/format/formatCreateQuestion';
+
+// const BASE_URL = http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
 const BASE_URL = 'http://10.147.20.218:65534/v1';
+// const BASE_URL =
+// 'http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1';
 
 const ENDPOINTS = {
   STUDENT_REGISTER: `${BASE_URL}/student/register`,
@@ -43,6 +46,8 @@ const ENDPOINTS = {
   CLASS: `${BASE_URL}/class`,
   CLASS_CREATE: `${BASE_URL}/class/create`,
   CLASS_MODULES: (id_class: string) => `${BASE_URL}/class/${id_class}/modules`,
+  CLASS_LEADERBOARD: (id_class: string) =>
+    `${BASE_URL}/class/${id_class}/leaderboard`,
   PROGRESS_MODULES: (id_class: string, id_student: string) =>
     `${BASE_URL}/challenge/class/${id_class}/student/${id_student}`,
   UPDATE_MODULES: (id_class: string) => `${BASE_URL}/class/${id_class}/modules`,
@@ -55,9 +60,12 @@ const ENDPOINTS = {
   TEACHER_CLASSES: (id: string) => `${BASE_URL}/teacher/${id}/class`,
   STUDENT_CLASSES: (id: string) => `${BASE_URL}/student/${id}/class`,
   TIME: `${BASE_URL}/configuration/time`,
+  SUBJECT_MODULES: (class_id: string) =>
+    `${BASE_URL}/subject/${class_id}/modules`,
+  CREATE_QUESTION: `${BASE_URL}/homework/question`,
   HOMEWORK_QUESTIONS: (subject_id: string, difficulty: 1 | 2 | 3) =>
     `${BASE_URL}/homework/question/subject/${subject_id}/difficulty/${difficulty}`,
-  SUBJECT_MODULES: (id: string) => `${BASE_URL}/subject/${id}/modules`,
+  SUBJECT_MODULES2: (id: string) => `${BASE_URL}/subject/${id}/modules`,
   HOMEWORK: `${BASE_URL}/homework`,
   SERVER_TIME: `${BASE_URL}/configuration/time`,
   CLASS_HOMEWORK: (class_id: string, startDate: Date, endDate?: Date) =>
@@ -66,6 +74,12 @@ const ENDPOINTS = {
     )}${endDate ? `&endDate=${formatDateString(endDate)}` : ''}`,
   INCOMING_CHALLENGE: (id_class: string, id_student: string) =>
     `${BASE_URL}/challenge/class/${id_class}/student/${id_student}/incoming_challenge`,
+  MODULE_GRAPH: (class_id: string, i: number) =>
+    `${BASE_URL}/class/${class_id}/module_${i === 1 ? 'average' : 'progress'}`,
+  CHALLENGE_GRAPH: (class_id: string, i: number) =>
+    `${BASE_URL}/class/${class_id}/challenge_${
+      i === 3 ? 'average' : 'progress'
+    }`,
 };
 
 export const createStudent = async (user: {
@@ -208,6 +222,22 @@ export const getSubjects = async (
   };
 
   const request = await fetch(ENDPOINTS.SUBJECT, options);
+
+  return request.json();
+};
+
+// ======= ALL MODULES GIVEN A SUBJECT =========
+export const getSubjectModules = async (
+  auth_token: string,
+  class_id: string
+): Promise<SubjectModulePromise> => {
+  const options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+
+  const request = await fetch(ENDPOINTS.SUBJECT_MODULES(class_id), options);
 
   return request.json();
 };
@@ -392,26 +422,64 @@ export const getGraphData = async (
   graph_id: number
 ): Promise<GroupGraphPromise> => {
   // Information for leaderboard
-  if (graph_id < 1) {
-    return new Promise((resolve) => {
-      setTimeout(
-        () => resolve({ status: 'success', data: leaderboardData }),
-        100
-      );
-    });
+  if (graph_id === 0) {
+    const options: RequestInit = {
+      headers: {
+        Authorization: `Bearer ${auth_token}`,
+      },
+    };
+    const request = await fetch(ENDPOINTS.CLASS_LEADERBOARD(id_class), options);
+    return request.json();
   }
   // Information for every other graph
-  const data = Array.from({ length: 10 }, () => {
-    const title = 'Modulo de aprendizaje';
-    const value = Math.floor(Math.random() * 101);
-    const id = Math.floor(Math.random() * 101);
-    return { title, value, id };
-  });
-  return new Promise((resolve) => {
-    setTimeout(() => resolve({ status: 'success', data }), 100);
-  });
+  const options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+  if (graph_id < 3) {
+    const request = await fetch(
+      ENDPOINTS.MODULE_GRAPH(id_class, graph_id),
+      options
+    );
+    return request.json();
+  }
+  const request = await fetch(
+    ENDPOINTS.CHALLENGE_GRAPH(id_class, graph_id),
+    options
+  );
+  return request.json();
 };
 
+// ======== CREATE QUESTION ============
+export const createQuestion = async (
+  auth_token: string,
+  general_config: { [key: string]: any },
+  options_config: (QuestionOption | TestCase)[],
+  answer: number,
+  firstName: string,
+  lastName: string
+): Promise<TypePromise<string>> => {
+  const bodyContent = formatCreateQuestionBody(
+    general_config,
+    options_config,
+    answer,
+    firstName,
+    lastName
+  );
+
+  const options: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify(bodyContent),
+  };
+
+  const request = await fetch(`${ENDPOINTS.CREATE_QUESTION}`, options);
+  return request.json();
+};
 // ====== GET HOMEWORK QUESTIONS BY SUBJECT AND DIFFICULTY   =======
 export const getSubjectHomeworkQuestions = async (
   auth_token: string,
@@ -443,7 +511,7 @@ export const getsSubjectModules = async (
     },
   };
 
-  const request = await fetch(ENDPOINTS.SUBJECT_MODULES(subject_id), options);
+  const request = await fetch(ENDPOINTS.SUBJECT_MODULES2(subject_id), options);
 
   return request.json();
 };
