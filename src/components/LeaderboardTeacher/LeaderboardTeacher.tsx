@@ -18,6 +18,7 @@ export default function LeaderboardTeacher({ data }: Props) {
     <div className={style['leaderboard-container']}>
       {data.map(({ student, score, position, name }) => (
         <LeaderboardCard
+          key={student}
           position={position}
           student_id={student}
           points={score}
