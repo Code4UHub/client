@@ -1,41 +1,43 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Challenge } from 'types/Challenge/Challenge';
 
 import Card from 'components/Card/Card';
+import NoResultsMessage from 'components/NoResultsMessage/NoResultsMessage';
 
 import styles from './GoToActivityCard.module.css';
 
 type Props = {
+  activity: Challenge | {};
   className?: string;
-  cardTitle: string;
-  moduleName: string;
-  activityName: string;
-  activityProgress: string;
-  actionLabel: string;
-  to: string;
 };
 
-export default function GoToActivityCard({
-  className,
-  cardTitle,
-  moduleName,
-  activityName,
-  activityProgress,
-  actionLabel,
-  to,
-}: Props) {
+function isChallenge(challenge: Challenge | {}): challenge is Challenge {
+  return 'title' in challenge;
+}
+export default function GoToActivityCard({ activity, className }: Props) {
   return (
     <Card className={`${styles.container} ${className}`}>
-      <span className={styles.title}>{cardTitle}</span>
-      <span className={styles['module-name']}>{moduleName}</span>
-      <span className={styles['activity-name']}>{activityName}</span>
-      <span className={styles.progress}>{activityProgress}</span>
-      <Link
-        to={to}
-        className={styles.button}
-      >
-        {actionLabel} &gt;
-      </Link>
+      <span className={styles.title}>Continúa donde te quedaste...</span>
+      {isChallenge(activity) ? (
+        <>
+          <span className={styles['module-name']}>{activity.title}</span>
+          <span className={styles['activity-name']}>
+            {activity.challenge_title}
+          </span>
+          <Link
+            to={`challenge/${activity.challenge_id}`}
+            className={styles.button}
+          >
+            Continuar &gt;
+          </Link>
+        </>
+      ) : (
+        <NoResultsMessage
+          className={styles['no-results-message']}
+          message="Sin desafíos pendientes"
+        />
+      )}
     </Card>
   );
 }
