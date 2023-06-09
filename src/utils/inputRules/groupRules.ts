@@ -11,7 +11,7 @@ const inputsMinLength = {
 };
 
 const inputsMaxLength = {
-  class_id: 16,
+  class_id: 10,
 };
 
 type InputRule = {

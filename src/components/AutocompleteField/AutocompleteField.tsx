@@ -2,18 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 
 import { InputField } from 'components/InputField/InputField';
 
-import styles from './AutoCompleteField.module.css';
+import { ListItem } from 'types/ListItem/ListItem';
 
-// TODO: Define this somewhere else
-export type ItemList = {
-  id: string;
-  value: string;
-};
+import styles from './AutoCompleteField.module.css';
 
 type Props = {
   label: string;
   id: string;
-  list: ItemList[];
+  list: ListItem[];
   error: string;
   handleChange: Function;
   handleBlur: Function;
@@ -51,7 +47,7 @@ export default function AutocompleteField({
     }
   }, [focusedItem]);
 
-  const handleClickedItem = (item: ItemList) => {
+  const handleClickedItem = (item: ListItem) => {
     if (inputFieldRef.current) inputFieldRef.current.value = item.value;
 
     setInputValue(item.value);

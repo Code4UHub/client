@@ -12,17 +12,28 @@ import {
   StudentRequestPromise,
   RequestAnswer,
 } from 'types/StudentRequest/StudentRequest';
+import {
+  ModulePromise,
+  SubjectModuleListPromise,
+  UpdateModule,
+} from 'types/Module/Module';
+import {
+  HomeworkRequest,
+  HomeworkResponsePromise,
+} from 'types/Homework/Homework';
+
 // TODO: Delete when backend has this information
 import { leaderboardData } from 'routes/groupGraphController/leaderboardDummyData';
 import { GroupGraphPromise } from 'types/GroupGraph/GroupGraphType';
-import { ModulePromise, UpdateModule } from 'types/Module/Module';
 import { QuestionOption, TestCase } from 'types/CreateQuestion/CreateQuestion';
 
 import { formatCreateQuestionBody } from 'utils/format/formatCreateQuestion';
+import { HomeworkQuestionListPromise } from 'types/Questions/Question';
 
 // http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
 // http://10.147.20.218:65534/v1
-const BASE_URL = 'http://10.147.20.218:65534/v1';
+const BASE_URL =
+  'http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1';
 
 const ENDPOINTS = {
   STUDENT_REGISTER: `${BASE_URL}/student/register`,
@@ -47,6 +58,10 @@ const ENDPOINTS = {
   SUBJECT_MODULES: (class_id: string) =>
     `${BASE_URL}/subject/${class_id}/modules`,
   CREATE_QUESTION: `${BASE_URL}/homework/question`,
+  HOMEWORK_QUESTIONS: (subject_id: string, difficulty: 1 | 2 | 3) =>
+    `${BASE_URL}/homework/question/subject/${subject_id}/difficulty/${difficulty}`,
+  SUBJECT_MODULES2: (id: string) => `${BASE_URL}/subject/${id}/modules`,
+  HOMEWORK: `${BASE_URL}/homework`,
 };
 
 export const createStudent = async (user: {
@@ -436,6 +451,68 @@ export const createQuestion = async (
   };
 
   const request = await fetch(`${ENDPOINTS.CREATE_QUESTION}`, options);
+  return request.json();
+};
+// ====== GET HOMEWORK QUESTIONS BY SUBJECT AND DIFFICULTY   =======
+export const getSubjectHomeworkQuestions = async (
+  auth_token: string,
+  subject_id: string,
+  difficulty: 1 | 2 | 3
+): Promise<HomeworkQuestionListPromise> => {
+  const options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+
+  const request = await fetch(
+    ENDPOINTS.HOMEWORK_QUESTIONS(subject_id, difficulty),
+    options
+  );
+
+  return request.json();
+};
+
+// ====== GET SUBJECT MODULES    =======
+export const getsSubjectModules = async (
+  auth_token: string,
+  subject_id: string
+): Promise<SubjectModuleListPromise> => {
+  const options: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+
+  const request = await fetch(ENDPOINTS.SUBJECT_MODULES2(subject_id), options);
+
+  return request.json();
+};
+
+// ====== CREATE HOMEWORK =======
+export const createHomework = async (
+  auth_token: string,
+  homework: HomeworkRequest
+): Promise<HomeworkResponsePromise> => {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const { class_id, questions, ...rest } = homework;
+
+  const body = {
+    ...rest,
+    class_id: (class_id as { id: string; value: string }).id,
+    question_ids: questions.map((question) => question.question_h_id),
+  };
+
+  const options: RequestInit = {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  };
+
+  const request = await fetch(ENDPOINTS.HOMEWORK, options);
 
   return request.json();
 };

@@ -2,15 +2,13 @@ import React from 'react';
 
 import Card from 'components/Card/Card';
 
-// TODO: Remove DummyData Question Type
-import { Question } from 'routes/homework/dummyData';
+import { HomeworkQuestion } from 'types/Questions/Question';
 
 import { ReactComponent as IconDelete } from './Delete.svg';
-
 import styles from './QuestionCard.module.css';
 
 type QuestionCardProps = {
-  question: Question;
+  question: HomeworkQuestion;
   onDelete: Function;
 };
 
@@ -20,11 +18,11 @@ export default function QuestionCard({
 }: QuestionCardProps) {
   return (
     <Card className={styles['question-card']}>
-      <span className={styles['question-id']}>{question.id}.</span>
+      <span className={styles['question-id']}>{question.question_h_id}.</span>
       <div>
         <div className={styles['question-tags']}>
           <span className={`${styles.tag} ${styles.module}`}>
-            {question.module}
+            {question.title}
           </span>
           <span className={`${styles.tag} ${styles.type}`}>
             {question.type}
@@ -32,15 +30,15 @@ export default function QuestionCard({
         </div>
         <span
           className={styles['question-title']}
-          title={question.title}
+          title={question.question.title}
         >
-          {question.title}
+          {question.question.title}
         </span>
       </div>
       <button
         type="button"
         className={styles['question-delete']}
-        onClick={() => onDelete(question)}
+        onClick={() => onDelete(question.question_h_id)}
       >
         <IconDelete />
       </button>

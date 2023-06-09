@@ -1,13 +1,14 @@
 import { HomeworkRequest } from 'types/Homework/Homework';
-import { ItemList } from 'components/AutocompleteField/AutocompleteField';
+import { ListItem } from 'types/ListItem/ListItem';
+import {
+  HomeworkQuestionList,
+  QuestionDifficulty,
+} from 'types/Questions/Question';
 
-// TODO: Remove dummyData
-import { Question, questionList } from '../dummyData';
-
-export type QuestionDifficulty = 1 | 2 | 3;
+export type ClassId = Pick<ListItem, 'value'> & { id: string };
 
 export const INITIAL_HOMEWORK = (
-  class_id: ItemList | undefined,
+  class_id: ClassId | undefined,
   difficulty: QuestionDifficulty
 ): HomeworkRequest => ({
   class_id: class_id || '',
@@ -16,16 +17,16 @@ export const INITIAL_HOMEWORK = (
   open_questions: undefined,
   closed_questions: undefined,
   deadline: '',
-  questions_ids: [...questionList],
+  questions: [],
 });
 
-type UpdateClass = { type: 'class'; payload: string | ItemList };
+type UpdateClass = { type: 'class'; payload: string | ClassId };
 type UpdateDifficulty = { type: 'difficulty'; payload: QuestionDifficulty };
 type UpdateTitle = { type: 'title'; payload: string };
 type UpdateOpenQuestions = { type: 'open_questions'; payload: number };
 type UpdateClosedQuestions = { type: 'closed_questions'; payload: number };
 type UpdateDeadline = { type: 'deadline'; payload: string };
-type UpdateQuestions = { type: 'questions'; payload: Question[] };
+type UpdateQuestions = { type: 'questions'; payload: HomeworkQuestionList };
 type ResetHomework = { type: 'reset'; payload: HomeworkRequest };
 type ReducerActions =
   | UpdateClass
@@ -58,7 +59,7 @@ export function homeworkRequestReducer(
       return { ...state, deadline: action.payload };
 
     case 'questions':
-      return { ...state, questions_ids: action.payload };
+      return { ...state, questions: action.payload };
 
     case 'reset':
       return { ...action.payload };

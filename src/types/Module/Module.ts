@@ -33,3 +33,12 @@ export interface StudentModule extends Module {
 
 export interface ModulePromise
   extends TypePromise<(Module | StudentModule)[]> {}
+
+export type SubjectModule = {
+  module_id: number;
+  subject_id: string;
+  title: string;
+};
+
+export interface SubjectModuleListPromise
+  extends TypePromise<SubjectModule[]> {}

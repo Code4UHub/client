@@ -14,12 +14,17 @@
   height: 3.2rem;
 }
 
-.container {
-  max-width: 110rem;
+.container,
+.section {
+  max-width: 100%;
   width: 100%;
-  margin-top: 4.8rem;
   padding-left: 2.4rem;
   padding-right: 2.4rem;
+}
+
+.container {
+  margin-top: 4.8rem;
+  margin-bottom: 3.6rem;
   display: grid;
   grid-template-rows: 50rem;
   grid-template-columns: 1fr 1fr;
