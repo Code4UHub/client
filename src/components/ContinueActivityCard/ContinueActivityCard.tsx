@@ -41,12 +41,11 @@ export default function ContinueActivityCard({ className }: Props) {
     getActivity();
   }, []);
 
-  return isFetching ? (
-    <p>Loading</p>
-  ) : (
+  return (
     <GoToActivityCard
       className={className}
       activity={activity}
+      isLoading={isFetching}
     />
   );
 }
