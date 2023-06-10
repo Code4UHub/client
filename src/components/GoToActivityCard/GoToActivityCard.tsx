@@ -4,24 +4,45 @@ import { Challenge } from 'types/Challenge/Challenge';
 
 import Card from 'components/Card/Card';
 import NoResultsMessage from 'components/NoResultsMessage/NoResultsMessage';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 
 import styles from './GoToActivityCard.module.css';
 
 type Props = {
   activity: Challenge | {};
   className?: string;
+  isLoading: boolean;
 };
 
 function isChallenge(challenge: Challenge | {}): challenge is Challenge {
-  return 'title' in challenge;
+  return 'challenge_id' in challenge;
 }
-export default function GoToActivityCard({ activity, className }: Props) {
+
+function getNode(isLoading: boolean) {
+  return isLoading ? (
+    <div className={styles['loading-container']}>
+      <LoadingSpinner />
+    </div>
+  ) : (
+    <NoResultsMessage
+      className={styles['no-results-message']}
+      message="Sin desafíos pendientes 😃"
+    />
+  );
+}
+
+export default function GoToActivityCard({
+  activity,
+  className,
+  isLoading,
+}: Props) {
   return (
     <Card className={`${styles.container} ${className}`}>
       <span className={styles.title}>Continúa donde te quedaste...</span>
-      {isChallenge(activity) ? (
+
+      {!isLoading && isChallenge(activity) ? (
         <>
-          <span className={styles['module-name']}>{activity.title}</span>
+          <span className={styles['module-name']}>{activity.module_title}</span>
           <span className={styles['activity-name']}>
             {activity.challenge_title}
           </span>
@@ -29,14 +50,11 @@ export default function GoToActivityCard({ activity, className }: Props) {
             to={`challenge/${activity.challenge_id}`}
             className={styles.button}
           >
-            Continuar &gt;
+            {activity.status === 'continue' ? 'Continuar' : 'Empezar'} &gt;
           </Link>
         </>
       ) : (
-        <NoResultsMessage
-          className={styles['no-results-message']}
-          message="Sin desafíos pendientes"
-        />
+        getNode(isLoading)
       )}
     </Card>
   );
