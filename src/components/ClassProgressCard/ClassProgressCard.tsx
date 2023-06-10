@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RootState } from 'store/store';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
+import { getClassProgress, getStudentProgress } from 'utils/db/db.utils';
 import Card from 'components/Card/Card';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 
-import { getDummyData } from './dummyData';
 import styles from './ClassProgressCard.module.css';
 
 type Props = {
@@ -13,12 +15,34 @@ type Props = {
 
 export default function ClassProgressCard({ className }: Props) {
   const [progress, setProgress] = React.useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const params = useParams();
   const user = useSelector((state: RootState) => state.user.currentUser);
 
   useEffect(() => {
     const getProgress = async () => {
-      const data = (await getDummyData()) as number;
-      setProgress(data);
+      setIsLoading(true);
+
+      let data;
+
+      if (user?.role === 'teacher') {
+        data = await getClassProgress(
+          user?.authToken as string,
+          params?.id as string,
+          user?.id as string
+        );
+      } else {
+        data = await getStudentProgress(
+          user?.authToken as string,
+          params?.id as string,
+          user?.id as string
+        );
+      }
+
+      if (data.status === 'success' && typeof data.data !== 'string') {
+        setProgress(data.data);
+      }
+      setIsLoading(false);
     };
 
     getProgress();
@@ -29,7 +53,8 @@ export default function ClassProgressCard({ className }: Props) {
       <span>
         {user?.role === 'student' ? 'Has completado' : 'Avance del grupo'}
       </span>
-      <span>{progress} %</span>
+      {isLoading ? <LoadingSpinner /> : <span>{progress.toFixed(1)} %</span>}
+
       <span>del curso {user?.role === 'teacher' ? 'total' : ''} </span>
     </Card>
   );
