@@ -24,6 +24,7 @@ import {
   ModulePromise,
   UpdateModule,
   SubjectModuleListPromise,
+  ModuleProgressListPromise,
 } from 'types/Module/Module';
 import {
   CachedCodeQuestion,
@@ -37,6 +38,7 @@ import { formatDateString } from 'utils/format/formatDate';
 import { QuestionOption, TestCase } from 'types/CreateQuestion/CreateQuestion';
 
 import { formatCreateQuestionBody } from 'utils/format/formatCreateQuestion';
+import { LeaderboardPromise } from 'types/Leaderboard/Leaderboard';
 
 // const BASE_URL = http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
 const BASE_URL = 'http://10.147.20.218:65534/v1';
@@ -91,6 +93,14 @@ const ENDPOINTS = {
     `${BASE_URL}/class/${class_id}/challenge_${
       i === 3 ? 'average' : 'progress'
     }`,
+  LEADERBOARD: (class_id: string) =>
+    `${BASE_URL}/class/${class_id}/leaderboard`,
+  STUDENT_PROGRESS: (class_id: string, student_id: string) =>
+    `${BASE_URL}/class/${class_id}/student/${student_id}/progress`,
+  CLASS_PROGRESS: (class_id: string, teacher_id: string) =>
+    `${BASE_URL}/class/${class_id}/teacher/${teacher_id}/progress`,
+  MODULE_PROGRESS: (class_id: string) =>
+    `${BASE_URL}/class/${class_id}/module_progress`,
 };
 
 export const createStudent = async (user: {
@@ -670,6 +680,67 @@ export const getIncomingChallenge = async (
       },
     }
   );
+
+  return request.json();
+};
+
+// GET LEADERBOARD
+export const getLeaderboard = async (
+  auth_token: string,
+  class_id: string
+): Promise<LeaderboardPromise> => {
+  const request = await fetch(ENDPOINTS.LEADERBOARD(class_id), {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  });
+
+  return request.json();
+};
+
+// GET STUDENT PROGRESS
+export const getStudentProgress = async (
+  auth_token: string,
+  class_id: string,
+  student_id: string
+): Promise<TypePromise<number>> => {
+  const request = await fetch(
+    ENDPOINTS.STUDENT_PROGRESS(class_id, student_id),
+    {
+      headers: {
+        Authorization: `Bearer ${auth_token}`,
+      },
+    }
+  );
+
+  return request.json();
+};
+
+// GET CLASS PROGRESS
+export const getClassProgress = async (
+  auth_token: string,
+  class_id: string,
+  teacher_id: string
+): Promise<TypePromise<number>> => {
+  const request = await fetch(ENDPOINTS.CLASS_PROGRESS(class_id, teacher_id), {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  });
+
+  return request.json();
+};
+
+// GET CLASS MODULE PROGRESS
+export const getModuleProgress = async (
+  auth_token: string,
+  class_id: string
+): Promise<ModuleProgressListPromise> => {
+  const request = await fetch(ENDPOINTS.MODULE_PROGRESS(class_id), {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  });
 
   return request.json();
 };
