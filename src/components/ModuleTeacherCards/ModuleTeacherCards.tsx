@@ -3,8 +3,8 @@ import { Button } from 'components/Button/Button';
 import Card from 'components/Card/Card';
 import CardSkeleton from 'components/CardSkeleton/CardSkeleton';
 
-import { ReactComponent as LockIcon } from 'routes/modules/lock.svg';
-import { ReactComponent as UnlockIcon } from 'routes/modules/unlock.svg';
+import { ReactComponent as LockIcon } from 'routes/class/modules/lock.svg';
+import { ReactComponent as UnlockIcon } from 'routes/class/modules/unlock.svg';
 
 import { Module } from 'types/Module/Module';
 

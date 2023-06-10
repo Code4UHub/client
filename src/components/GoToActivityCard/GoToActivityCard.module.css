@@ -53,3 +53,10 @@
 .button:hover {
   background-color: #445a6f;
 }
+
+.no-results-message {
+  color: var(--light-blue-color);
+  font-weight: 300;
+  margin-bottom: auto;
+  margin-top: auto;
+}

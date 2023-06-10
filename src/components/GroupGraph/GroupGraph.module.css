@@ -39,7 +39,7 @@
     font-size: var(--fs-mid-small-text);
     display: flex;
     align-items: center;
-    padding: 0;
+    padding: 0 1.1rem 0 0;
 }
 
 .bar-graph {

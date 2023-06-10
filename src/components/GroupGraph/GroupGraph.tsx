@@ -35,7 +35,7 @@ export default function GroupGraph({ graphData, category, evaluate }: Props) {
     onUpdateData(
       graphData.map((graph) => ({
         title: `${graph.id}. ${graph.title}`,
-        value: graph.value,
+        percentage: graph.percentage,
         id: graph.id,
       }))
     );
@@ -69,13 +69,13 @@ export default function GroupGraph({ graphData, category, evaluate }: Props) {
 
       <div className={style.graphs}>
         {sortedData.map((d) => (
-          <React.Fragment key={`${d.id}${d.value}`}>
+          <React.Fragment key={`${d.id}${d.percentage}`}>
             <span className={style['graph-title']}>{d.title}</span>
             <div className={style['bar-graph']}>
               <ProgressBar
-                percentage={d.value}
+                percentage={d.percentage}
                 textPosition="in"
-                key={`${d.id}${d.value}${ruleElement}${ruleDirection}graph`}
+                key={`${d.id}${d.percentage}${ruleElement}${ruleDirection}graph`}
               />
             </div>
           </React.Fragment>
