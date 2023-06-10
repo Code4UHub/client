@@ -107,3 +107,7 @@
   font-weight: 500;
   color: var(--dark-dark-gray);
 }
+
+.loading-spinner {
+  margin: 6.4rem 0;
+}

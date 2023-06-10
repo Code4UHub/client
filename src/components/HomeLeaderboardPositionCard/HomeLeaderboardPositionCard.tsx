@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { RootState } from 'store/store';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import { LeaderboardList } from 'types/Leaderboard/Leaderboard';
+
 import Card from 'components/Card/Card';
 import Carousel from 'components/Carousel/Carousel';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 
 import {
-  Position,
-  TopLeaderboardList,
-  getTopLeaderboardListData,
-  getYourPositionData,
-} from './dummyData';
+  StudentPositionLeaderboard,
+  useLeaderboardList,
+} from 'hooks/useLeaderboardList';
 
 import { ReactComponent as UpArrowIcon } from './ArrowUp.svg';
 import { ReactComponent as DownArrowIcon } from './ArrowDown.svg';
@@ -23,17 +24,20 @@ import styles from './HomeLeaderboardPositionCard.module.css';
 
 type LeaderboardUpDownProps = {
   direction: 'up' | 'down';
-  points: number;
+  points?: number | undefined;
 };
 
 function LeaderboardUpDown({ direction, points }: LeaderboardUpDownProps) {
   return (
     <div className={`${styles['up-down']} ${styles[direction]}`}>
       {direction === 'up' ? <UpArrowIcon /> : <DownArrowIcon />}
-      <span>{`${points}pts`}</span>
+      {typeof points === 'number' && <span>{`${points}pts`}</span>}
     </div>
   );
 }
+LeaderboardUpDown.defaultProps = {
+  points: undefined,
+};
 
 function getPositionElement(position: number, name: string) {
   switch (position) {
@@ -76,59 +80,62 @@ function getPositionElement(position: number, name: string) {
 }
 
 function TeacherCard() {
-  const [leaderboardList, setLeaderboardList] = useState<TopLeaderboardList>(
-    []
+  const { leaderboardList, isLoading } = useLeaderboardList();
+
+  const leaderboardNodes = (leaderboardList as LeaderboardList)
+    .slice(0, 3)
+    .map((student) => (
+      <div
+        key={student.student}
+        className={styles['top-position-container']}
+      >
+        {getPositionElement(student.position, student.name)}
+        <span className={styles['position-points']}>{student.score}pts</span>
+      </div>
+    ));
+
+  return isLoading ? (
+    <LoadingSpinner className={styles['loading-spinner']} />
+  ) : (
+    <Carousel items={leaderboardNodes} />
   );
-
-  const leaderboardNodes = leaderboardList.map((position, index) => (
-    <div
-      key={position.id}
-      className={styles['top-position-container']}
-    >
-      {getPositionElement(index + 1, position.name)}
-      <span className={styles['position-points']}>{position.points}pts</span>
-    </div>
-  ));
-
-  useEffect(() => {
-    const getTopLeadeboard = async () => {
-      const topLeadeboard = await getTopLeaderboardListData();
-
-      setLeaderboardList(topLeadeboard);
-    };
-
-    getTopLeadeboard();
-  }, []);
-
-  return <Carousel items={leaderboardNodes} />;
 }
 
 function StudentCard() {
-  const [positionInfo, setPositionInfo] = useState<Position>();
-
-  useEffect(() => {
-    const getPositionInfo = async () => {
-      const position = await getYourPositionData();
-      setPositionInfo(position);
-    };
-
-    getPositionInfo();
-  }, []);
-
-  if (!positionInfo) return null;
+  const { leaderboardList, isLoading } = useLeaderboardList();
 
   return (
     <div>
       <LeaderboardUpDown
-        points={positionInfo.up}
+        points={
+          !isLoading && leaderboardList
+            ? (leaderboardList as StudentPositionLeaderboard).up
+            : undefined
+        }
         direction="up"
       />
       <div className={styles['position-container']}>
-        <span>{positionInfo.position}</span>
-        <span>{positionInfo.points}pts</span>
+        {isLoading ? (
+          <LoadingSpinner className={styles['loading-spinner']} />
+        ) : (
+          leaderboardList && (
+            <>
+              <span>
+                {(leaderboardList as StudentPositionLeaderboard).position}
+              </span>
+              <span>
+                {(leaderboardList as StudentPositionLeaderboard).score}pts
+              </span>
+            </>
+          )
+        )}
       </div>
       <LeaderboardUpDown
-        points={positionInfo.down}
+        points={
+          !isLoading && leaderboardList
+            ? (leaderboardList as StudentPositionLeaderboard).down
+            : undefined
+        }
         direction="down"
       />
     </div>
