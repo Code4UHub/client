@@ -16,6 +16,19 @@ export type Challenge = {
   student_challenge: Score[];
 };
 
+export type ModuleProgress = {
+  id: number;
+  title: string;
+  percentage: number;
+  number_of_students: number;
+  number_approved_students: number;
+};
+
+export type ModuleProgressList = ModuleProgress[];
+
+export interface ModuleProgressListPromise
+  extends TypePromise<ModuleProgressList> {}
+
 // To update availability, db requires only id and is_active
 export interface UpdateModule {
   is_active: boolean;
