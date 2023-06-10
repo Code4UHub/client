@@ -11,7 +11,7 @@ export default function Group() {
     <div className={style.container}>
       {groupOptions.map((option, i) => (
         <Link
-          to={`graph/${i}`}
+          to={`${i}`}
           state={{ id_graph: i }}
           key={option.title}
         >

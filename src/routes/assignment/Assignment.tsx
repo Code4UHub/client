@@ -1,17 +1,28 @@
 import React, { useState, useEffect, useRef } from 'react';
-import CodeQuestion from 'components/CodeQuestion/CodeQuestion';
-import { useIndex } from 'hooks/useIndex';
-import { ClosedQuestion } from 'types/Questions/CloseQuestion';
+import { RootState } from 'store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+
+import { updateToast } from 'store/toast/toastSlice';
+
+import { saveAssignmentProgress } from 'utils/db/db.utils';
+
+import {
+  HomeworkQuestionList,
+  ClosedQuestion,
+  OpenHomeworkQuestion,
+  ClosedHomeworkQuestion,
+} from 'types/Questions/Question';
 
 import SectionHeader from 'components/SectionHeader/SectionHeader';
+import CodeQuestion from 'components/CodeQuestion/CodeQuestion';
 import CloseQuestion from 'components/CloseQuestion/CloseQuestion';
 import { Button } from 'components/Button/Button';
 import Timer from 'components/Timer/Timer';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 
-import { useDispatch } from 'react-redux';
-import { updateToast } from 'store/toast/toastSlice';
+import { useIndex } from 'hooks/useIndex';
 
-import { questionData } from './questionData';
 import style from './Assignment.module.css';
 
 // Translate rems to pixels, as needed to move container with buttons
@@ -24,16 +35,39 @@ function getTranslatedPixels(rems: number) {
 
 type CodeAnswer = {
   isCorrect: boolean;
-  code: string | null;
+  code: string;
 };
 
-export default function Assignment() {
+type Props = {
+  assignment: HomeworkQuestionList;
+};
+
+// TODO: Save Time, and time out of focus
+// TODO: Submit Process
+export default function Assignment({ assignment }: Props) {
+  const user = useSelector((root: RootState) => root.user.currentUser);
+  const { homeworkId } = useParams();
+
   const { index, next, prev, jumpTo, setMaxIndex, max } = useIndex({
     initial: 0,
   });
+
   const [answers, setAnswers] = useState<{
     [key: number]: number | CodeAnswer;
-  }>({});
+  }>(
+    assignment.reduce((acc, question, i) => {
+      if (question.type === 'open') {
+        acc[i] = question.solution.user_input || { isCorrect: false, code: '' };
+      } else {
+        acc[i] =
+          typeof question.solution.user_input === 'number'
+            ? question.solution.user_input
+            : -1;
+      }
+      return acc;
+    }, {} as { [key: number]: number | CodeAnswer })
+  );
+
   // Seconds on complete assignment
   const [seconds, setSeconds] = useState<number>(0);
   // Seconds per question
@@ -41,6 +75,7 @@ export default function Assignment() {
     {}
   );
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [isSavingProcess, setIsSavingProcess] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -56,23 +91,8 @@ export default function Assignment() {
 
   // Update the maximum possible index on hook useIndex
   useEffect(() => {
-    setMaxIndex(questionData.length - 1);
-  }, [setMaxIndex]);
-
-  useEffect(() => {
-    questionData.forEach((question, i) => {
-      if (question.type === 'open') {
-        setAnswers((ans) => ({
-          ...ans,
-          [i]: { isCorrect: false, code: null },
-        }));
-      } else {
-        setAnswers((ans) => ({ ...ans, [i]: -1 }));
-      }
-
-      setTimeRegistry((times) => ({ ...times, [i]: 0 }));
-    });
-  }, []);
+    setMaxIndex(assignment.length - 1);
+  }, [setMaxIndex, assignment]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -84,8 +104,31 @@ export default function Assignment() {
   }, [isSubmitted, seconds]);
 
   // Update values on answer registry for ClosedQuestions
-  const onChooseAnswer = (i: number, option: number) => {
-    setAnswers((ans) => ({ ...ans, [i]: option }));
+  const onChooseAnswer = async (i: number, option: number | boolean) => {
+    if (typeof option === 'number') {
+      setAnswers((ans) => ({ ...ans, [i]: option }));
+    } else {
+      setAnswers((ans) => ({
+        ...ans,
+        [i]: { ...(ans[i] as CodeAnswer), isCorrect: option },
+      }));
+    }
+
+    setIsSavingProcess(true);
+    try {
+      await saveAssignmentProgress(
+        user?.authToken as string,
+        Number(homeworkId),
+        assignment[i].question_h_id,
+        user?.id as string,
+        typeof option === 'number'
+          ? option
+          : { ...(answers[i] as CodeAnswer), isCorrect: option }
+      );
+    } catch (error) {
+      // TODO: Catch Error
+    }
+    setIsSavingProcess(false);
   };
 
   // Total time on assignemnt - total registry = time on current question
@@ -134,13 +177,6 @@ export default function Assignment() {
     }));
   };
 
-  const updateCodeCorrect = (i: number, value: boolean) => {
-    setAnswers((ans) => ({
-      ...ans,
-      [i]: { ...(ans[i] as CodeAnswer), isCorrect: value },
-    }));
-  };
-
   // On Submit Assignment
   const onSubmitAssignment = () => {
     // Update time of that last question
@@ -183,7 +219,11 @@ export default function Assignment() {
 
   return (
     <div className={style.assignment}>
-      <SectionHeader title="Condicionales">
+      <SectionHeader
+        title="Examen"
+        childType={isSavingProcess ? 'loading' : ''}
+      >
+        {isSavingProcess && <LoadingSpinner className={style.loading} />}
         <Button
           location="assignmentSubmit"
           text="Terminar examen"
@@ -207,9 +247,9 @@ export default function Assignment() {
               ref={containerSelectQuestionRef}
               className={style['select-question-container']}
             >
-              {questionData.map((q, i) => (
+              {assignment.map((q, i) => (
                 <Button
-                  key={`${q.id}-button`}
+                  key={`${q.question_h_id}-button`}
                   location={defineButtonClass(i)}
                   text={defineButtonText(i)}
                   onClickHandler={() => onClickHandler('jump', i)}
@@ -229,29 +269,31 @@ export default function Assignment() {
         </div>
         <div
           className={`${style['question-container']} ${
-            questionData[index].type === 'open' ? style.code : ''
+            assignment[index].type === 'open' ? style.code : ''
           }`}
         >
-          {questionData[index].type === 'closed' ? (
+          {assignment[index].type === 'closed' ? (
             <CloseQuestion
+              key={assignment[index].question_h_id}
               rightAnswer={
                 isSubmitted
-                  ? (questionData[index] as ClosedQuestion).answer
+                  ? (assignment[index].question as ClosedQuestion).answer
                   : -1
               }
               isSubmitted={isSubmitted}
               questionIndex={index}
               onChoose={onChooseAnswer}
               chosenAnswer={answers[index] as number}
-              questionData={questionData[index]}
-              options={(questionData[index] as ClosedQuestion).options}
+              questionData={assignment[index] as ClosedHomeworkQuestion}
+              options={(assignment[index].question as ClosedQuestion).options}
             />
           ) : (
             <CodeQuestion
-              updateCorrect={updateCodeCorrect}
+              key={assignment[index].question_h_id}
+              updateCorrect={onChooseAnswer}
               questionIndex={index}
-              cachedData={answers[index]}
-              questionData={questionData[index]}
+              cachedData={answers[index] as CodeAnswer}
+              questionData={assignment[index] as OpenHomeworkQuestion}
               updateCode={updateCode}
             />
           )}

@@ -1,28 +1,30 @@
 .tags-container {
-    display: flex;
-    column-gap: 2.5%;
-    margin-bottom: 2.4rem;
+  display: flex;
+  column-gap: 2.5%;
+  margin-top: 1.2rem;
+  margin-bottom: 0.8rem;
 }
 
-.topic, .level {
-    padding: 0.5rem 1rem;
-    border-radius: 1.2rem;
-    font-size: var(--fs-small-small-text);
-    color: var(--white-color);
+.topic,
+.level {
+  padding: 0.5rem 1rem;
+  border-radius: 1.2rem;
+  font-size: 1rem;
+  color: var(--white-color);
 }
 
 .topic {
-    background-color: var(--light-blue-color);
+  background-color: var(--light-blue-color);
 }
 
 .easy {
-    background-color: var(--dark-green);
+  background-color: var(--dark-green);
 }
 
 .medium {
-    background-color: #edc168;
+  background-color: #edc168;
 }
 
 .hard {
-    background-color: var(--middle-red);
+  background-color: var(--middle-red);
 }

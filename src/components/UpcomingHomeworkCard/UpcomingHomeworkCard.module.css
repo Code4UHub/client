@@ -26,6 +26,7 @@
 }
 
 .card-skeleton {
+  min-height: 35rem;
   max-height: 35rem;
   overflow: hidden;
 }

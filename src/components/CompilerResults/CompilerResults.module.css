@@ -1,0 +1,146 @@
+.container {
+  height: 100%;
+  margin: 2.8rem 3.6rem;
+  overflow-y: auto;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.loading-container span {
+  font-size: var(--fs-small-text);
+  color: var(--dark-dark-gray);
+  margin-bottom: 1.2rem;
+  animation: fade 1s linear infinite alternate;
+}
+
+.spinner {
+  width: 5.4rem;
+  height: 5.4rem;
+}
+
+@keyframes fade {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0.3;
+  }
+}
+
+.result-title,
+.result-description,
+.test-cases-title {
+  display: block;
+}
+
+.result-title {
+  font-size: var(--fs-sub-sub-title);
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+}
+
+.accepted {
+  color: var(--dark-green);
+}
+
+.failed-title {
+  color: var(--middle-red);
+}
+
+.result-description,
+.test-cases-title {
+  font-size: var(--fs-mid-text);
+}
+
+.result-description {
+  margin-bottom: 1.6rem;
+}
+
+.result-description span {
+  font-weight: 600;
+}
+
+.test-cases-title {
+  font-weight: 500;
+  color: var(--dark-dark-gray);
+  margin-bottom: 0.8rem;
+}
+
+.test-cases-container {
+  padding-top: 1.2rem;
+  padding-bottom: 1.2rem;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.6rem;
+}
+
+.test-case {
+  margin-left: 0.6rem;
+  margin-right: 0.6rem;
+  background-color: var(--light-gray);
+  border-radius: 10px;
+  padding: 1.6rem 2.4rem;
+}
+
+.test-case-number {
+  font-size: 2.6rem;
+  font-weight: 500;
+  color: var(--sec-blue-color);
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.failed,
+.error {
+  outline: 2px solid var(--dark-red);
+}
+
+.success {
+  outline: 2px solid var(--dark-green);
+}
+
+.test-section-title {
+  display: block;
+  font-size: var(--fs-mid-small-text);
+  font-weight: 500;
+  color: var(--black-color);
+}
+
+.test-section-content {
+  width: 100%;
+  height: 20rem;
+  overflow-y: auto;
+  margin-top: 0.6rem;
+  margin-bottom: 0.8rem;
+  border-radius: 10px;
+  display: block;
+  background-color: var(--white-color);
+  padding: 1.2rem 2.4rem;
+  font-size: var(--fs-mid-small-text);
+  white-space: pre-wrap;
+}
+
+.test-section-content code {
+  display: block;
+  width: 100%;
+}
+
+.no-results {
+  height: 100%;
+  width: auto;
+  position: static;
+  background-color: transparent;
+}

@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { RootState } from 'store/store';
+import { useSelector } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
+
+import { getModuleProgress } from 'utils/db/db.utils';
 
 import Card from 'components/Card/Card';
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Carousel from 'components/Carousel/Carousel';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 
-import { ModuleList, getDummyData } from './dummyData';
+import { ModuleProgressList } from 'types/Module/Module';
+
 import styles from './ClassModulesProgressCard.module.css';
 
 type Props = {
@@ -14,7 +20,11 @@ type Props = {
 };
 
 export default function ClassModulesProgressCard({ className }: Props) {
-  const [moduleList, setModuleList] = useState<ModuleList>([]);
+  const [moduleList, setModuleList] = useState<ModuleProgressList>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const user = useSelector((state: RootState) => state.user.currentUser);
+  const params = useParams();
 
   const moduleNodes = moduleList.map((module, index) => (
     <div
@@ -25,21 +35,31 @@ export default function ClassModulesProgressCard({ className }: Props) {
         <CircularProgressbarWithChildren value={module.percentage}>
           <div className={styles['progress-bar-content']}>
             <span className={styles.percentage}>{module.percentage}%</span>
-            <span className={styles.students}>{`${module.students}/32`}</span>
+            <span
+              className={styles.students}
+            >{`${module.number_approved_students}/${module.number_of_students}`}</span>
           </div>
         </CircularProgressbarWithChildren>
       </div>
       <span className={styles['module-name']}>{`Módulo ${index + 1}: ${
-        module.name
+        module.title
       }`}</span>
     </div>
   ));
 
   useEffect(() => {
     const getModules = async () => {
-      const modules = await getDummyData();
+      setIsLoading(true);
+      const modules = await getModuleProgress(
+        user?.authToken as string,
+        params?.id as string
+      );
 
-      setModuleList(modules);
+      if (modules.status === 'success' && typeof modules.data !== 'string') {
+        setModuleList(modules.data);
+      }
+
+      setIsLoading(false);
     };
 
     getModules();
@@ -51,10 +71,14 @@ export default function ClassModulesProgressCard({ className }: Props) {
         <h2>Avance de Módulos</h2>
         <Link to="modules">Ver Grupo</Link>
       </div>
-      <Carousel
-        items={moduleNodes}
-        className={styles.carousel}
-      />
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <Carousel
+          items={moduleNodes}
+          className={styles.carousel}
+        />
+      )}
     </Card>
   );
 }

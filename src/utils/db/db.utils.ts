@@ -13,30 +13,35 @@ import {
   RequestAnswer,
 } from 'types/StudentRequest/StudentRequest';
 import {
-  ModulePromise,
-  SubjectModuleListPromise,
-  UpdateModule,
-} from 'types/Module/Module';
-import {
   HomeworkPromise,
   HomeworkRequest,
   HomeworkResponsePromise,
 } from 'types/Homework/Homework';
+
+// TODO: Delete when backend has this information
+import { GroupGraphPromise } from 'types/GroupGraph/GroupGraphType';
+import {
+  ModulePromise,
+  UpdateModule,
+  SubjectModuleListPromise,
+  ModuleProgressListPromise,
+} from 'types/Module/Module';
+import {
+  CachedCodeQuestion,
+  HomeworkQuestionListPromise,
+} from 'types/Questions/Question';
+import { CompiledCodeResultsPromise } from 'types/CompiledCodeResults/CompiledCodeResults';
 import { Challenge } from 'types/Challenge/Challenge';
-import { HomeworkQuestionListPromise } from 'types/Questions/Question';
 import { ServerTimePromise } from 'types/ServerTime/ServerTime';
 
 import { formatDateString } from 'utils/format/formatDate';
-
-import { GroupGraphPromise } from 'types/GroupGraph/GroupGraphType';
 import { QuestionOption, TestCase } from 'types/CreateQuestion/CreateQuestion';
 
 import { formatCreateQuestionBody } from 'utils/format/formatCreateQuestion';
+import { LeaderboardPromise } from 'types/Leaderboard/Leaderboard';
 
 // const BASE_URL = http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
 const BASE_URL = 'http://10.147.20.218:65534/v1';
-// const BASE_URL =
-// 'http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1';
 
 const ENDPOINTS = {
   STUDENT_REGISTER: `${BASE_URL}/student/register`,
@@ -60,13 +65,21 @@ const ENDPOINTS = {
   TEACHER_CLASSES: (id: string) => `${BASE_URL}/teacher/${id}/class`,
   STUDENT_CLASSES: (id: string) => `${BASE_URL}/student/${id}/class`,
   TIME: `${BASE_URL}/configuration/time`,
+  HOMEWORK_QUESTIONS_DIFFICULTY: (subject_id: string, difficulty: 1 | 2 | 3) =>
+    `${BASE_URL}/homework/question/subject/${subject_id}/difficulty/${difficulty}`,
   SUBJECT_MODULES: (class_id: string) =>
     `${BASE_URL}/subject/${class_id}/modules`,
   CREATE_QUESTION: `${BASE_URL}/homework/question`,
-  HOMEWORK_QUESTIONS: (subject_id: string, difficulty: 1 | 2 | 3) =>
-    `${BASE_URL}/homework/question/subject/${subject_id}/difficulty/${difficulty}`,
-  SUBJECT_MODULES2: (id: string) => `${BASE_URL}/subject/${id}/modules`,
   HOMEWORK: `${BASE_URL}/homework`,
+  HOMEWORK_QUESTIONS: (idHomework: string, idStudent: string) =>
+    `${BASE_URL}/homework/${idHomework}/student/${idStudent}/questions`,
+  EXECUTE_CODE: `${BASE_URL}/run`,
+  SAVE_ASSIGNMENT_PROGRESS: (
+    homework_id: number,
+    student_id: string,
+    question_id: number
+  ) =>
+    `${BASE_URL}/homework/${homework_id}/student/${student_id}/question/${question_id}`,
   SERVER_TIME: `${BASE_URL}/configuration/time`,
   CLASS_HOMEWORK: (class_id: string, startDate: Date, endDate?: Date) =>
     `${BASE_URL}/class/${class_id}/homework?startDate=${formatDateString(
@@ -80,6 +93,14 @@ const ENDPOINTS = {
     `${BASE_URL}/class/${class_id}/challenge_${
       i === 3 ? 'average' : 'progress'
     }`,
+  LEADERBOARD: (class_id: string) =>
+    `${BASE_URL}/class/${class_id}/leaderboard`,
+  STUDENT_PROGRESS: (class_id: string, student_id: string) =>
+    `${BASE_URL}/class/${class_id}/student/${student_id}/progress`,
+  CLASS_PROGRESS: (class_id: string, teacher_id: string) =>
+    `${BASE_URL}/class/${class_id}/teacher/${teacher_id}/progress`,
+  MODULE_PROGRESS: (class_id: string) =>
+    `${BASE_URL}/class/${class_id}/module_progress`,
 };
 
 export const createStudent = async (user: {
@@ -488,12 +509,35 @@ export const getSubjectHomeworkQuestions = async (
 ): Promise<HomeworkQuestionListPromise> => {
   const options: RequestInit = {
     headers: {
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${auth_token}`,
     },
   };
 
   const request = await fetch(
-    ENDPOINTS.HOMEWORK_QUESTIONS(subject_id, difficulty),
+    ENDPOINTS.HOMEWORK_QUESTIONS_DIFFICULTY(subject_id, difficulty),
+    options
+  );
+
+  return request.json();
+};
+
+// ====== QUESTIONS FROM A HOMEWORK =======
+
+export const getQuestionFromHomework = async (
+  auth_token: string,
+  id_homework: string,
+  id_student: string
+): Promise<HomeworkQuestionListPromise> => {
+  const options: RequestInit = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+
+  const request = await fetch(
+    ENDPOINTS.HOMEWORK_QUESTIONS(id_homework, id_student),
     options
   );
 
@@ -511,7 +555,7 @@ export const getsSubjectModules = async (
     },
   };
 
-  const request = await fetch(ENDPOINTS.SUBJECT_MODULES2(subject_id), options);
+  const request = await fetch(ENDPOINTS.SUBJECT_MODULES(subject_id), options);
 
   return request.json();
 };
@@ -544,6 +588,25 @@ export const createHomework = async (
   return request.json();
 };
 
+/// Run Code
+export const executeCode = async (
+  auth_token: string,
+  code: any
+): Promise<CompiledCodeResultsPromise> => {
+  const options: RequestInit = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify(code),
+  };
+
+  const request = await fetch(ENDPOINTS.EXECUTE_CODE, options);
+
+  return request.json();
+};
+
 // GET SERVER TIME
 export const getServerTime = async (
   auth_token: string
@@ -553,6 +616,33 @@ export const getServerTime = async (
       Authorization: `Bearer ${auth_token}`,
     },
   });
+
+  return request.json();
+};
+
+// Save progress
+export const saveAssignmentProgress = async (
+  auth_token: string,
+  homework_id: number,
+  question_id: number,
+  student_id: string,
+  user_input: number | CachedCodeQuestion
+): Promise<TypePromise<string>> => {
+  const options: RequestInit = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify({
+      user_input,
+    }),
+  };
+
+  const request = await fetch(
+    ENDPOINTS.SAVE_ASSIGNMENT_PROGRESS(homework_id, student_id, question_id),
+    options
+  );
 
   return request.json();
 };
@@ -590,6 +680,67 @@ export const getIncomingChallenge = async (
       },
     }
   );
+
+  return request.json();
+};
+
+// GET LEADERBOARD
+export const getLeaderboard = async (
+  auth_token: string,
+  class_id: string
+): Promise<LeaderboardPromise> => {
+  const request = await fetch(ENDPOINTS.LEADERBOARD(class_id), {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  });
+
+  return request.json();
+};
+
+// GET STUDENT PROGRESS
+export const getStudentProgress = async (
+  auth_token: string,
+  class_id: string,
+  student_id: string
+): Promise<TypePromise<number>> => {
+  const request = await fetch(
+    ENDPOINTS.STUDENT_PROGRESS(class_id, student_id),
+    {
+      headers: {
+        Authorization: `Bearer ${auth_token}`,
+      },
+    }
+  );
+
+  return request.json();
+};
+
+// GET CLASS PROGRESS
+export const getClassProgress = async (
+  auth_token: string,
+  class_id: string,
+  teacher_id: string
+): Promise<TypePromise<number>> => {
+  const request = await fetch(ENDPOINTS.CLASS_PROGRESS(class_id, teacher_id), {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  });
+
+  return request.json();
+};
+
+// GET CLASS MODULE PROGRESS
+export const getModuleProgress = async (
+  auth_token: string,
+  class_id: string
+): Promise<ModuleProgressListPromise> => {
+  const request = await fetch(ENDPOINTS.MODULE_PROGRESS(class_id), {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  });
 
   return request.json();
 };

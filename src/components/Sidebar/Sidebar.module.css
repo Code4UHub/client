@@ -90,6 +90,7 @@
   flex-direction: column;
   align-items: center;
   transition: background-color 0.23s linear;
+  padding: 2.4rem;
 }
 
 .link-container a svg {

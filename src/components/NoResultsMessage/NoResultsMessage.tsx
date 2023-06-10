@@ -10,7 +10,7 @@ type Props = {
 export default function NoResultsMessage({ className, message }: Props) {
   return (
     <div className={`${styles.container} ${className}`}>
-      <span> {message} 🎉</span>
+      <span> {message} </span>
     </div>
   );
 }

@@ -24,7 +24,7 @@ div .assignment-button-controllers {
 .select-question-container {
   display: flex;
   flex-direction: row;
-  overflow-x: scroll;
+  overflow-x: auto;
   gap: 1rem;
   scroll-behavior: smooth;
 }
@@ -40,6 +40,12 @@ div .assignment-button-controllers {
 
 div .code {
   padding: 1.2rem;
+}
+
+.loading {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-top: 0.2rem solid var(--dark-gray);
 }
 
 @media (max-width: 40em) {

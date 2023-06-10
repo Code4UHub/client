@@ -26,9 +26,7 @@ function ClassNav({ isStudent }: ClassNavProps) {
           </NavLink>
         </li>
         <li>
-          <NavLink to={`modules/${isStudent ? 'student' : 'teacher'}`}>
-            Módulos
-          </NavLink>
+          <NavLink to="modules">Módulos</NavLink>
         </li>
         <li>
           <NavLink to="homework">Tareas</NavLink>
