@@ -6,6 +6,7 @@ import CardSkeleton from 'components/CardSkeleton/CardSkeleton';
 import ClassCard from 'components/ClassCard/ClassCard';
 import JoinGroupForm from 'components/JoinGroupForm/JoinGroupForm';
 import CreateGroupForm from 'components/CreateGroupForm/CreateGroupForm';
+import NoResultsMessage from 'components/NoResultsMessage/NoResultsMessage';
 
 import { Subject } from 'types/Subject/Subject';
 import {
@@ -24,10 +25,33 @@ import { updateSubjects } from 'store/subject/subjectSlice';
 
 import styles from './Classes.module.css';
 
+type CardListProps = {
+  classList: StudentClass[] | TeacherClass[];
+};
+
+function ClassCardList({ classList }: CardListProps) {
+  return classList.length > 0 ? (
+    <>
+      {classList.map((classItem) => (
+        <ClassCard
+          key={classItem.class_id}
+          classInfo={classItem}
+        />
+      ))}
+    </>
+  ) : (
+    <NoResultsMessage
+      message="Unéte a una clase para comenzar 💡"
+      className={styles['no-results']}
+    />
+  );
+}
+
 export default function Classes() {
   const [classList, setclassList] = useState<StudentClass[] | TeacherClass[]>(
     []
   );
+  const [isLoading, setIsLoading] = useState(false);
 
   const user = useSelector((state: RootState) => state.user.currentUser);
   const dispatch = useDispatch();
@@ -42,6 +66,7 @@ export default function Classes() {
     };
 
     const getClassList = async () => {
+      setIsLoading(true);
       let data: TeacherClassListPromise | StudentClassListPromise;
 
       if (user?.role === 'teacher') {
@@ -56,6 +81,7 @@ export default function Classes() {
       if (data.status === 'success' && typeof data.data !== 'string') {
         setclassList(data.data);
       }
+      setIsLoading(false);
     };
 
     if (user?.role === 'teacher') getSubjectsList();
@@ -69,15 +95,10 @@ export default function Classes() {
         {user?.role === 'teacher' ? <CreateGroupForm /> : <JoinGroupForm />}
       </SectionHeader>
       <div className={styles['card-container']}>
-        {classList.length > 0 ? (
-          classList.map((classItem) => (
-            <ClassCard
-              key={classItem.class_id}
-              classInfo={classItem}
-            />
-          ))
-        ) : (
+        {isLoading ? (
           <CardSkeleton items={4} />
+        ) : (
+          <ClassCardList classList={classList} />
         )}
       </div>
     </>
