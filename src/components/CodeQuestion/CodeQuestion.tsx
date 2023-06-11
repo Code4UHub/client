@@ -8,7 +8,10 @@ import {
   ImperativePanelHandle,
 } from 'react-resizable-panels';
 
-import { OpenHomeworkQuestion } from 'types/Questions/Question';
+import {
+  OpenChallengeQuestion,
+  OpenHomeworkQuestion,
+} from 'types/Questions/Question';
 import { CompiledCodeResultsPromise } from 'types/CompiledCodeResults/CompiledCodeResults';
 
 import { executeCode } from 'utils/db/db.utils';
@@ -27,7 +30,7 @@ type CodeAnswer = {
 };
 
 type QuestionProps = {
-  questionData: OpenHomeworkQuestion;
+  questionData: OpenHomeworkQuestion | OpenChallengeQuestion;
   cachedData: CodeAnswer;
   questionIndex: number;
   updateCode: Function;

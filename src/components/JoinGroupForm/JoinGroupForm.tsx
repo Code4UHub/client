@@ -21,7 +21,11 @@ import { correctState } from 'utils/inputRules/generalRules';
 
 import styles from './JoinGroupForm.module.css';
 
-export default function JoinGroupForm() {
+type Props = {
+  onComplete: Function;
+};
+
+export default function JoinGroupForm({ onComplete }: Props) {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [classCode, setClassCode] = useState('');
   const STATE_NAME = 'classCode';
@@ -115,6 +119,7 @@ export default function JoinGroupForm() {
           })
         );
         setIsFormSubmitted(true);
+        onComplete();
       } else {
         dispatch(
           updateToast({

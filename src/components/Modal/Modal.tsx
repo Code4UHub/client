@@ -55,10 +55,12 @@ export default function Modal({
 
     document.addEventListener('focusin', trapFocus);
     document.addEventListener('keydown', escapeClose);
+    if (isModalOpen) document.body.classList.add('no-scroll');
 
     return function removeListener() {
       document.removeEventListener('focusin', trapFocus);
       document.removeEventListener('keydown', escapeClose);
+      document.body.classList.remove('no-scroll');
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

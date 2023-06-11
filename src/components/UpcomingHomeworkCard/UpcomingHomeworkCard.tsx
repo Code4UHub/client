@@ -29,9 +29,7 @@ export default function UpcomingHomeworkCard({ className }: Props) {
           <CardSkeleton items={10} />
         </div>
       ) : (
-        homeworkList.length > 0 && (
-          <HomeworkList homeworkList={homeworkList as Homework[][]} />
-        )
+        <HomeworkList homeworkList={homeworkList as Homework[][]} />
       )}
     </Card>
   );

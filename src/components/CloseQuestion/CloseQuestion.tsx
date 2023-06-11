@@ -8,7 +8,11 @@ import { tomorrow } from 'thememirror';
 import RadioInput from 'components/RadioInput/RadioInput';
 // TODO: Move to Question
 import { Option } from 'types/Questions/CloseQuestion';
-import { ClosedHomeworkQuestion } from 'types/Questions/Question';
+import {
+  ClosedChallengeQuestion,
+  ClosedHomeworkQuestion,
+  isClosedHomeworkQuestion,
+} from 'types/Questions/Question';
 
 import QuestionTags from 'components/QuestionTags/QuestionTags';
 
@@ -18,7 +22,7 @@ type Props = {
   questionIndex: number;
   chosenAnswer: number;
   rightAnswer: number;
-  questionData: ClosedHomeworkQuestion;
+  questionData: ClosedHomeworkQuestion | ClosedChallengeQuestion;
   options: Option[];
   isSubmitted: boolean;
   onChoose: (id: number, option: number) => void;
@@ -68,7 +72,7 @@ export default function CloseQuestion({
         difficulty={questionData.difficulty_id}
       />
       <h3 className={style.title}>{questionData.question.title}</h3>
-      {code ? (
+      {code.length > 0 ? (
         <div>
           <p className={style.description}>{description}</p>
           <div
@@ -77,13 +81,17 @@ export default function CloseQuestion({
           />
         </div>
       ) : (
-        <p>{questionData.question.description}</p>
+        <p className={style.description}>{questionData.question.description}</p>
       )}
       <div className={style.options}>
         {options.map((option, index) => (
           <RadioInput
             isDisable={isSubmitted}
-            key={`${questionData.question_h_id}${option.text}`}
+            key={`${
+              isClosedHomeworkQuestion(questionData)
+                ? questionData.question_h_id
+                : questionData.question_id
+            }${option.text}`}
             onClick={onClickHandler}
             isChecked={chosenAnswer === index}
             isCorrect={rightAnswer === chosenAnswer}

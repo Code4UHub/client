@@ -27,8 +27,10 @@ import {
   ModuleProgressListPromise,
 } from 'types/Module/Module';
 import {
-  CachedCodeQuestion,
-  HomeworkQuestionListPromise,
+  ChallengeQuestionsPromise,
+  HomeworkQuestionPoolPromise,
+  HomeworkQuestionsPromise,
+  OpenQuestionSolution,
 } from 'types/Questions/Question';
 import { CompiledCodeResultsPromise } from 'types/CompiledCodeResults/CompiledCodeResults';
 import { Challenge } from 'types/Challenge/Challenge';
@@ -74,7 +76,7 @@ const ENDPOINTS = {
   HOMEWORK_QUESTIONS: (idHomework: string, idStudent: string) =>
     `${BASE_URL}/homework/${idHomework}/student/${idStudent}/questions`,
   EXECUTE_CODE: `${BASE_URL}/run`,
-  SAVE_ASSIGNMENT_PROGRESS: (
+  SAVE_HOMEWORK_PROGRESS: (
     homework_id: number,
     student_id: string,
     question_id: number
@@ -101,6 +103,10 @@ const ENDPOINTS = {
     `${BASE_URL}/class/${class_id}/teacher/${teacher_id}/progress`,
   MODULE_PROGRESS: (class_id: string) =>
     `${BASE_URL}/class/${class_id}/module_progress`,
+  CHALLENGE_QUESTIONS: (challenge_id: string, student_id: string) =>
+    `${BASE_URL}/challenge/${challenge_id}/student/${student_id}/questions`,
+  SAVE_CHALLENGE: (student_id: string, question_id: number) =>
+    `${BASE_URL}/challenge/student/${student_id}/question/${question_id}`,
 };
 
 export const createStudent = async (user: {
@@ -506,7 +512,7 @@ export const getSubjectHomeworkQuestions = async (
   auth_token: string,
   subject_id: string,
   difficulty: 1 | 2 | 3
-): Promise<HomeworkQuestionListPromise> => {
+): Promise<HomeworkQuestionPoolPromise> => {
   const options: RequestInit = {
     headers: {
       'Content-Type': 'application/json',
@@ -528,7 +534,7 @@ export const getQuestionFromHomework = async (
   auth_token: string,
   id_homework: string,
   id_student: string
-): Promise<HomeworkQuestionListPromise> => {
+): Promise<HomeworkQuestionsPromise> => {
   const options: RequestInit = {
     headers: {
       'Content-Type': 'application/json',
@@ -620,13 +626,13 @@ export const getServerTime = async (
   return request.json();
 };
 
-// Save progress
-export const saveAssignmentProgress = async (
+// Save homework progress
+export const saveHomeworkProgress = async (
   auth_token: string,
   homework_id: number,
   question_id: number,
   student_id: string,
-  user_input: number | CachedCodeQuestion
+  user_input: number | OpenQuestionSolution
 ): Promise<TypePromise<string>> => {
   const options: RequestInit = {
     method: 'PUT',
@@ -640,7 +646,7 @@ export const saveAssignmentProgress = async (
   };
 
   const request = await fetch(
-    ENDPOINTS.SAVE_ASSIGNMENT_PROGRESS(homework_id, student_id, question_id),
+    ENDPOINTS.SAVE_HOMEWORK_PROGRESS(homework_id, student_id, question_id),
     options
   );
 
@@ -741,6 +747,54 @@ export const getModuleProgress = async (
       Authorization: `Bearer ${auth_token}`,
     },
   });
+
+  return request.json();
+};
+
+// ====== QUESTIONS FROM A CHALLENGE =======
+
+export const getQuestionFromChallenge = async (
+  auth_token: string,
+  id_challenge: string,
+  id_student: string
+): Promise<ChallengeQuestionsPromise> => {
+  const options: RequestInit = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+  };
+
+  const request = await fetch(
+    ENDPOINTS.CHALLENGE_QUESTIONS(id_challenge, id_student),
+    options
+  );
+
+  return request.json();
+};
+
+// Save homework progress
+export const saveChallengeProgress = async (
+  auth_token: string,
+  student_id: string,
+  question_id: number,
+  user_input: number | OpenQuestionSolution
+): Promise<TypePromise<string>> => {
+  const options: RequestInit = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify({
+      user_input,
+    }),
+  };
+
+  const request = await fetch(
+    ENDPOINTS.SAVE_CHALLENGE(student_id, question_id),
+    options
+  );
 
   return request.json();
 };

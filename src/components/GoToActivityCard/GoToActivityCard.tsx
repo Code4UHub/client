@@ -14,7 +14,10 @@ type Props = {
   isLoading: boolean;
 };
 
-function isChallenge(challenge: Challenge | {}): challenge is Challenge {
+function isChallenge(
+  challenge: Challenge | {} | string
+): challenge is Challenge {
+  if (typeof challenge === 'string') return false;
   return 'challenge_id' in challenge;
 }
 

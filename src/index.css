@@ -75,6 +75,11 @@ a {
   text-decoration: none;
 }
 
+.no-scroll {
+  overflow: hidden;
+  position: fixed;
+}
+
 /**************************/
 /* BELOW 1344px /smaller desktops */
 /**************************/

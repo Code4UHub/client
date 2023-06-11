@@ -42,3 +42,22 @@
 .teacher-name {
   margin-bottom: 0.4rem;
 }
+
+.card-container .pending-tag {
+  display: inline-block;
+  background-color: #f7cb73;
+  border-radius: 100px;
+  padding: 0.15rem 0.8rem;
+  font-size: var(--fs-xsmall-text);
+  margin-bottom: 0.8rem;
+  visibility: hidden;
+  color: var(--sec-blue-color);
+}
+
+.class-link-pending {
+  cursor: not-allowed;
+}
+
+.card-container.pending .pending-tag {
+  visibility: visible;
+}

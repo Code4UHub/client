@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { formatDate, formatDateString } from 'utils/format/formatDate';
 
 import { Homework } from 'types/Homework/Homework';
+import NoResultsMessage from 'components/NoResultsMessage/NoResultsMessage';
 
 import styles from './HomeworkList.module.css';
 
@@ -47,22 +48,33 @@ type Props = {
 
 export default function HomeworkList({ homeworkList, className }: Props) {
   return (
-    <div className={`${styles.content} ${className}`}>
+    <div
+      className={`${styles.content} ${className} ${
+        homeworkList.length === 0 ? styles.center : ''
+      }`}
+    >
       <ol className={styles.container}>
-        {homeworkList.map((homeWorkGroup, index) => (
-          <li key={index}>
-            <div>
-              <HomeworkDateHeader date={homeWorkGroup[0].deadline} />
-              <ul className={styles.container}>
-                {homeWorkGroup.map((homework) => (
-                  <li key={homework.homework_id}>
-                    <HomeWorkItem homework={homework} />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </li>
-        ))}
+        {homeworkList.length > 0 ? (
+          homeworkList.map((homeWorkGroup, index) => (
+            <li key={index}>
+              <div>
+                <HomeworkDateHeader date={homeWorkGroup[0].deadline} />
+                <ul className={styles.container}>
+                  {homeWorkGroup.map((homework) => (
+                    <li key={homework.homework_id}>
+                      <HomeWorkItem homework={homework} />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+          ))
+        ) : (
+          <NoResultsMessage
+            message="No hay tareas pendientes 😀"
+            className={styles['no-results']}
+          />
+        )}
       </ol>
     </div>
   );
