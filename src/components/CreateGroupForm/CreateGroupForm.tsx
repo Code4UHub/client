@@ -51,7 +51,11 @@ const INPUT_VALUES_INITIAL = createGroupInputData.reduce(
   {}
 );
 
-export default function CreateGroupForm() {
+type Props = {
+  onComplete: Function;
+};
+
+export default function CreateGroupForm({ onComplete }: Props) {
   const [isListOpen, setIsListOpen] = useState(false);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
@@ -199,6 +203,7 @@ export default function CreateGroupForm() {
           })
         );
         setIsFormSubmitted(true);
+        onComplete();
       } else {
         dispatch(
           updateToast({
