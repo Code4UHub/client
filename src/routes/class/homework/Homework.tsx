@@ -20,7 +20,7 @@ export default function HomeworkPage() {
   const user = useSelector((state: RootState) => state.user.currentUser);
 
   return (
-    <div>
+    <div className={styles.container}>
       {user?.role === 'teacher' && (
         <div className={styles['create-homework-container']}>
           <Modal
@@ -59,12 +59,10 @@ export default function HomeworkPage() {
       {isLoading ? (
         <CardSkeleton items={20} />
       ) : (
-        homeworkList.length > 0 && (
-          <HomeworkList
-            homeworkList={homeworkList as Homework[][]}
-            className={styles['homework-list']}
-          />
-        )
+        <HomeworkList
+          homeworkList={homeworkList as Homework[][]}
+          className={styles['homework-list']}
+        />
       )}
     </div>
   );
