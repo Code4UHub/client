@@ -3,8 +3,8 @@
 }
 
 .table-row input {
-  width: 2.4rem;
-  height: 2.4rem;
+  width: 3.2rem;
+  height: 3.2rem;
 }
 
 .table-row:nth-of-type(2n) {
@@ -24,7 +24,8 @@
 .preview-container {
   display: flex;
   flex-direction: column;
-  width: 65rem;
+  width: 100%;
+  padding: 0 1.6rem;
 }
 
 .preview-title,
@@ -36,6 +37,7 @@
   font-size: var(--fs-big-text);
   font-weight: 500;
   margin-bottom: 1.6rem;
+  margin-top: 2.4rem;
 }
 
 .preview-description-title {
@@ -60,10 +62,11 @@
   background-color: var(--light-blue-color);
   color: var(--white-color);
   font-size: var(--fs-mid-text);
-  padding: 0.6rem 1.4rem;
+  padding: 1.2rem 2.4rem;
   font-family: 'Montserrat', sans-serif;
   cursor: pointer;
   align-self: flex-end;
+  margin-bottom: 1.6rem;
 }
 
 .preview-close:hover {
