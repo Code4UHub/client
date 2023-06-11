@@ -2,13 +2,23 @@ import React from 'react';
 
 import Card from 'components/Card/Card';
 
-import { HomeworkQuestion } from 'types/Questions/Question';
+import {
+  ClosedChallengeQuestion,
+  ClosedHomeworkQuestion,
+  OpenChallengeQuestion,
+  OpenHomeworkQuestion,
+  isChallengeQuestion,
+} from 'types/Questions/Question';
 
 import { ReactComponent as IconDelete } from './Delete.svg';
 import styles from './QuestionCard.module.css';
 
 type QuestionCardProps = {
-  question: HomeworkQuestion;
+  question:
+    | OpenHomeworkQuestion
+    | ClosedChallengeQuestion
+    | ClosedHomeworkQuestion
+    | OpenChallengeQuestion;
   onDelete: Function;
 };
 
@@ -18,7 +28,12 @@ export default function QuestionCard({
 }: QuestionCardProps) {
   return (
     <Card className={styles['question-card']}>
-      <span className={styles['question-id']}>{question.question_h_id}.</span>
+      <span className={styles['question-id']}>
+        {isChallengeQuestion(question)
+          ? question.question_id
+          : question.question_h_id}
+        .
+      </span>
       <div>
         <div className={styles['question-tags']}>
           <span className={`${styles.tag} ${styles.module}`}>
@@ -38,7 +53,13 @@ export default function QuestionCard({
       <button
         type="button"
         className={styles['question-delete']}
-        onClick={() => onDelete(question.question_h_id)}
+        onClick={() =>
+          onDelete(
+            isChallengeQuestion(question)
+              ? question.question_id
+              : question.question_h_id
+          )
+        }
       >
         <IconDelete />
       </button>
