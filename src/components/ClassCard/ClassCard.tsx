@@ -22,7 +22,7 @@ type Props = {
 };
 
 export default function ClassCard({ classInfo }: Props) {
-  if (isStudent(classInfo) && classInfo.is_finished) return null;
+  if (classInfo.is_finished) return null;
 
   return (
     <Card className={styles.card}>
@@ -30,14 +30,27 @@ export default function ClassCard({ classInfo }: Props) {
         className={styles['color-bar']}
         style={{ backgroundColor: colorHash(classInfo.subject_name) }}
       />
-      <div className={styles['card-container']}>
-        <Link
-          to={`/classes/${classInfo.class_id}`}
-          className={styles['class-link']}
-          title={classInfo.subject_name}
-        >
-          <span>{classInfo.subject_name}</span>
-        </Link>
+      <div
+        className={`${styles['card-container']} ${
+          isStudent(classInfo) && classInfo.pending ? styles.pending : ''
+        }`}
+      >
+        <span className={styles['pending-tag']}>Pendiente</span>
+        {isStudent(classInfo) && classInfo.pending ? (
+          <span
+            className={`${styles['class-link']} ${styles['class-link-pending']}`}
+          >
+            {classInfo.subject_name}
+          </span>
+        ) : (
+          <Link
+            to={`/classes/${classInfo.class_id}`}
+            className={styles['class-link']}
+            title={classInfo.subject_name}
+          >
+            <span>{classInfo.subject_name}</span>
+          </Link>
+        )}
         {isStudent(classInfo) && (
           <span className={styles['teacher-name']}>
             {classInfo.teacher_name}
