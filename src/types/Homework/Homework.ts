@@ -1,5 +1,8 @@
+import {
+  ClosedHomeworkQuestion,
+  OpenHomeworkQuestion,
+} from 'types/Questions/Question';
 import { TypePromise } from 'types/TypePromise/TypePromise';
-import { HomeworkQuestionList } from 'types/Questions/Question';
 
 export type HomeworkRequest = {
   class_id: string | { id: string; value: string };
@@ -8,7 +11,7 @@ export type HomeworkRequest = {
   open_questions: number | undefined;
   closed_questions: number | undefined;
   deadline: string;
-  questions: HomeworkQuestionList;
+  questions: (OpenHomeworkQuestion | ClosedHomeworkQuestion)[];
 };
 
 export type Homework = {
