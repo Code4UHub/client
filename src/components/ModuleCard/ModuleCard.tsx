@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { Button } from 'components/Button/Button';
 import Card from 'components/Card/Card';
@@ -18,6 +19,7 @@ type Props = {
 
 export default function ModuleCard({ data }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  const navigateTo = useNavigate();
 
   const getPointsColor = (student_points: number, total_points: number) => {
     const percentage = student_points / total_points;
@@ -85,7 +87,11 @@ export default function ModuleCard({ data }: Props) {
             <Button
               text={isChallengePassed ? 'Repasar' : 'Aprender'}
               location="topic-card"
-              onClickHandler={() => []}
+              onClickHandler={() =>
+                navigateTo(
+                  `${data.module_id}/challenge/${challenge.challenge_id}`
+                )
+              }
             />
           </Card>
         );
