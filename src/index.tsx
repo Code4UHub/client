@@ -25,6 +25,7 @@ import {
   getSubjectHomeworkQuestions,
   getsSubjectModules,
   getQuestionFromHomework,
+  getQuestionFromChallenge,
 } from 'utils/db/db.utils';
 
 import { Root } from 'routes/root/Root';
@@ -208,18 +209,33 @@ function Index() {
           element: <Test />,
         },
         {
-          path: 'classes/:classId/modules/challenge/:challengeId',
-          element: <h1>Este es un challenge</h1>,
-        },
-        {
-          path: 'homework/:homeworkId',
+          path: 'classes/:classId/modules/:moduleId/challenge/:assignmentId',
           element: <AssignmentWrapper />,
           loader: async ({ params }) => {
-            if (!user || user.role !== 'student') throw new Error();
+            if (!user) return redirect('/auth');
+            if (user.role !== 'student') throw new Error();
+
+            const assignmentPromise = getQuestionFromChallenge(
+              user.authToken,
+              params.assignmentId as string,
+              user.id
+            );
+
+            return defer({
+              assignment: assignmentPromise,
+            });
+          },
+        },
+        {
+          path: 'homework/:assignmentId',
+          element: <AssignmentWrapper />,
+          loader: async ({ params }) => {
+            if (!user) return redirect('/auth');
+            if (user.role !== 'student') throw new Error();
 
             const assignmentPromise = getQuestionFromHomework(
               user.authToken,
-              params.homeworkId as string,
+              params.assignmentId as string,
               user.id
             );
 
