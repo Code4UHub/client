@@ -41,7 +41,6 @@ import { Class } from 'routes/class/Class';
 // import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
 import Test from 'routes/test/Test';
-import CreateHomework from 'routes/homework/CreateHomework';
 import Leaderboard from 'routes/leaderboard/Leaderboard';
 import AssignmentWrapper from 'routes/assignment/AssignmentWrapper';
 import CreateHomework from 'routes/homework/createHomework/CreateHomework';
