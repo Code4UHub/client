@@ -41,6 +41,7 @@ import { Class } from 'routes/class/Class';
 // import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
 import Test from 'routes/test/Test';
+import Leaderboard from 'routes/leaderboard/Leaderboard';
 import AssignmentWrapper from 'routes/assignment/AssignmentWrapper';
 import CreateHomework from 'routes/homework/createHomework/CreateHomework';
 import HomeworkPage from 'routes/class/homework/Homework';
@@ -156,8 +157,8 @@ function Index() {
                       <ModuleStudents />
                     ),
                 },
+                { path: 'leaderboard', element: <Leaderboard /> },
                 { path: 'homework', element: <HomeworkPage /> },
-                { path: 'leaderboard', element: 'Leaderboard' },
                 { path: 'graphs', element: <Group /> },
                 {
                   path: 'graphs/:graph_id',

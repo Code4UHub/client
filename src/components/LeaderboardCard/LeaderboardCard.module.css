@@ -7,6 +7,9 @@
     padding: 2rem 5rem;
 }
 
+.active {
+    border-left: 1rem solid var(--light-blue-color);
+}
 
 .card:hover {
     transform: scale(1);
