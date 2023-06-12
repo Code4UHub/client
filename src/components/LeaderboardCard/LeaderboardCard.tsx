@@ -40,6 +40,7 @@ type Props = {
   name: string;
   points: number;
   student_id: string;
+  is_active?: boolean;
 };
 
 export default function LeaderboardCard({
@@ -47,13 +48,14 @@ export default function LeaderboardCard({
   name,
   points,
   student_id,
+  is_active,
 }: Props) {
   const isInPodium = position < 4;
   const formattedPoints = formatPoints(points);
   return (
     <Card
       key={student_id}
-      className={style.card}
+      className={`${style.card} ${is_active ? style.active : ''}`}
     >
       {isInPodium ? (
         getPodiumIcon(position)
@@ -65,3 +67,7 @@ export default function LeaderboardCard({
     </Card>
   );
 }
+
+LeaderboardCard.defaultProps = {
+  is_active: false,
+};
