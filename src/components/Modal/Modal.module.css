@@ -1,22 +1,26 @@
 .modal-wrapper {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   background-color: rgba(0, 0, 0, 0.5);
   overflow: auto;
 }
 
 .modal-container {
-  width: 75rem;
+  max-width: 75rem;
+  width: 100%;
   border-radius: 1.2rem;
   padding: 2.4rem;
   background-color: var(--white-color);
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .modal-content {

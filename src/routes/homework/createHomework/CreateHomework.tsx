@@ -12,8 +12,9 @@ import QuestionCard from 'components/QuestionCard/QuestionCard';
 import HomeworkQuestionListTable from 'components/HomeworkQuestionListTable/HomeworkQuestionListTable';
 
 import {
-  HomeworkQuestion,
+  ClosedHomeworkQuestion,
   HomeworkQuestionList,
+  OpenHomeworkQuestion,
   QuestionDifficulty,
 } from 'types/Questions/Question';
 import { ListItem } from 'types/ListItem/ListItem';
@@ -118,7 +119,9 @@ export default function CreateHomework() {
     }
   };
 
-  const addQuestion = (question: HomeworkQuestion) => {
+  const addQuestion = (
+    question: OpenHomeworkQuestion | ClosedHomeworkQuestion
+  ) => {
     homeworkRequestDispatch({
       type: 'questions',
       payload: [...homeworkRequest.questions, question],

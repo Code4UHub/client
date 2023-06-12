@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import {
   HomeworkQuestionList,
-  HomeworkQuestion,
+  OpenHomeworkQuestion,
+  ClosedHomeworkQuestion,
 } from 'types/Questions/Question';
 import { ListItem } from 'types/ListItem/ListItem';
 
@@ -35,7 +36,7 @@ type Props = {
   modules: ListItem[];
   questionList: HomeworkQuestionList;
   selectedQuestions: HomeworkQuestionList;
-  onChecked: (question: HomeworkQuestion) => void;
+  onChecked: (question: OpenHomeworkQuestion | ClosedHomeworkQuestion) => void;
   onUnchecked: (question_id: number) => void;
 };
 
@@ -73,6 +74,7 @@ export default function HomeworkQuestionListTable({
 
       if (type && question.type !== type) return false;
 
+      setActivePage(1);
       return true;
     });
   }, [tableFilterOptions, questionList]);

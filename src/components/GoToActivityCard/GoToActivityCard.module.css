@@ -18,9 +18,10 @@
 }
 
 .module-name {
-  font-size: var(--fs-mid-small-text);
+  font-size: var(--fs-small-text);
   color: var(--black-color);
-  margin-bottom: 1.2rem;
+  margin-top: 1.6rem;
+  margin-bottom: 1rem;
 }
 
 .activity-name,
@@ -29,7 +30,7 @@
 }
 
 .activity-name {
-  font-size: var(--fs-big-text);
+  font-size: var(--fs-sub-title);
   color: var(--light-blue-color);
   margin-bottom: 0.6rem;
 }
@@ -47,9 +48,25 @@
   padding: 1.2rem 1.2rem;
   border-radius: 1.2rem;
   align-self: flex-end;
+  margin-top: auto;
   transition: background-color 0.23s linear;
 }
 
 .button:hover {
   background-color: #445a6f;
+}
+
+.no-results-message {
+  color: var(--light-blue-color);
+  font-weight: 300;
+  margin-bottom: auto;
+  margin-top: auto;
+}
+
+.loading-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: auto;
 }

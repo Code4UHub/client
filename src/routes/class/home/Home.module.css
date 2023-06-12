@@ -9,6 +9,10 @@
   column-gap: 1.2rem;
 }
 
+.home-container-item {
+  min-height: 25rem;
+}
+
 .home-container-item:hover {
   transform: none;
 }

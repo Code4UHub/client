@@ -7,6 +7,7 @@ import {
   redirect,
   LoaderFunction,
   LoaderFunctionArgs,
+  defer,
 } from 'react-router-dom';
 
 import { store, persistor, RootState } from 'store/store';
@@ -23,23 +24,28 @@ import {
   getSubjects,
   getSubjectHomeworkQuestions,
   getsSubjectModules,
+  getQuestionFromHomework,
+  getQuestionFromChallenge,
 } from 'utils/db/db.utils';
 
 import { Root } from 'routes/root/Root';
 import Authentication from 'routes/authentication/Authentication';
-import StudentRequests from 'routes/StudentRequests/StudentRequests';
+import StudentRequests from 'routes/requests/StudentRequests';
 import Classes from 'routes/classes/Classes';
-import ModuleTeachers from 'routes/modules/ModuleTeachers';
-import ModuleStudents from 'routes/modules/ModuleStudents';
-import Group from 'routes/group/Group';
-import GroupGraphController from 'routes/groupGraphController/GroupGraphController';
+import ModuleTeachers from 'routes/class/modules/ModuleTeachers';
+import ModuleStudents from 'routes/class/modules/ModuleStudents';
+import Group from 'routes/class/group/Group';
+import GroupGraphController from 'routes/class/groupGraphController/GroupGraphController';
 import CreateQuestion from 'routes/createQuestion/createQuestion';
 import { Class } from 'routes/class/Class';
-import Assignment from 'routes/assignment/Assignment';
+// import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
 import Test from 'routes/test/Test';
 import CreateHomework from 'routes/homework/CreateHomework';
 import Leaderboard from 'routes/leaderboard/Leaderboard';
+import AssignmentWrapper from 'routes/assignment/AssignmentWrapper';
+import CreateHomework from 'routes/homework/createHomework/CreateHomework';
+import HomeworkPage from 'routes/class/homework/Homework';
 
 import { Toast } from 'components/Toast/Toast';
 import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
@@ -48,11 +54,6 @@ import './index.css';
 
 function Index() {
   const user = useSelector((state: RootState) => state.user.currentUser);
-
-  const noChecking = async (): Promise<TypePromise<string>> =>
-    new Promise((resolve) => {
-      setTimeout(() => resolve({ status: 'success', data: '' }), 100);
-    });
 
   const loaderWrapper = async (
     fn: () => Promise<TypePromise<any>>,
@@ -149,20 +150,16 @@ function Index() {
                   element: <Home />,
                 },
                 {
-                  path: 'modules/teacher',
-                  element: <ModuleTeachers />,
-                  loader: async () =>
-                    await loaderWrapper(() => noChecking(), 'teacher'),
+                  path: 'modules',
+                  element:
+                    user?.role === 'teacher' ? (
+                      <ModuleTeachers />
+                    ) : (
+                      <ModuleStudents />
+                    ),
                 },
-                {
-                  path: 'modules/student',
-                  element: <ModuleStudents />,
-                  loader: async () =>
-                    await loaderWrapper(() => noChecking(), 'student'),
-                },
-
-                { path: 'homework', element: 'Tareas' },
                 { path: 'leaderboard', element: <Leaderboard /> },
+                { path: 'homework', element: <HomeworkPage /> },
                 { path: 'graphs', element: <Group /> },
                 {
                   path: 'graphs/:graph_id',
@@ -189,7 +186,7 @@ function Index() {
         },
         {
           path: 'homework',
-          element: <Assignment />,
+          element: <h1>Aqui va la lista de tareas</h1>,
         },
         {
           path: 'new-question',
@@ -212,6 +209,42 @@ function Index() {
         {
           path: 'test',
           element: <Test />,
+        },
+        {
+          path: 'classes/:classId/modules/:moduleId/challenge/:assignmentId',
+          element: <AssignmentWrapper />,
+          loader: async ({ params }) => {
+            if (!user) return redirect('/auth');
+            if (user.role !== 'student') throw new Error();
+
+            const assignmentPromise = getQuestionFromChallenge(
+              user.authToken,
+              params.assignmentId as string,
+              user.id
+            );
+
+            return defer({
+              assignment: assignmentPromise,
+            });
+          },
+        },
+        {
+          path: 'homework/:assignmentId',
+          element: <AssignmentWrapper />,
+          loader: async ({ params }) => {
+            if (!user) return redirect('/auth');
+            if (user.role !== 'student') throw new Error();
+
+            const assignmentPromise = getQuestionFromHomework(
+              user.authToken,
+              params.assignmentId as string,
+              user.id
+            );
+
+            return defer({
+              assignment: assignmentPromise,
+            });
+          },
         },
       ],
       errorElement: <NotFound />,

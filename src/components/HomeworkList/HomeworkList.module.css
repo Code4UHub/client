@@ -1,6 +1,13 @@
 .content {
   max-height: 35rem;
-  overflow-y: auto;
+  overflow: auto;
+}
+
+.center {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .container {
@@ -14,10 +21,19 @@
   position: relative;
 }
 
+.date-header {
+  padding: 2.4rem 1.2rem;
+}
+
 .date-header span {
-  display: block;
+  display: inline-block;
   font-size: var(--fs-small-text);
-  padding: 1.2rem 0.6rem;
+  margin-bottom: 0.8rem;
+}
+
+.date-header .today {
+  font-weight: 500;
+  font-size: var(--fs-mid-text);
 }
 
 .date-header hr {
@@ -54,4 +70,9 @@
 
 .item-container a {
   display: block;
+}
+
+.no-results span {
+  color: var(--dark-dark-gray);
+  text-align: center;
 }

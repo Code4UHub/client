@@ -32,6 +32,7 @@ export interface StudentClass extends BaseClass {
 
 export interface TeacherClass extends BaseClass {
   subject_id: string;
+  is_finished: boolean;
 }
 
 export interface ClassPromise extends TypePromise<Class> {}

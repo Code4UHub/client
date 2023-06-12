@@ -1,12 +1,8 @@
+import {
+  ClosedHomeworkQuestion,
+  OpenHomeworkQuestion,
+} from 'types/Questions/Question';
 import { TypePromise } from 'types/TypePromise/TypePromise';
-import { HomeworkQuestionList } from 'types/Questions/Question';
-
-export type Homework = {
-  homework_id: string;
-  homework_name: string;
-  is_finished: boolean;
-  date: Date;
-};
 
 export type HomeworkRequest = {
   class_id: string | { id: string; value: string };
@@ -15,10 +11,10 @@ export type HomeworkRequest = {
   open_questions: number | undefined;
   closed_questions: number | undefined;
   deadline: string;
-  questions: HomeworkQuestionList;
+  questions: (OpenHomeworkQuestion | ClosedHomeworkQuestion)[];
 };
 
-type HomeworkObj = {
+export type Homework = {
   homework_id: number;
   class_id: string;
   difficulty_id: number;
@@ -31,10 +27,10 @@ type HomeworkObj = {
 
 export type HomeworkResponse = {
   message: string;
-  homework: HomeworkObj;
+  homework: Homework;
   question_ids: number[];
 };
 
-export interface HomeworkPromise extends TypePromise<Homework[][]> {}
+export interface HomeworkPromise extends TypePromise<Homework[]> {}
 export interface HomeworkResponsePromise
   extends TypePromise<HomeworkResponse> {}

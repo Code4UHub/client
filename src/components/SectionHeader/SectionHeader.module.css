@@ -32,3 +32,15 @@
 .backButton h1 {
   order: 1;
 }
+
+.loading {
+  justify-content: start;
+}
+
+.loading h1 {
+  margin-right: 1.6rem;
+}
+
+.loading button {
+  margin-left: auto;
+}
