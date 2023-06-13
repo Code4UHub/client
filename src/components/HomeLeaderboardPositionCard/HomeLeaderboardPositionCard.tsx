@@ -184,14 +184,12 @@ export default function HomeLeaderboardPositionCard({ className }: Props) {
         </h2>
       </div>
       {user?.role === 'student' ? <StudentCard /> : <TeacherCard />}
-      {user?.role === 'teacher' && (
-        <Link
-          to="graphs/0"
-          className={styles.button}
-        >
-          Ver Leaderboard
-        </Link>
-      )}
+      <Link
+        to={user?.role === 'teacher' ? 'graphs/0' : 'leaderboard'}
+        className={styles.button}
+      >
+        Ver Leaderboard
+      </Link>
     </Card>
   );
 }

@@ -31,7 +31,11 @@ function ClassNav({ isStudent }: ClassNavProps) {
         <li>
           <NavLink to="homework">Tareas</NavLink>
         </li>
-        {!isStudent && (
+        {isStudent ? (
+          <li>
+            <NavLink to="leaderboard">Leaderboard</NavLink>
+          </li>
+        ) : (
           <li>
             <NavLink to="graphs">Gráficos</NavLink>
           </li>

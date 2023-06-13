@@ -39,6 +39,7 @@ import GroupGraphController from 'routes/class/groupGraphController/GroupGraphCo
 import CreateQuestion from 'routes/createQuestion/createQuestion';
 import { Class } from 'routes/class/Class';
 import Home from 'routes/class/home/Home';
+import Leaderboard from 'routes/leaderboard/Leaderboard';
 import AssignmentWrapper from 'routes/assignment/AssignmentWrapper';
 import CreateHomework from 'routes/homework/createHomework/CreateHomework';
 import HomeworkPage from 'routes/class/homework/Homework';
@@ -155,6 +156,7 @@ function Index() {
                       <ModuleStudents />
                     ),
                 },
+                { path: 'leaderboard', element: <Leaderboard /> },
                 { path: 'homework', element: <HomeworkPage /> },
                 { path: 'graphs', element: <Group /> },
                 {
