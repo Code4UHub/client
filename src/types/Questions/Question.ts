@@ -1,4 +1,5 @@
 import { TypePromise } from 'types/TypePromise/TypePromise';
+import { CompiledCodeResultsPromise } from 'types/CompiledCodeResults/CompiledCodeResults';
 
 export type QuestionDifficulty = 1 | 2 | 3;
 
@@ -44,20 +45,28 @@ export type HomeworkQuestion = {
   title: string;
 };
 
+export type OpenSolution = {
+  solution: string;
+  tests: CompiledCodeResultsPromise;
+};
+
 export interface OpenHomeworkQuestion extends HomeworkQuestion {
   type: 'open';
-  solution: {
-    user_input?: OpenQuestionSolution;
-  };
+  solution: {} | { user_input: OpenQuestionSolution } | OpenSolution;
   question: OpenQuestion;
+  source_code?: string;
 }
 
+export type ClosedSolution = {
+  solution: number;
+  explanation: string;
+  isCorrect: boolean;
+};
 export interface ClosedHomeworkQuestion extends HomeworkQuestion {
   type: 'closed';
-  solution: {
-    user_input?: number;
-  };
+  solution: {} | { user_input: number } | ClosedSolution;
   question: ClosedQuestion;
+  selected_choice: number;
 }
 
 export type Questions = {
@@ -87,18 +96,16 @@ export type ChallengeQuestion = {
 
 export interface OpenChallengeQuestion extends ChallengeQuestion {
   type: 'open';
-  solution: {
-    user_input?: OpenQuestionSolution;
-  };
+  solution: {} | { user_input: OpenQuestionSolution } | OpenSolution;
   question: OpenQuestion;
+  source_code?: string;
 }
 
 export interface ClosedChallengeQuestion extends ChallengeQuestion {
   type: 'closed';
-  solution: {
-    user_input?: number;
-  };
+  solution: {} | { user_input: number } | ClosedSolution;
   question: ClosedQuestion;
+  selected_choice: number;
 }
 
 export type ChallengeQuestionList = (

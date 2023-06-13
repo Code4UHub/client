@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import { EditorState } from '@codemirror/state';
 import { EditorView, keymap, KeyBinding } from '@codemirror/view';
 import { python } from '@codemirror/lang-python';
 import { basicSetup } from 'codemirror';
@@ -26,12 +27,14 @@ type EditorPropTypes = {
   questionIndex: number;
   code: string;
   onChange: Function;
+  readOnly?: boolean;
 };
 
 export default function CodeEditor({
   questionIndex,
   code,
   onChange,
+  readOnly,
 }: EditorPropTypes) {
   const parentDivRef = useRef<HTMLDivElement>(null);
   const codeEditorRef = useRef<EditorView>();
@@ -45,6 +48,7 @@ export default function CodeEditor({
         EditorView.lineWrapping,
         keymap.of([autocompleteEnter, autocompleteTab, insertTabKey]),
         tomorrow,
+        EditorState.readOnly.of(readOnly || false),
         EditorView.updateListener.of((e) => {
           if (e.docChanged) {
             onChange(e.state.doc.toString(), questionIndex);
@@ -66,3 +70,6 @@ export default function CodeEditor({
     />
   );
 }
+CodeEditor.defaultProps = {
+  readOnly: false,
+};

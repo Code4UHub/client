@@ -1,6 +1,7 @@
 import {
   ClosedHomeworkQuestion,
   OpenHomeworkQuestion,
+  QuestionDifficulty,
 } from 'types/Questions/Question';
 import { TypePromise } from 'types/TypePromise/TypePromise';
 
@@ -34,3 +35,39 @@ export type HomeworkResponse = {
 export interface HomeworkPromise extends TypePromise<Homework[]> {}
 export interface HomeworkResponsePromise
   extends TypePromise<HomeworkResponse> {}
+
+export type AllHomeworks = {
+  homework_id: number;
+  title: string;
+  deadline: string;
+  total_points: number;
+  is_active: boolean;
+};
+
+export interface StudentAllHomeworks extends AllHomeworks {
+  score: number;
+  'class.class_id': string;
+  'class.subject.subject_id': string;
+  'class.subject.subject_name': string;
+}
+export interface TeacherAllHomeworks extends AllHomeworks {
+  difficulty_id: QuestionDifficulty;
+  class_id: string;
+  open_questions: number;
+  closed_questions: number;
+}
+
+export interface StudentAllHomeworksPromise
+  extends TypePromise<StudentAllHomeworks[]> {}
+export interface TeacherAllHomeworksPromise
+  extends TypePromise<TeacherAllHomeworks[]> {}
+
+export interface StudentClassHomework extends AllHomeworks {
+  score: number;
+  difficulty_id: number;
+}
+
+export type StudentClassHomeworks = StudentClassHomework[];
+
+export interface StudentClassHomeworksPromise
+  extends TypePromise<StudentClassHomeworks> {}

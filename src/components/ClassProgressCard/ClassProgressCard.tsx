@@ -53,7 +53,11 @@ export default function ClassProgressCard({ className }: Props) {
       <span>
         {user?.role === 'student' ? 'Has completado' : 'Avance del grupo'}
       </span>
-      {isLoading ? <LoadingSpinner /> : <span>{progress.toFixed(1)} %</span>}
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <span>{progress ? progress.toFixed(1) : 0} %</span>
+      )}
 
       <span>del curso {user?.role === 'teacher' ? 'total' : ''} </span>
     </Card>

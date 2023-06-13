@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
 import LeaderboardCard from 'components/LeaderboardCard/LeaderboardCard';
-
+import NoResultsMessage from 'components/NoResultsMessage/NoResultsMessage';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import { Leaderboard } from 'types/GroupGraph/GroupGraphType';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { setLoading, removeLoading } from 'store/loading/loadingSlice';
 import { RootState } from 'store/store';
 
 import { getGraphData } from 'utils/db/db.utils';
@@ -16,16 +16,16 @@ import { ReactComponent as DownIcon } from './Down.svg';
 import style from './Leaderboard.module.css';
 
 export default function LeaderboardStudent() {
-  const dispatch = useDispatch();
   const params = useParams();
   const user = useSelector((state: RootState) => state.user.currentUser);
   const [leaderboardData, setLeaderboardData] = useState<Leaderboard[]>([]);
   const [podium, setPodium] = useState<Leaderboard[]>([]);
   const [behindPodium, setBehindPodium] = useState<Leaderboard[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      dispatch(setLoading());
+      setIsLoading(true);
       const response = await getGraphData(
         user?.authToken as string,
         params.id as string,
@@ -34,10 +34,10 @@ export default function LeaderboardStudent() {
       if (response.status === 'success') {
         setLeaderboardData(response.data as Leaderboard[]);
       }
-      dispatch(removeLoading());
+      setIsLoading(false);
     };
     fetchData();
-  }, [dispatch, params.id, user?.authToken]);
+  }, [params.id, user?.authToken]);
 
   useEffect(() => {
     // To get who is in the podium, and how people relate to your current position
@@ -52,10 +52,13 @@ export default function LeaderboardStudent() {
   const isInPodium = behindPodium.length === 0 && podium.length !== 0;
   const noData = behindPodium.length === 0 && podium.length === 0;
 
-  if (noData) return <h1>No hay estudiantes aún aceptados en este grupo</h1>;
+  if (isLoading) return <LoadingSpinner />;
+
+  if (noData)
+    return <NoResultsMessage message="No hay estudiantes en la clase 🙁" />;
   return (
     <div className={style.container}>
-      <h2 className={style.title}>Podium</h2>
+      <h2 className={style.title}>Podio</h2>
       {podium.map(({ student, score, position, name }, index) => {
         if (!isInPodium)
           return (

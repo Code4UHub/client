@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import ProgressBar, { BarLegend } from 'components/ProgressBar/ProgressBar';
 import { SortButtons } from 'components/SortButtons/SortButtons';
+import NoResultsMessage from 'components/NoResultsMessage/NoResultsMessage';
 
 import { GroupGraphType } from 'types/GroupGraph/GroupGraphType';
 import { GraphCategory, GraphEvaluate } from 'types/GroupOptions/GroupOptions';
@@ -42,45 +43,51 @@ export default function GroupGraph({ graphData, category, evaluate }: Props) {
     // eslint-disable-next-line
   }, [graphData]);
 
-  if (!sortedData) return <h1>Loading</h1>;
-
   return (
     <div className={style.container}>
       <div className={style.legend}>
         <BarLegend />
       </div>
-      <div className={style.sorters}>
-        <span className={style.hint}>Ordenar por: </span>
-        <div className={style.sort}>
-          <SortButtons
-            active={getActiveSort(category)}
-            parameter={category}
-            updateSortRule={onUpdateRules}
-          />
-        </div>
-        <div className={style.sort}>
-          <SortButtons
-            active={getActiveSort(evaluate)}
-            parameter={evaluate}
-            updateSortRule={onUpdateRules}
-          />
-        </div>
-      </div>
-
-      <div className={style.graphs}>
-        {sortedData.map((d) => (
-          <React.Fragment key={`${d.id}${d.percentage}`}>
-            <span className={style['graph-title']}>{d.title}</span>
-            <div className={style['bar-graph']}>
-              <ProgressBar
-                percentage={d.percentage}
-                textPosition="in"
-                key={`${d.id}${d.percentage}${ruleElement}${ruleDirection}graph`}
+      {graphData.length === 0 ? (
+        <NoResultsMessage
+          message="No hay estudiantes en la clase 🙁"
+          className={style['no-results']}
+        />
+      ) : (
+        <>
+          <div className={style.sorters}>
+            <span className={style.hint}>Ordenar por: </span>
+            <div className={style.sort}>
+              <SortButtons
+                active={getActiveSort(category)}
+                parameter={category}
+                updateSortRule={onUpdateRules}
               />
             </div>
-          </React.Fragment>
-        ))}
-      </div>
+            <div className={style.sort}>
+              <SortButtons
+                active={getActiveSort(evaluate)}
+                parameter={evaluate}
+                updateSortRule={onUpdateRules}
+              />
+            </div>
+          </div>
+          <div className={style.graphs}>
+            {sortedData.map((d) => (
+              <React.Fragment key={`${d.id}${d.percentage}`}>
+                <span className={style['graph-title']}>{d.title}</span>
+                <div className={style['bar-graph']}>
+                  <ProgressBar
+                    percentage={d.percentage}
+                    textPosition="in"
+                    key={`${d.id}${d.percentage}${ruleElement}${ruleDirection}graph`}
+                  />
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

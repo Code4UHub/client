@@ -7,7 +7,11 @@ type Props = {
 };
 
 export default function LoadingSpinner({ className }: Props) {
-  return <div className={`${styles.spinner} ${className}`} />;
+  return (
+    <div className={styles.container}>
+      <div className={`${styles.spinner} ${className}`} />
+    </div>
+  );
 }
 
 LoadingSpinner.defaultProps = {

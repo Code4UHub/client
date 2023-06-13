@@ -7,7 +7,7 @@ import { Homework } from 'types/Homework/Homework';
 
 import HomeworkList from 'components/HomeworkList/HomeworkList';
 import Modal from 'components/Modal/Modal';
-import CardSkeleton from 'components/CardSkeleton/CardSkeleton';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 
 import { useHomeworkList } from 'hooks/useHomeworkList';
 
@@ -57,7 +57,7 @@ export default function HomeworkPage() {
         </div>
       )}
       {isLoading ? (
-        <CardSkeleton items={20} />
+        <LoadingSpinner />
       ) : (
         <HomeworkList
           homeworkList={homeworkList as Homework[][]}

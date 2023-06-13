@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { RootState } from 'store/store';
+import { useSelector } from 'react-redux';
+
+import { updateChallengeStatusContinue } from 'utils/db/db.utils';
 
 import { Button } from 'components/Button/Button';
 import Card from 'components/Card/Card';
@@ -19,6 +23,7 @@ type Props = {
 
 export default function ModuleCard({ data }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  const user = useSelector((state: RootState) => state.user.currentUser);
   const navigateTo = useNavigate();
 
   const getPointsColor = (student_points: number, total_points: number) => {
@@ -61,6 +66,17 @@ export default function ModuleCard({ data }: Props) {
         const { difficulty } = challenge.difficulty;
         const challengePercentage = studentPoints / challenge.total_points;
         const isChallengePassed = challengePercentage >= 0.7;
+
+        let buttonLabel = '';
+
+        if (challenge.student_challenge[0].status === 'start') {
+          buttonLabel = 'Empezar';
+        } else if (challenge.student_challenge[0].status === 'continue') {
+          buttonLabel = 'Continuar';
+        } else {
+          buttonLabel = 'Repasar';
+        }
+
         return (
           <Card
             key={challenge.challenge_id}
@@ -85,13 +101,18 @@ export default function ModuleCard({ data }: Props) {
               </span>
             </div>
             <Button
-              text={isChallengePassed ? 'Repasar' : 'Aprender'}
+              text={buttonLabel}
               location="topic-card"
-              onClickHandler={() =>
-                navigateTo(
-                  `${data.module_id}/challenge/${challenge.challenge_id}`
-                )
-              }
+              onClickHandler={() => {
+                if (challenge.student_challenge[0].status === 'start') {
+                  updateChallengeStatusContinue(
+                    user?.authToken as string,
+                    challenge.challenge_id,
+                    user?.id as string
+                  );
+                }
+                navigateTo(`challenge/${challenge.challenge_id}`);
+              }}
             />
           </Card>
         );

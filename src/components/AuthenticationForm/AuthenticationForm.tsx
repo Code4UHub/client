@@ -22,6 +22,8 @@ import { authData } from './authData';
 
 import style from './AuthenticationForm.module.css';
 
+const CryptoJS = require('crypto-js');
+
 type Props = {
   screen: 'signIn' | 'signUp';
 };
@@ -74,16 +76,20 @@ export default function AuthenticationForm({ screen }: Props) {
 
       const studentRegex = /^[aA]0/g;
       const userName = inputValues.email.split('@')[0];
+      const password = CryptoJS.MD5(
+        inputValues.passwordLogin || inputValues.password
+      ).toString();
+
       if (screen === 'signIn') {
-        const { email, passwordLogin } = inputValues;
+        const { email } = inputValues;
 
         if (studentRegex.test(userName)) {
-          user = await logStudent(email.toLowerCase(), passwordLogin);
+          user = await logStudent(email.toLowerCase(), password);
         } else {
-          user = await logTeacher(email.toLowerCase(), passwordLogin);
+          user = await logTeacher(email.toLowerCase(), password);
         }
       } else {
-        const { firstName, lastName, email, password } = inputValues;
+        const { firstName, lastName, email } = inputValues;
 
         const userData = {
           first_name: toTitleCase(firstName),
