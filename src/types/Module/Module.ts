@@ -3,6 +3,7 @@ import { TypePromise } from 'types/TypePromise/TypePromise';
 // To solve backend problem of sending over the score inside an array of objects
 type Score = {
   score: number;
+  status: 'finished' | 'start' | 'continue';
 };
 
 export type Challenge = {
