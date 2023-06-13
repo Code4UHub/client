@@ -27,9 +27,10 @@ import styles from './Classes.module.css';
 
 type CardListProps = {
   classList: StudentClass[] | TeacherClass[];
+  userType: string | undefined;
 };
 
-function ClassCardList({ classList }: CardListProps) {
+function ClassCardList({ classList, userType }: CardListProps) {
   return classList.length > 0 ? (
     <>
       {classList.map((classItem) => (
@@ -41,7 +42,9 @@ function ClassCardList({ classList }: CardListProps) {
     </>
   ) : (
     <NoResultsMessage
-      message="Unéte a una clase para comenzar 💡"
+      message={`${
+        userType === 'teacher' ? 'Crea' : 'Únete'
+      } a una clase para comenzar 💡`}
       className={styles['no-results']}
     />
   );
@@ -60,19 +63,24 @@ export default function Classes() {
     setIsLoading(true);
     let data: TeacherClassListPromise | StudentClassListPromise;
 
-    if (user?.role === 'teacher') {
-      data = await getTeacherClassList(user.id, user.authToken);
-    } else {
-      data = await getStudentClassList(
-        user?.id as string,
-        user?.authToken as string
-      );
-    }
+    try {
+      if (user?.role === 'teacher') {
+        data = await getTeacherClassList(user.id, user.authToken);
+      } else {
+        data = await getStudentClassList(
+          user?.id as string,
+          user?.authToken as string
+        );
+      }
 
-    if (data.status === 'success' && typeof data.data !== 'string') {
-      setclassList(data.data);
+      if (data.status === 'success' && typeof data.data !== 'string') {
+        setclassList(data.data);
+      }
+
+      setIsLoading(false);
+    } catch (e) {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -102,7 +110,10 @@ export default function Classes() {
         {isLoading ? (
           <CardSkeleton items={4} />
         ) : (
-          <ClassCardList classList={classList} />
+          <ClassCardList
+            classList={classList}
+            userType={user?.role}
+          />
         )}
       </div>
     </>
