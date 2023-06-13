@@ -16,6 +16,8 @@ import {
   HomeworkPromise,
   HomeworkRequest,
   HomeworkResponsePromise,
+  StudentAllHomeworksPromise,
+  StudentClassHomeworksPromise,
 } from 'types/Homework/Homework';
 
 // TODO: Delete when backend has this information
@@ -27,8 +29,10 @@ import {
   ModuleProgressListPromise,
 } from 'types/Module/Module';
 import {
+  ChallengeQuestions,
   ChallengeQuestionsPromise,
   HomeworkQuestionPoolPromise,
+  HomeworkQuestions,
   HomeworkQuestionsPromise,
   OpenQuestionSolution,
 } from 'types/Questions/Question';
@@ -41,6 +45,10 @@ import { QuestionOption, TestCase } from 'types/CreateQuestion/CreateQuestion';
 
 import { formatCreateQuestionBody } from 'utils/format/formatCreateQuestion';
 import { LeaderboardPromise } from 'types/Leaderboard/Leaderboard';
+import {
+  ChallengeSubmitPromise,
+  HomeworkSubmitPromise,
+} from 'types/Submit/Submit';
 
 // const BASE_URL = http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
 const BASE_URL = 'http://10.147.20.218:65534/v1';
@@ -107,6 +115,18 @@ const ENDPOINTS = {
     `${BASE_URL}/challenge/${challenge_id}/student/${student_id}/questions`,
   SAVE_CHALLENGE: (student_id: string, question_id: number) =>
     `${BASE_URL}/challenge/student/${student_id}/question/${question_id}`,
+  ALL_STUDENT_HOMEWORKS: (student_id: string) =>
+    `${BASE_URL}/student/${student_id}/homeworks`,
+  ALL_TEACHER_HOMEWORKS: (teacher_id: string) =>
+    `${BASE_URL}/teacher/${teacher_id}/homeworks`,
+  UPDATE_HOMEWORK_OUT_FOCUS: (homework_id: string, student_id: string) =>
+    `${BASE_URL}/homework/${homework_id}/student/${student_id}/update_time`,
+  CHALLENGE_SUBMIT: `${BASE_URL}/challenge/submit`,
+  HOMEWORK_SUBMIT: `${BASE_URL}/homework/submit`,
+  STUDENT_CLASS_HOMEWORK: (class_id: string, student_id: string) =>
+    `${BASE_URL}/class/${class_id}/student/${student_id}/homeworks`,
+  UPDATE_CHALLENGE_STATUS_CONTINUE: `${BASE_URL}/challenge/update_status_continue`,
+  UPDATE_CHALLENGE_STATUS_FINISHED: `${BASE_URL}/challenge/update_status_start`,
 };
 
 export const createStudent = async (user: {
@@ -795,6 +815,183 @@ export const saveChallengeProgress = async (
     ENDPOINTS.SAVE_CHALLENGE(student_id, question_id),
     options
   );
+
+  return request.json();
+};
+
+// Get all student homework
+export const getAllStudentHomeworks = async (
+  auth_token: string,
+  student_id: string
+): Promise<StudentAllHomeworksPromise> => {
+  const request = await fetch(ENDPOINTS.ALL_STUDENT_HOMEWORKS(student_id), {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  });
+
+  return request.json();
+};
+
+// Get all teacher homework
+export const getAllTeacherHomeworks = async (
+  auth_token: string,
+  teacher_id: string
+): Promise<StudentAllHomeworksPromise> => {
+  const request = await fetch(ENDPOINTS.ALL_TEACHER_HOMEWORKS(teacher_id), {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
+  });
+
+  return request.json();
+};
+
+// Update homework out of focus
+export const updateOutOfFocusHomework = async (
+  auth_token: string,
+  student_id: string,
+  homework_id: string,
+  time: number
+): Promise<string> => {
+  const request = await fetch(
+    ENDPOINTS.UPDATE_HOMEWORK_OUT_FOCUS(homework_id, student_id),
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth_token}`,
+      },
+      body: JSON.stringify({
+        added_time: time,
+      }),
+    }
+  );
+
+  return request.json();
+};
+
+export const submitHomework = async (
+  auth_token: string,
+  answers: {
+    [key: number]: number | OpenQuestionSolution;
+  },
+  homework: HomeworkQuestions,
+  student_id: string
+): Promise<HomeworkSubmitPromise> => {
+  const homeworkAnswers = homework.homeworks.map((question, index) => {
+    if (question.type === 'open') {
+      question.source_code = (answers[index] as OpenQuestionSolution).code;
+    } else {
+      question.selected_choice = answers[index] as number;
+    }
+    return question;
+  });
+
+  const options: RequestInit = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify({
+      student_id,
+      questions: [...homeworkAnswers],
+    }),
+  };
+
+  const request = await fetch(ENDPOINTS.HOMEWORK_SUBMIT, options);
+
+  return request.json();
+};
+
+export const submitChallenge = async (
+  auth_token: string,
+  answers: {
+    [key: number]: number | OpenQuestionSolution;
+  },
+  challenge: ChallengeQuestions,
+  student_id: string
+): Promise<ChallengeSubmitPromise> => {
+  const challengeAnswers = challenge.challenges.map((question, index) => {
+    if (question.type === 'open') {
+      question.source_code = (answers[index] as OpenQuestionSolution).code;
+    } else {
+      question.selected_choice = answers[index] as number;
+    }
+    return question;
+  });
+
+  const options: RequestInit = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify({
+      student_id,
+      questions: [...challengeAnswers],
+    }),
+  };
+
+  const request = await fetch(ENDPOINTS.CHALLENGE_SUBMIT, options);
+
+  return request.json();
+};
+
+export const getStudentClassHomeworks = async (
+  auth_token: string,
+  class_id: string,
+  student_id: string
+): Promise<StudentClassHomeworksPromise> => {
+  const request = await fetch(
+    ENDPOINTS.STUDENT_CLASS_HOMEWORK(class_id, student_id),
+    {
+      headers: {
+        Authorization: `Bearer ${auth_token}`,
+      },
+    }
+  );
+
+  return request.json();
+};
+
+export const updateChallengeStatusContinue = async (
+  auth_token: string,
+  challenge_id: number,
+  student_id: string
+): Promise<TypePromise<string>> => {
+  const request = await fetch(ENDPOINTS.UPDATE_CHALLENGE_STATUS_CONTINUE, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify({
+      challenge_id,
+      student_id,
+    }),
+  });
+
+  return request.json();
+};
+
+export const updateChallengeStatusFinished = async (
+  auth_token: string,
+  challenge_id: number,
+  student_id: string
+): Promise<TypePromise<string>> => {
+  const request = await fetch(ENDPOINTS.UPDATE_CHALLENGE_STATUS_FINISHED, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth_token}`,
+    },
+    body: JSON.stringify({
+      challenge_id,
+      student_id,
+    }),
+  });
 
   return request.json();
 };
