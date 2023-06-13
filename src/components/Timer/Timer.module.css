@@ -2,8 +2,9 @@ div .timer {
   text-align: center;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   flex-direction: column;
+  margin: 1rem 0;
 }
 
 div .timer :hover {

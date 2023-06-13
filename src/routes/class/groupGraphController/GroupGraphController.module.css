@@ -1,0 +1,24 @@
+
+.controllers {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    margin: 3rem 0 4rem;
+}
+
+.title {
+    text-align: left;
+    font-size: var(--fs-mid-text);
+}
+
+.description {
+    text-align: left;
+    font-size: var(--fs-mid-text);
+    font-weight: 100;
+    font-style: italic;
+    color: #565555;
+    margin: 2rem 0;
+}
+

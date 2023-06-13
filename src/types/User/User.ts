@@ -1,3 +1,5 @@
+import { TypePromise } from 'types/TypePromise/TypePromise';
+
 export type User = {
   id: string;
   role: string;
@@ -6,8 +8,6 @@ export type User = {
   email: string;
 };
 
-export type UserPromise = {
-  status: 'success' | 'failed' | 'error';
+export interface UserPromise extends TypePromise<User> {
   auth_token: string;
-  data: User | string;
-};
+}

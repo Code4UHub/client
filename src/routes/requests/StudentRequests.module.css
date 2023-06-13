@@ -1,0 +1,76 @@
+
+.request-container {
+    margin-top: 1rem;
+}
+
+.request-shortcuts {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.filter {
+    width: 40%;
+}
+
+.autocomplete-list {
+    width: 40rem;
+    height: 35rem;
+    background-color: var(--light-gray);
+    position: absolute;
+    list-style: none;
+    font-size: var(--fs-small-text);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.autocomplete-list li {
+    padding-left: 2.4rem;
+    padding-right: 2.4rem;
+    padding-bottom: 0.6rem;
+    padding-top: 0.6rem;
+    cursor: pointer;
+}
+
+.autocomplete-list li:first-child {
+    padding-top: 1.2rem;
+}
+
+.autocomplete-list li:last-child {
+    padding-bottom: 1.2rem;
+}
+
+.autocomplete-list li:hover {
+    color: var(--white-color);
+    font-weight: bold;
+    background-color: var(--sec-blue-color);
+}
+
+.selected-shortcuts {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+.join-request input {
+    height: auto;
+    background-color: var(--light-gray);
+}
+
+
+@media (max-width: 60em) {
+    .request-container {
+        column-gap: 2rem;
+    }
+    .filter {
+        width: 50%;
+    }
+    .join-request input {
+        font-size: var(--fs-small-small-text);
+    }
+    
+}

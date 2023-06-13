@@ -1,0 +1,22 @@
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(25rem, 32rem));
+  column-gap: 2.4rem;
+  row-gap: 2.4rem;
+  margin-top: 3.6rem;
+  padding-left: 0.6rem;
+}
+
+.no-results {
+  grid-column: 1 / -1;
+}
+
+.no-results span {
+  color: var(--dark-dark-gray);
+}
+
+@media (max-width: 36.25em) {
+  .card-container {
+    grid-template-columns: 1fr;
+  }
+}

@@ -20,6 +20,7 @@ html {
   overflow-x: hidden;
   font-family: 'Montserrat', sans-serif;
   color: var(--black-color);
+  background-color: #f7f8fa;
 }
 
 :root {
@@ -27,9 +28,11 @@ html {
 
   --main-blue-color: #02203c;
   --sec-blue-color: #15314b;
+  --dark-dark-gray: #565555;
   --dark-gray: #bfbfbf;
   --light-gray: #f5f2f2;
   --light-blue-color: #0060b9;
+  --light-light-blue-color: #ccdff1;
   --light-red: #fed6d7;
   --middle-red: #d9534f;
   --dark-red: #822727;
@@ -46,9 +49,12 @@ html {
     #15314b 100%
   );
 
+  --box-shadow: rgba(0, 0, 0, 0.04) 0px 2px 6px, rgba(0, 0, 0, 0.02) 0px 4px 8px,
+    rgba(0, 0, 0, 0.02) 0px 6px 12px;
+
   --fs-big-title: 5rem;
   --fs-title: 4.4rem;
-  --fs-sub-title: 4rem;
+  --fs-sub-title: 3.5rem;
   --fs-sub-sub-title: 2.8rem;
 
   --fs-big-text: 2.4rem;
@@ -56,6 +62,7 @@ html {
   --fs-mid-small-text: 1.8rem;
   --fs-small-text: 1.6rem;
   --fs-small-small-text: 1.4rem;
+  --fs-xsmall-text: 1.3rem;
 }
 
 * {
@@ -66,6 +73,11 @@ html {
 
 a {
   text-decoration: none;
+}
+
+.no-scroll {
+  overflow: hidden;
+  position: fixed;
 }
 
 /**************************/

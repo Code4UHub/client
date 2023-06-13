@@ -1,0 +1,52 @@
+.pagination-container {
+  margin-top: 1.6rem;
+  display: flex;
+  justify-content: flex-end;
+  column-gap: 0.8rem;
+}
+
+.page-btn {
+  width: 3.6rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-btn,
+.dir-btn {
+  border: 1px solid var(--main-blue-color);
+  border-radius: 5px;
+  padding: 0.8rem 1.4rem;
+  cursor: pointer;
+  color: var(--main-blue-color);
+  font-size: var(--fs-small-small-text);
+  background-color: var(--white-color);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.page-btn:hover,
+.dir-btn:hover,
+.page-btn:focus,
+.dir-btn:focus {
+  background-color: var(--light-gray);
+}
+
+.selected,
+.selected:hover,
+.selected:focus {
+  border: 1px solid var(--light-blue-color);
+  background-color: var(--light-blue-color);
+  color: var(--white-color);
+}
+
+.disabled {
+  cursor: not-allowed;
+  background-color: var(--dark-gray);
+  color: var(--dark-dark-gray);
+}
+
+.disabled:hover,
+.disabled:focus {
+  background-color: var(--dark-gray);
+  color: var(--dark-dark-gray);
+}

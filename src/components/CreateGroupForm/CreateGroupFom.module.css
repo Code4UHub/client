@@ -3,6 +3,8 @@
   flex-direction: column;
   column-gap: 3.6rem;
   row-gap: 1.2rem;
+  width: 100%;
+  padding: 0 3rem;
 }
 
 .form-container h3 {
@@ -16,6 +18,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-column-gap: 4rem;
+  width: 100%;
 }
 
 .halfInput {

@@ -4,8 +4,6 @@ type InputData = {
   id: string;
 }[];
 
-export const days: string[] = ['L', 'M', 'X', 'J', 'V'];
-
 export const createGroupInputData: InputData = [
   {
     label: 'Unidad de Formación (Nombre o clave)',
@@ -13,19 +11,19 @@ export const createGroupInputData: InputData = [
     id: 'subject',
   },
   {
-    label: 'Código de la clase',
+    label: 'Código para inscripción',
     type: 'text',
-    id: 'classCode',
+    id: 'class_id',
   },
   {
     label: 'Hora Inicio',
     type: 'time',
-    id: 'startTime',
+    id: 'start_time',
   },
   {
     label: 'Hora Fin',
     type: 'time',
-    id: 'endTime',
+    id: 'end_time',
   },
   {
     label: 'Días que aplican a este horario',
@@ -35,6 +33,6 @@ export const createGroupInputData: InputData = [
   {
     label: 'Fecha Fin',
     type: 'date',
-    id: 'endDate',
+    id: 'finished_date',
   },
 ];

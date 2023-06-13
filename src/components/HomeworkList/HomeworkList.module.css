@@ -1,0 +1,101 @@
+.content {
+  max-height: 35rem;
+  overflow: auto;
+}
+
+.container {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.container li {
+  display: block;
+  position: relative;
+}
+
+.date-header {
+  padding: 2.4rem 1.2rem;
+  padding-bottom: 0;
+}
+
+.date-header span {
+  display: inline-block;
+  font-size: var(--fs-small-text);
+  margin-bottom: 0.8rem;
+}
+
+.date-header .today {
+  font-weight: 500;
+  font-size: var(--fs-mid-text);
+}
+
+.date-header hr {
+  display: block;
+  width: 100%;
+  margin-top: 0;
+  border: 0.05rem solid var(--black-color);
+}
+
+.item-container {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  border-bottom: 0.05rem solid var(--dark-gray);
+  padding: 3.6rem;
+  transition: background-color 0.23s linear;
+  align-items: center;
+}
+
+.item-container:hover {
+  background-color: var(--light-gray);
+}
+
+.homework-title,
+.btn {
+  color: var(--light-blue-color);
+}
+
+.item-container .homework-title {
+  font-size: var(--fs-mid-text);
+  display: block;
+}
+
+.item-container .btn {
+  font-size: var(--fs-mid-text);
+}
+
+.item-container a {
+  display: block;
+}
+
+.no-results span {
+  color: var(--dark-dark-gray);
+  text-align: center;
+}
+
+.title-tag {
+  display: inline-block;
+  font-size: 1rem;
+  color: var(--white-color);
+  background-color: var(--light-blue-color);
+  padding: 0.6rem 0.8rem;
+  border-radius: 100px;
+  margin-bottom: 0.4rem;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  column-gap: 1.4rem;
+}
+
+.done-icon {
+  width: 3.6rem;
+  height: 3.6rem;
+  fill: var(--dark-green);
+}
+
+.hidden {
+  visibility: hidden;
+}

@@ -1,0 +1,46 @@
+.assignment-header-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.assignment-header hr {
+  margin-top: 1rem;
+  border: 0.05rem solid black;
+}
+
+.assignment-header h1 {
+  font-weight: 300;
+  font-size: var(--fs-sub-sub-title);
+}
+
+.nav {
+  flex-direction: column;
+  align-items: normal;
+}
+
+.nav + hr {
+  margin-top: 0;
+}
+
+.backButton {
+  justify-content: start;
+  column-gap: 1.2rem;
+}
+
+.backButton h1 {
+  order: 1;
+}
+
+.loading {
+  justify-content: start;
+}
+
+.loading h1 {
+  margin-right: 1.6rem;
+}
+
+.loading button {
+  margin-left: auto;
+}

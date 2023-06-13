@@ -1,0 +1,32 @@
+.container {
+    position: relative;
+}
+
+.list-container {
+    width: 100%;
+    overflow: hidden;
+}
+
+.list {
+    width: 100%;
+    position: relative;
+    list-style: none;
+    display: flex;
+    transition: transform 0.35s linear;
+}
+
+.item-container {
+    width: 100%;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.prev {
+    left: 0;
+
+}
+
+.next {
+    right: 0;
+}

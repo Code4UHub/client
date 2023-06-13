@@ -1,0 +1,240 @@
+.nav-bar {
+  width: 8.4rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: var(--blue-gradient);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+.mobile-menu-container {
+  width: 55px;
+  height: 55px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.mobile-menu {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  fill: var(--light-gray);
+  cursor: pointer;
+}
+
+.mobile-menu:active {
+  box-shadow: inset 0 0 0 2px var(--white-color);
+}
+
+.mobile-menu svg {
+  width: 3.6rem;
+  height: 3.6rem;
+}
+
+.home-container {
+  width: 100%;
+  margin-bottom: 5.2rem;
+}
+
+.home-link {
+  width: 65%;
+  margin: 2.4rem auto;
+  display: block;
+}
+
+.home-icon {
+  width: 100%;
+  height: auto;
+}
+
+.close-button-container {
+  display: none;
+}
+
+.close-button {
+  width: 7.2rem;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  transition: background 0.2s ease-out;
+  color: white;
+  margin-left: auto;
+}
+
+.close-button:hover {
+  background: rgba(145, 145, 145, 0.2);
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.link-container {
+  display: block;
+}
+
+.link-container a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: background-color 0.23s linear;
+  padding: 1.2rem 2.4rem;
+}
+
+.link-container a svg {
+  width: 4.8rem;
+  height: auto;
+  fill: var(--white-color);
+}
+
+.link-container a span {
+  color: var(--white-color);
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.classes a span {
+  position: relative;
+  top: -0.5rem;
+}
+
+.assignments a svg {
+  width: 4.2rem;
+}
+
+.assignments a {
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+}
+
+.link-container a:global(.active) {
+  background-color: var(--white-color);
+}
+
+.link-container a:global(.active) svg {
+  fill: var(--main-blue-color);
+}
+
+.link-container a:global(.active) span {
+  color: var(--main-blue-color);
+}
+
+.link-container a:not(:global(.active)):hover {
+  background-color: #021d36;
+}
+
+.nav-links-container {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.logout-container {
+  margin-top: auto;
+}
+
+.logout-container-mobile {
+  display: none;
+}
+
+.logout {
+  border: none;
+  background-color: transparent;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.2rem 2.4rem;
+  text-align: center;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.23s linear;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.logout:hover,
+.logout:focus {
+  background-color: #021d36;
+}
+
+.logout svg {
+  width: 100%;
+  fill: var(--white-color);
+}
+
+@media (max-width: 48em) {
+  .nav-bar {
+    width: 100%;
+    position: static;
+    flex-direction: row;
+    height: auto;
+    min-height: auto;
+  }
+
+  .mobile-menu-container {
+    display: flex;
+  }
+
+  .home-container {
+    display: none;
+  }
+
+  .menu-container {
+    display: none;
+  }
+
+  .logout-container {
+    display: none;
+  }
+
+  .logout-container-mobile {
+    display: block;
+  }
+
+  .logout-container-mobile .logout svg {
+    width: 4.2rem;
+  }
+
+  .menu-container:global(.active) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+    background-color: var(--main-blue-color);
+    display: flex;
+    animation: dropdown 0.23s ease-in-out forwards;
+  }
+
+  :global(.active) .close-button-container {
+    display: block;
+  }
+
+  @keyframes dropdown {
+    from {
+      transform: translateY(-100%);
+    }
+
+    to {
+      transform: translateY(0);
+    }
+  }
+}

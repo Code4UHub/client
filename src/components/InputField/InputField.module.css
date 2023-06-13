@@ -51,6 +51,20 @@
   color: var(--dark-green);
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px var(--dark-gray) inset;
+  -webkit-text-fill-color: inherit;
+  background-color: var(--dark-gray);
+}
+
+.inputField input.readOnly {
+  background-color: #b2b3b7;
+  color: var(--dark-dark-gray);
+  cursor: not-allowed;
+}
+
 @keyframes showFeedback {
   0% {
     opacity: 0;
@@ -60,14 +74,6 @@
     opacity: 1;
     transform: translateX(0);
   }
-}
-
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0px 1000px var(--dark-gray) inset;
-  -webkit-text-fill-color: inherit;
-  background-color: var(--dark-gray);
 }
 
 @media (max-width: 80em) {

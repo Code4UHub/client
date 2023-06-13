@@ -1,0 +1,48 @@
+.card {
+  height: 18rem;
+}
+
+.content {
+  border-radius: 2px;
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+
+.subtitle {
+  width: 33%;
+  height: 1.2rem;
+  margin-top: 1.2rem;
+}
+
+.title {
+  width: 60%;
+  height: 2.4rem;
+  margin-top: 1.2rem;
+}
+
+.sub-content {
+  width: 40%;
+  height: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.sub-sub-content {
+  width: 20%;
+  height: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.button-content {
+  width: 7.2rem;
+  height: 3.6rem;
+  margin-top: 1.2rem;
+  margin-left: auto;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(200, 20%, 80%);
+  }
+  100% {
+    background-color: hsl(200, 20%, 95%);
+  }
+}

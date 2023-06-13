@@ -1,15 +1,17 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from 'components/Button/Button';
 import styles from './Modal.module.css';
 import { ReactComponent as IconClose } from './x-mark.svg';
 
 type ModalProps = {
   title: string;
-  open: Boolean;
-  onClose: Function;
+  open?: Boolean;
+  onClose?: Function;
   lastFocusableElement: React.RefObject<HTMLElement>;
   children: React.ReactNode;
   current?: string;
+  isOpen?: boolean;
 };
 
 export default function Modal({
@@ -19,6 +21,7 @@ export default function Modal({
   lastFocusableElement,
   children,
   current,
+  isOpen,
 }: ModalProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -28,8 +31,8 @@ export default function Modal({
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const closeModal = () => {
-    setIsModalOpen(false);
-    onClose();
+    if (typeof isOpen === 'undefined') setIsModalOpen(false);
+    if (onClose) onClose();
   };
 
   useEffect(() => {
@@ -37,7 +40,7 @@ export default function Modal({
 
     const trapFocus = (e: FocusEvent) => {
       if (e.target === topRef.current) {
-        lastFocusableEl.current?.focus();
+        if (lastFocusableEl) lastFocusableEl.current?.focus();
       } else if (e.target === bottomRef.current) {
         closeRef.current?.focus();
       }
@@ -45,28 +48,36 @@ export default function Modal({
 
     const escapeClose = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        setIsModalOpen(false);
-        onClose();
+        if (typeof isOpen === 'undefined') setIsModalOpen(false);
+        if (onClose) onClose();
       }
     };
 
     document.addEventListener('focusin', trapFocus);
     document.addEventListener('keydown', escapeClose);
+    if (isModalOpen) document.body.classList.add('no-scroll');
 
     return function removeListener() {
       document.removeEventListener('focusin', trapFocus);
       document.removeEventListener('keydown', escapeClose);
+      document.body.classList.remove('no-scroll');
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastFocusableElement, isModalOpen]);
 
   useEffect(() => {
-    if (open) {
+    if (typeof isOpen === 'undefined' && open) {
       closeModal();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
+
+  useEffect(() => {
+    if (typeof isOpen !== 'undefined') {
+      setIsModalOpen(isOpen);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const modalContainer = modalRef.current;
@@ -76,48 +87,56 @@ export default function Modal({
       setTimeout(() => {
         modalContainer?.classList.remove(styles.fadein);
       }, 400);
+      closeRef.current?.focus();
     }
   }, [isModalOpen, current]);
 
   return (
     <>
-      <Button
-        text={title}
-        onClickHandler={() => setIsModalOpen(true)}
-        location=""
-      />
-      {isModalOpen && (
-        <div className={styles['modal-wrapper']}>
-          <div
-            tabIndex={0}
-            ref={topRef}
-          />
-          <div
-            className={styles['modal-container']}
-            ref={modalRef}
-          >
-            <div className={styles['close-button-container']}>
-              <button
-                className={styles['close-button']}
-                type="button"
-                ref={closeRef}
-                onClick={closeModal}
-              >
-                <IconClose />
-              </button>
-            </div>
-            <div className={styles['modal-content']}>{children}</div>
-          </div>
-          <div
-            tabIndex={0}
-            ref={bottomRef}
-          />
-        </div>
+      {typeof isOpen === 'undefined' && (
+        <Button
+          text={title}
+          onClickHandler={() => setIsModalOpen(true)}
+          location="modal"
+        />
       )}
+      {isModalOpen &&
+        createPortal(
+          <div className={styles['modal-wrapper']}>
+            <div
+              tabIndex={0}
+              ref={topRef}
+            />
+            <div
+              className={styles['modal-container']}
+              ref={modalRef}
+            >
+              <div className={styles['close-button-container']}>
+                <button
+                  className={styles['close-button']}
+                  type="button"
+                  ref={closeRef}
+                  onClick={closeModal}
+                >
+                  <IconClose />
+                </button>
+              </div>
+              <div className={styles['modal-content']}>{children}</div>
+            </div>
+            <div
+              tabIndex={0}
+              ref={bottomRef}
+            />
+          </div>,
+          document.body
+        )}
     </>
   );
 }
 
 Modal.defaultProps = {
   current: '',
+  isOpen: undefined,
+  open: undefined,
+  onClose: undefined,
 };
