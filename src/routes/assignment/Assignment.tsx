@@ -3,9 +3,15 @@ import { RootState } from 'store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { updateToast } from 'store/toast/toastSlice';
+import { TOAST_GENERAL_ERRORS, updateToast } from 'store/toast/toastSlice';
 
-import { saveChallengeProgress, saveHomeworkProgress } from 'utils/db/db.utils';
+import {
+  saveChallengeProgress,
+  saveHomeworkProgress,
+  submitChallenge,
+  submitHomework,
+  updateChallengeStatusFinished,
+} from 'utils/db/db.utils';
 import { formatAssignmentTimer } from 'utils/format/formatAssignmentTimer';
 
 import SectionHeader from 'components/SectionHeader/SectionHeader';
@@ -22,12 +28,18 @@ import {
   ClosedChallengeQuestion,
   ClosedHomeworkQuestion,
   ClosedQuestion,
+  ClosedSolution,
   HomeworkQuestions,
   OpenChallengeQuestion,
   OpenHomeworkQuestion,
   OpenQuestionSolution,
+  OpenSolution,
   isChallenge,
 } from 'types/Questions/Question';
+import {
+  ChallengeSubmitPromise,
+  HomeworkSubmitPromise,
+} from 'types/Submit/Submit';
 
 import style from './Assignment.module.css';
 
@@ -48,37 +60,65 @@ function initialAnswers(assignment: ChallengeQuestions | HomeworkQuestions) {
     const questions = assignment.challenges;
     return questions.reduce((acc, question, index) => {
       if (question.type === 'open') {
-        acc[index] = question.solution.user_input || {
-          isCorrect: false,
-          code: '',
-        };
+        if ('user_input' in question.solution) {
+          acc[index] = question.solution.user_input;
+        } else if ('solution' in question.solution) {
+          acc[index] = { ...question.solution };
+        } else {
+          acc[index] = {
+            isCorrect: false,
+            code: '',
+          };
+        }
+      } else if ('user_input' in question.solution) {
+        acc[index] = question.solution.user_input;
+      } else if ('solution' in question.solution) {
+        acc[index] = { ...question.solution };
       } else {
-        acc[index] =
-          typeof question.solution.user_input === 'number'
-            ? question.solution.user_input
-            : -1;
+        acc[index] = -1;
       }
 
       return acc;
-    }, {} as { [key: number]: number | OpenQuestionSolution });
+    }, {} as { [key: number]: number | OpenQuestionSolution | ClosedSolution | OpenSolution });
   }
 
   const questions = assignment.homeworks;
   return questions.reduce((acc, question, index) => {
     if (question.type === 'open') {
-      acc[index] = question.solution.user_input || {
-        isCorrect: false,
-        code: '',
-      };
+      if ('user_input' in question.solution) {
+        acc[index] = question.solution.user_input;
+      } else if ('solution' in question.solution) {
+        acc[index] = { ...question.solution };
+      } else {
+        acc[index] = {
+          isCorrect: false,
+          code: '',
+        };
+      }
+    } else if ('user_input' in question.solution) {
+      acc[index] = question.solution.user_input;
+    } else if ('solution' in question.solution) {
+      acc[index] = { ...question.solution };
     } else {
-      acc[index] =
-        typeof question.solution.user_input === 'number'
-          ? question.solution.user_input
-          : -1;
+      acc[index] = -1;
     }
 
     return acc;
-  }, {} as { [key: number]: number | OpenQuestionSolution });
+  }, {} as { [key: number]: number | OpenQuestionSolution | ClosedSolution | OpenSolution });
+}
+
+function isAssignmentPreviouslySubmitted(
+  assignment: ChallengeQuestions | HomeworkQuestions
+) {
+  if (isChallenge(assignment)) {
+    return assignment.challenges.every(
+      (question) => 'solution' in question.solution
+    );
+  }
+
+  return assignment.homeworks.every(
+    (question) => 'solution' in question.solution
+  );
 }
 
 // TODO: Save Time, and time out of focus
@@ -88,6 +128,8 @@ export default function Assignment({ assignment }: Props) {
     ? assignment.challenges
     : assignment.homeworks;
 
+  const isPreviouslySubmitted = isAssignmentPreviouslySubmitted(assignment);
+
   const user = useSelector((root: RootState) => root.user.currentUser);
   const { assignmentId } = useParams();
 
@@ -96,19 +138,23 @@ export default function Assignment({ assignment }: Props) {
   });
 
   const [answers, setAnswers] = useState<{
-    [key: number]: number | OpenQuestionSolution;
+    [key: number]:
+      | number
+      | OpenQuestionSolution
+      | ClosedSolution
+      | OpenSolution;
   }>(initialAnswers(assignment));
 
   // Seconds on complete assignment
   const [seconds, setSeconds] = useState<number>(
     formatAssignmentTimer(Number(assignment.start_date))
   );
-  // Seconds per question
-  const [timeRegistry, setTimeRegistry] = useState<{ [key: number]: number }>(
-    {}
+
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(
+    isPreviouslySubmitted
   );
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [isSavingProcess, setIsSavingProcess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -117,10 +163,72 @@ export default function Assignment({ assignment }: Props) {
     if (typeof answer === 'number') {
       return answer !== -1;
     }
-    return (answer as OpenQuestionSolution).isCorrect;
+
+    if ('code' in answer) {
+      return answer.isCorrect;
+    }
+
+    return true;
   });
 
   const containerSelectQuestionRef = useRef<HTMLDivElement>(null);
+
+  // Detect visibilty change on document
+  useEffect(() => {
+    let worker: Worker;
+
+    const startTimer = () => {
+      if (!isSubmitted) worker.postMessage('start');
+    };
+
+    const stopTimer = () => {
+      if (!isSubmitted) worker.postMessage('stop');
+    };
+
+    if (!isSubmitted) {
+      if (!isChallenge(assignment)) {
+        worker = new Worker(new URL('./visibilityWorker.ts', import.meta.url));
+        worker.postMessage({
+          homeworkId: assignmentId,
+          studentId: user?.id,
+          authToken: user?.authToken,
+        });
+        window.addEventListener('blur', startTimer);
+        window.addEventListener('focus', stopTimer);
+      }
+    }
+
+    return () => {
+      if (!isChallenge(assignment)) {
+        if (worker) worker.terminate();
+        window.removeEventListener('blur', startTimer);
+        window.removeEventListener('focus', stopTimer);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    let timeWorker: Worker;
+    if (!isSubmitted) {
+      timeWorker = new Worker(new URL('./timerWorker.ts', import.meta.url));
+      timeWorker.postMessage('start');
+      timeWorker.onmessage = (e) => {
+        if (e.data === 'update') {
+          setSeconds((currSeconds) => currSeconds + 1);
+        }
+      };
+    }
+
+    return () => {
+      if (isSubmitted && timeWorker) {
+        timeWorker.postMessage('stop');
+      }
+
+      if (timeWorker) {
+        timeWorker.terminate();
+      }
+    };
+  }, [isSubmitted]);
 
   // Update the maximum possible index on hook useIndex
   useEffect(() => {
@@ -130,15 +238,6 @@ export default function Assignment({ assignment }: Props) {
       setMaxIndex(assignment.homeworks.length - 1);
     }
   }, [setMaxIndex, assignment]);
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (!isSubmitted) setSeconds(seconds + 1);
-    }, 1000);
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [isSubmitted, seconds]);
 
   // Update values on answer registry for ClosedQuestions
   const onChooseAnswer = async (i: number, option: number | boolean) => {
@@ -179,23 +278,9 @@ export default function Assignment({ assignment }: Props) {
     setIsSavingProcess(false);
   };
 
-  // Total time on assignemnt - total registry = time on current question
-  function timeOnAllQuestions(): number {
-    const totalTime = Object.values(timeRegistry).reduce(
-      (sum, value) => sum + value,
-      0
-    );
-    return seconds - totalTime;
-  }
-
   // For the buttons that change the question
   function onClickHandler(action: string, newIndex?: number) {
     const container = containerSelectQuestionRef.current;
-    const timeOnQuestion = timeOnAllQuestions();
-    setTimeRegistry((registry) => ({
-      ...registry,
-      [index]: registry[index] + timeOnQuestion,
-    }));
     if (action === 'next') {
       // If next was successful and container exists
       if (next() && container) {
@@ -226,21 +311,74 @@ export default function Assignment({ assignment }: Props) {
   };
 
   // On Submit Assignment
-  const onSubmitAssignment = () => {
-    // Update time of that last question
-    const timeOnQuestion = timeOnAllQuestions();
-    setTimeRegistry((registry) => ({
-      ...registry,
-      [index]: registry[index] + timeOnQuestion,
-    }));
-    dispatch(
-      updateToast({
-        title: 'Success',
-        message: 'Exam completed!',
-        type: 'success',
-      })
-    );
-    setIsSubmitted(true);
+  const onSubmitAssignment = async () => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
+    try {
+      let submitResults: HomeworkSubmitPromise | ChallengeSubmitPromise;
+
+      if (isChallenge(assignment)) {
+        submitResults = await submitChallenge(
+          user?.authToken as string,
+          answers as { [key: number]: number | OpenQuestionSolution },
+          assignment,
+          user?.id as string
+        );
+      } else {
+        submitResults = await submitHomework(
+          user?.authToken as string,
+          answers as { [key: number]: number | OpenQuestionSolution },
+          assignment,
+          user?.id as string
+        );
+      }
+
+      if (
+        submitResults.status === 'success' &&
+        typeof submitResults.data !== 'string'
+      ) {
+        const newAnswers:
+          | { [key: number]: ClosedSolution | OpenSolution }
+          | Record<number, never> = {};
+
+        submitResults.data.questions.forEach((question, indexQuestion) => {
+          newAnswers[indexQuestion] = question.solution;
+        });
+
+        if (isChallenge(assignment)) {
+          updateChallengeStatusFinished(
+            user?.authToken as string,
+            Number(assignmentId),
+            user?.id as string
+          );
+        }
+
+        setAnswers(newAnswers);
+        dispatch(
+          updateToast({
+            title: 'Success',
+            message: 'Exam completed!',
+            type: 'success',
+          })
+        );
+        setIsSubmitted(true);
+        setIsSubmitting(false);
+      } else {
+        dispatch(
+          updateToast({
+            title: submitResults.status,
+            message: submitResults.data as string,
+            type: 'error',
+          })
+        );
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      setIsSubmitting(false);
+      dispatch(updateToast(TOAST_GENERAL_ERRORS.SYSTEM));
+    }
   };
 
   function defineButtonClass(value: number) {
@@ -250,8 +388,21 @@ export default function Assignment({ assignment }: Props) {
     if (typeof answers[value] === 'number') {
       // Question is answered
       if (answers[value] !== -1) return 'assignmentAnswered';
-    } else if ((answers[value] as OpenQuestionSolution)?.isCorrect)
+    } else if (
+      'code' in
+        (answers[value] as
+          | OpenQuestionSolution
+          | ClosedSolution
+          | OpenSolution) &&
+      (answers[value] as OpenQuestionSolution).isCorrect
+    ) {
       return 'assignmentAnswered';
+    } else if (
+      'solution' in
+      (answers[value] as OpenQuestionSolution | ClosedSolution | OpenSolution)
+    ) {
+      return 'assignmentAnswered';
+    }
     // Unanswered question
     return 'assignmentInactive';
   }
@@ -260,11 +411,20 @@ export default function Assignment({ assignment }: Props) {
     const tickString = '\u2713';
     const numberString = String(i + 1);
 
-    if (typeof answers[i] === 'number')
+    if (typeof answers[i] === 'number') {
       return answers[i] !== -1 ? tickString : numberString;
-    return (answers[i] as OpenQuestionSolution)?.isCorrect
-      ? tickString
-      : numberString;
+    }
+
+    if (
+      'code' in
+      (answers[i] as OpenQuestionSolution | ClosedSolution | OpenSolution)
+    ) {
+      return (answers[i] as OpenQuestionSolution).isCorrect
+        ? tickString
+        : numberString;
+    }
+
+    return tickString;
   }
 
   return (
@@ -274,106 +434,115 @@ export default function Assignment({ assignment }: Props) {
         childType={isSavingProcess ? 'loading' : ''}
       >
         {isSavingProcess && <LoadingSpinner className={style.loading} />}
-        <Button
-          location="assignmentSubmit"
-          text="Terminar examen"
-          onClickHandler={onSubmitAssignment}
-          type="submit"
-          isDisable={allQuestionsAnswered}
-        />
+        {!isSubmitted && (
+          <Button
+            location="assignmentSubmit"
+            text="Terminar examen"
+            onClickHandler={onSubmitAssignment}
+            type="submit"
+            isDisable={allQuestionsAnswered}
+          />
+        )}
       </SectionHeader>
-      <div className={style.assignment}>
-        <div className={style['assignment-info']}>
-          <Timer seconds={seconds} />
-          <div className={style['assignment-button-controllers']}>
-            <Button
-              location="assignmentChange"
-              text="<"
-              onClickHandler={() => onClickHandler('previous')}
-              type="button"
-              isDisable={index === 0}
-            />
-            <div
-              ref={containerSelectQuestionRef}
-              className={style['select-question-container']}
-            >
-              {isChallenge(assignment)
-                ? assignment.challenges.map((q, i) => (
-                    <Button
-                      key={`${q.question_id}-button`}
-                      location={defineButtonClass(i)}
-                      text={defineButtonText(i)}
-                      onClickHandler={() => onClickHandler('jump', i)}
-                      type="button"
-                      isDisable={false}
-                    />
-                  ))
-                : assignment.homeworks.map((q, i) => (
-                    <Button
-                      key={`${q.question_h_id}-button`}
-                      location={defineButtonClass(i)}
-                      text={defineButtonText(i)}
-                      onClickHandler={() => onClickHandler('jump', i)}
-                      type="button"
-                      isDisable={false}
-                    />
-                  ))}
+      {isSubmitting ? (
+        <LoadingSpinner />
+      ) : (
+        <div className={style.assignment}>
+          <div className={style['assignment-info']}>
+            <Timer seconds={seconds} />
+            <div className={style['assignment-button-controllers']}>
+              <Button
+                location="assignmentChange"
+                text="<"
+                onClickHandler={() => onClickHandler('previous')}
+                type="button"
+                isDisable={index === 0}
+              />
+              <div
+                ref={containerSelectQuestionRef}
+                className={style['select-question-container']}
+              >
+                {isChallenge(assignment)
+                  ? assignment.challenges.map((q, i) => (
+                      <Button
+                        key={`${q.question_id}-button`}
+                        location={defineButtonClass(i)}
+                        text={defineButtonText(i)}
+                        onClickHandler={() => onClickHandler('jump', i)}
+                        type="button"
+                        isDisable={false}
+                      />
+                    ))
+                  : assignment.homeworks.map((q, i) => (
+                      <Button
+                        key={`${q.question_h_id}-button`}
+                        location={defineButtonClass(i)}
+                        text={defineButtonText(i)}
+                        onClickHandler={() => onClickHandler('jump', i)}
+                        type="button"
+                        isDisable={false}
+                      />
+                    ))}
+              </div>
+              <Button
+                location="assignmentChange"
+                text=">"
+                onClickHandler={() => onClickHandler('next')}
+                type="button"
+                isDisable={index === max}
+              />
             </div>
-            <Button
-              location="assignmentChange"
-              text=">"
-              onClickHandler={() => onClickHandler('next')}
-              type="button"
-              isDisable={index === max}
-            />
+          </div>
+          <div
+            className={`${style['question-container']} ${
+              questions[index].type === 'open' ? style.code : ''
+            }`}
+          >
+            {questions[index].type === 'closed' ? (
+              <CloseQuestion
+                key={
+                  isChallenge(assignment)
+                    ? assignment.challenges[index].question_id
+                    : assignment.homeworks[index].question_h_id
+                }
+                isSubmitted={isSubmitted}
+                questionIndex={index}
+                onChoose={onChooseAnswer}
+                chosenAnswer={
+                  typeof answers[index] === 'number'
+                    ? (answers[index] as number)
+                    : (answers[index] as ClosedSolution).solution
+                }
+                questionData={
+                  questions[index] as
+                    | ClosedHomeworkQuestion
+                    | ClosedChallengeQuestion
+                }
+                options={(questions[index].question as ClosedQuestion).options}
+              />
+            ) : (
+              <CodeQuestion
+                key={
+                  isChallenge(assignment)
+                    ? assignment.challenges[index].question_id
+                    : assignment.homeworks[index].question_h_id
+                }
+                updateCorrect={onChooseAnswer}
+                questionIndex={index}
+                cachedData={
+                  answers[index] as OpenSolution | OpenQuestionSolution
+                }
+                questionData={
+                  questions[index] as
+                    | OpenHomeworkQuestion
+                    | OpenChallengeQuestion
+                }
+                updateCode={updateCode}
+              />
+            )}
           </div>
         </div>
-        <div
-          className={`${style['question-container']} ${
-            questions[index].type === 'open' ? style.code : ''
-          }`}
-        >
-          {questions[index].type === 'closed' ? (
-            <CloseQuestion
-              key={
-                isChallenge(assignment)
-                  ? assignment.challenges[index].question_id
-                  : assignment.homeworks[index].question_h_id
-              }
-              rightAnswer={
-                isSubmitted
-                  ? (questions[index].question as ClosedQuestion).answer
-                  : -1
-              }
-              isSubmitted={isSubmitted}
-              questionIndex={index}
-              onChoose={onChooseAnswer}
-              chosenAnswer={answers[index] as number}
-              questionData={
-                questions[index] as
-                  | ClosedHomeworkQuestion
-                  | ClosedChallengeQuestion
-              }
-              options={(questions[index].question as ClosedQuestion).options}
-            />
-          ) : (
-            <CodeQuestion
-              key={
-                isChallenge(assignment)
-                  ? assignment.challenges[index].question_id
-                  : assignment.homeworks[index].question_h_id
-              }
-              updateCorrect={onChooseAnswer}
-              questionIndex={index}
-              cachedData={answers[index] as OpenQuestionSolution}
-              questionData={
-                questions[index] as OpenHomeworkQuestion | OpenChallengeQuestion
-              }
-              updateCode={updateCode}
-            />
-          )}
-        </div>
-      </div>
+      )}
     </div>
   );
 }
