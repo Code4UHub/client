@@ -8,6 +8,7 @@ import { LeaderboardList } from 'types/Leaderboard/Leaderboard';
 import Card from 'components/Card/Card';
 import Carousel from 'components/Carousel/Carousel';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
+import NoResultsMessage from 'components/NoResultsMessage/NoResultsMessage';
 
 import {
   StudentPositionLeaderboard,
@@ -79,33 +80,57 @@ function getPositionElement(position: number, name: string) {
   }
 }
 
+function getTeacherLeaderbordContent(leaderboard: LeaderboardList) {
+  if (leaderboard.length === 0) {
+    return (
+      <NoResultsMessage
+        message="No hay estudiantes en la clase 🙁"
+        className={styles['no-results']}
+      />
+    );
+  }
+
+  const leaderboardNodes = leaderboard.slice(0, 3).map((student) => (
+    <div
+      key={student.student}
+      className={styles['top-position-container']}
+    >
+      {getPositionElement(student.position, student.name)}
+      <span className={styles['position-points']}>{student.score}pts</span>
+    </div>
+  ));
+
+  return <Carousel items={leaderboardNodes} />;
+}
+
 function TeacherCard() {
   const { leaderboardList, isLoading } = useLeaderboardList();
-
-  const leaderboardNodes = (leaderboardList as LeaderboardList)
-    .slice(0, 3)
-    .map((student) => (
-      <div
-        key={student.student}
-        className={styles['top-position-container']}
-      >
-        {getPositionElement(student.position, student.name)}
-        <span className={styles['position-points']}>{student.score}pts</span>
-      </div>
-    ));
 
   return isLoading ? (
     <LoadingSpinner className={styles['loading-spinner']} />
   ) : (
-    <Carousel items={leaderboardNodes} />
+    getTeacherLeaderbordContent(leaderboardList as LeaderboardList)
   );
+}
+
+function getStudentPosition(position: number) {
+  switch (position) {
+    case 1:
+      return <FirstPlaceIcon className={styles.position} />;
+    case 2:
+      return <SecondPlaceIcon className={styles.position} />;
+    case 3:
+      return <ThirdPlaceIcon className={styles.position} />;
+    default:
+      return <span>{position}</span>;
+  }
 }
 
 function StudentCard() {
   const { leaderboardList, isLoading } = useLeaderboardList();
 
   return (
-    <div>
+    <div className={styles['student-container']}>
       <LeaderboardUpDown
         points={
           !isLoading && leaderboardList
@@ -121,7 +146,9 @@ function StudentCard() {
           leaderboardList && (
             <>
               <span>
-                {(leaderboardList as StudentPositionLeaderboard).position}
+                {getStudentPosition(
+                  (leaderboardList as StudentPositionLeaderboard).position
+                )}
               </span>
               <span>
                 {(leaderboardList as StudentPositionLeaderboard).score}pts
@@ -157,12 +184,14 @@ export default function HomeLeaderboardPositionCard({ className }: Props) {
         </h2>
       </div>
       {user?.role === 'student' ? <StudentCard /> : <TeacherCard />}
-      <Link
-        to="leaderboard"
-        className={styles.button}
-      >
-        Ver Leaderboard
-      </Link>
+      {user?.role === 'teacher' && (
+        <Link
+          to="graphs/0"
+          className={styles.button}
+        >
+          Ver Leaderboard
+        </Link>
+      )}
     </Card>
   );
 }
