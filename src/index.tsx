@@ -38,12 +38,11 @@ import Group from 'routes/class/group/Group';
 import GroupGraphController from 'routes/class/groupGraphController/GroupGraphController';
 import CreateQuestion from 'routes/createQuestion/createQuestion';
 import { Class } from 'routes/class/Class';
-// import Assignment from 'routes/assignment/Assignment';
 import Home from 'routes/class/home/Home';
-import Test from 'routes/test/Test';
 import AssignmentWrapper from 'routes/assignment/AssignmentWrapper';
 import CreateHomework from 'routes/homework/createHomework/CreateHomework';
 import HomeworkPage from 'routes/class/homework/Homework';
+import Homework from 'routes/homework/Homework';
 
 import { Toast } from 'components/Toast/Toast';
 import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
@@ -157,7 +156,6 @@ function Index() {
                     ),
                 },
                 { path: 'homework', element: <HomeworkPage /> },
-                { path: 'leaderboard', element: 'Leaderboard' },
                 { path: 'graphs', element: <Group /> },
                 {
                   path: 'graphs/:graph_id',
@@ -184,7 +182,7 @@ function Index() {
         },
         {
           path: 'homework',
-          element: <h1>Aqui va la lista de tareas</h1>,
+          element: <Homework />,
         },
         {
           path: 'new-question',
@@ -201,15 +199,7 @@ function Index() {
           loader: createHomeworkLoader,
         },
         {
-          path: 'report',
-          element: <h1>Aqui va los reportes</h1>,
-        },
-        {
-          path: 'test',
-          element: <Test />,
-        },
-        {
-          path: 'classes/:classId/modules/:moduleId/challenge/:assignmentId',
+          path: 'classes/:classId/modules/challenge/:assignmentId',
           element: <AssignmentWrapper />,
           loader: async ({ params }) => {
             if (!user) return redirect('/auth');
