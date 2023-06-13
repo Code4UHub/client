@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Homework } from 'types/Homework/Homework';
+import { Homework, StudentClassHomework } from 'types/Homework/Homework';
 
 import Card from 'components/Card/Card';
 import HomeworkList from 'components/HomeworkList/HomeworkList';
-import CardSkeleton from 'components/CardSkeleton/CardSkeleton';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 
 import { useHomeworkList } from 'hooks/useHomeworkList';
 
@@ -25,11 +25,11 @@ export default function UpcomingHomeworkCard({ className }: Props) {
         <Link to="homework">Ver tareas</Link>
       </div>
       {isLoading ? (
-        <div className={styles['card-skeleton']}>
-          <CardSkeleton items={10} />
-        </div>
+        <LoadingSpinner />
       ) : (
-        <HomeworkList homeworkList={homeworkList as Homework[][]} />
+        <HomeworkList
+          homeworkList={homeworkList as (Homework | StudentClassHomework)[][]}
+        />
       )}
     </Card>
   );
