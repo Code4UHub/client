@@ -3,6 +3,7 @@ import React from 'react';
 import { Leaderboard } from 'types/GroupGraph/GroupGraphType';
 
 import LeaderboardCard from 'components/LeaderboardCard/LeaderboardCard';
+import NoResultsMessage from 'components/NoResultsMessage/NoResultsMessage';
 
 import style from './LeaderboardTeacher.module.css';
 
@@ -11,8 +12,8 @@ type Props = {
 };
 
 export default function LeaderboardTeacher({ data }: Props) {
-  if (data.length === 0 || !(data[0] as Leaderboard)?.student)
-    return <h1>Loading</h1>;
+  if (data.length === 0)
+    return <NoResultsMessage message="No hay estudiantes en la clase 🙁" />;
 
   return (
     <div className={style['leaderboard-container']}>
