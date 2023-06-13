@@ -5,7 +5,7 @@ export type Challenge = {
   module_title: string;
   challenge_title: string;
   student_id: string;
-  status: 'start' | 'continue';
+  status: 'start' | 'continue' | 'finished';
   difficulty: string;
 };
 
