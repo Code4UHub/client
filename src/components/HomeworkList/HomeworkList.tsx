@@ -3,8 +3,15 @@ import { Link } from 'react-router-dom';
 
 import { formatDate, formatDateString } from 'utils/format/formatDate';
 
-import { Homework } from 'types/Homework/Homework';
+import {
+  Homework,
+  StudentAllHomeworks,
+  StudentClassHomework,
+  TeacherAllHomeworks,
+} from 'types/Homework/Homework';
 import NoResultsMessage from 'components/NoResultsMessage/NoResultsMessage';
+
+import { ReactComponent as DoneIcon } from './Done.svg';
 
 import styles from './HomeworkList.module.css';
 
@@ -26,8 +33,42 @@ function HomeworkDateHeader({ date }: HeaderProps) {
 }
 
 type HomeworkItemProps = {
-  homework: Homework;
+  homework:
+    | Homework
+    | StudentAllHomeworks
+    | TeacherAllHomeworks
+    | StudentClassHomework;
 };
+
+function isStudentAllHomeworks(
+  homework:
+    | Homework
+    | StudentAllHomeworks
+    | TeacherAllHomeworks
+    | StudentClassHomework
+): homework is StudentAllHomeworks {
+  return 'class.class_id' in homework;
+}
+
+function isStudentHomeworks(
+  homework:
+    | Homework
+    | StudentAllHomeworks
+    | TeacherAllHomeworks
+    | StudentClassHomework
+): homework is StudentAllHomeworks | StudentClassHomework {
+  return 'score' in homework;
+}
+
+function isTeacherAllHomeworks(
+  homework:
+    | Homework
+    | StudentAllHomeworks
+    | TeacherAllHomeworks
+    | StudentClassHomework
+): homework is TeacherAllHomeworks {
+  return 'class_id' in homework;
+}
 
 function HomeWorkItem({ homework }: HomeworkItemProps) {
   return (
@@ -35,14 +76,38 @@ function HomeWorkItem({ homework }: HomeworkItemProps) {
       to={`/homework/${homework.homework_id}`}
       className={styles['item-container']}
     >
-      <span>{homework.title}</span>
-      <span>&gt;</span>
+      <div className={styles['title-container']}>
+        {isStudentHomeworks(homework) && (
+          <DoneIcon
+            className={`${styles['done-icon']} ${
+              homework.score === 0 ? styles.hidden : ''
+            }`}
+          />
+        )}
+        <div>
+          {isStudentAllHomeworks(homework) && (
+            <span className={styles['title-tag']}>
+              {homework['class.class_id']}
+            </span>
+          )}
+          {isTeacherAllHomeworks(homework) && (
+            <span className={styles['title-tag']}>{homework.class_id}</span>
+          )}
+          <span className={styles['homework-title']}>{homework.title}</span>
+        </div>
+      </div>
+      <span className={styles.btn}>&gt;</span>
     </Link>
   );
 }
 
 type Props = {
-  homeworkList: Homework[][];
+  homeworkList: (
+    | Homework
+    | StudentAllHomeworks
+    | TeacherAllHomeworks
+    | StudentClassHomework
+  )[][];
   className?: string;
 };
 
