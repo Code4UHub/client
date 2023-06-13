@@ -10,6 +10,7 @@ import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Carousel from 'components/Carousel/Carousel';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
+import NoResultsMessage from 'components/NoResultsMessage/NoResultsMessage';
 
 import { ModuleProgressList } from 'types/Module/Module';
 
@@ -19,14 +20,11 @@ type Props = {
   className?: string;
 };
 
-export default function ClassModulesProgressCard({ className }: Props) {
-  const [moduleList, setModuleList] = useState<ModuleProgressList>([]);
-  const [isLoading, setIsLoading] = useState(false);
+function getCardContent(modules: ModuleProgressList) {
+  if (modules.length === 0)
+    return <NoResultsMessage message="No hay estudiantes en la clase 🙁" />;
 
-  const user = useSelector((state: RootState) => state.user.currentUser);
-  const params = useParams();
-
-  const moduleNodes = moduleList.map((module, index) => (
+  const moduleNodes = modules.map((module, index) => (
     <div
       key={module.id}
       className={styles['progress-bar-container']}
@@ -46,6 +44,21 @@ export default function ClassModulesProgressCard({ className }: Props) {
       }`}</span>
     </div>
   ));
+
+  return (
+    <Carousel
+      items={moduleNodes}
+      className={styles.carousel}
+    />
+  );
+}
+
+export default function ClassModulesProgressCard({ className }: Props) {
+  const [moduleList, setModuleList] = useState<ModuleProgressList>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const user = useSelector((state: RootState) => state.user.currentUser);
+  const params = useParams();
 
   useEffect(() => {
     const getModules = async () => {
@@ -71,14 +84,7 @@ export default function ClassModulesProgressCard({ className }: Props) {
         <h2>Avance de Módulos</h2>
         <Link to="modules">Ver Grupo</Link>
       </div>
-      {isLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <Carousel
-          items={moduleNodes}
-          className={styles.carousel}
-        />
-      )}
+      {isLoading ? <LoadingSpinner /> : getCardContent(moduleList)}
     </Card>
   );
 }
