@@ -11,6 +11,8 @@ import {
 import {
   OpenChallengeQuestion,
   OpenHomeworkQuestion,
+  OpenQuestionSolution,
+  OpenSolution,
 } from 'types/Questions/Question';
 import { CompiledCodeResultsPromise } from 'types/CompiledCodeResults/CompiledCodeResults';
 
@@ -24,18 +26,21 @@ import CompilerResults from 'components/CompilerResults/CompilerResults';
 import { ReactComponent as VertDots } from './vert-dots.svg';
 import styles from './CodeQuestion.module.css';
 
-type CodeAnswer = {
-  isCorrect: boolean;
-  code: string;
-};
-
 type QuestionProps = {
   questionData: OpenHomeworkQuestion | OpenChallengeQuestion;
-  cachedData: CodeAnswer;
+  cachedData: OpenSolution | OpenQuestionSolution;
   questionIndex: number;
   updateCode: Function;
   updateCorrect: Function;
 };
+
+function getInitialCompilerResults(data: OpenSolution | OpenQuestionSolution) {
+  if ('tests' in data) {
+    return data.tests;
+  }
+
+  return undefined;
+}
 
 export default function CodeQuestion({
   questionData,
@@ -49,8 +54,10 @@ export default function CodeQuestion({
   const [isPanelVertical, setPanelVertical] = useState(window.innerWidth < 800);
   const [compilerResults, setCompilerResults] = useState<
     CompiledCodeResultsPromise | undefined | 'error'
-  >(undefined);
-  const [isTerminalOpen, setTerminalOpen] = useState(false);
+  >(getInitialCompilerResults(cachedData));
+  const [isTerminalOpen, setTerminalOpen] = useState(
+    'solution' in questionData.solution || 'tests' in cachedData
+  );
   const [isCompilerLoading, setIsCompilerLoading] = useState(false);
 
   useEffect(() => {
@@ -82,8 +89,8 @@ export default function CodeQuestion({
 
     try {
       const data = await executeCode(user?.authToken as string, {
-        source_code: cachedData.code,
-        shown_tests: [...questionData.question.tests],
+        source_code: (cachedData as OpenQuestionSolution).code,
+        tests: [...questionData.question.tests],
       });
 
       if (data.status === 'error') {
@@ -136,7 +143,12 @@ export default function CodeQuestion({
               <CodeEditor
                 questionIndex={questionIndex}
                 onChange={updateCode}
-                code={cachedData.code}
+                code={
+                  'code' in cachedData ? cachedData.code : cachedData.solution
+                }
+                readOnly={
+                  'solution' in questionData.solution || 'tests' in cachedData
+                }
               />
             </Panel>
             {isTerminalOpen && (
@@ -156,13 +168,15 @@ export default function CodeQuestion({
               </>
             )}
           </PanelGroup>
-          <div className={styles['submit-container']}>
-            <Button
-              text="Enviar"
-              location="submitCode"
-              onClickHandler={submitCode}
-            />
-          </div>
+          {!('solution' in questionData.solution) && (
+            <div className={styles['submit-container']}>
+              <Button
+                text="Enviar"
+                location="submitCode"
+                onClickHandler={submitCode}
+              />
+            </div>
+          )}
         </Panel>
       </PanelGroup>
     </div>
