@@ -8,4 +8,6 @@
 .container span {
   font-size: var(--fs-big-text);
   font-weight: 500;
+  color: var(--dark-dark-gray);
+  text-align: center;
 }
