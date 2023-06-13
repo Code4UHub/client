@@ -21,7 +21,6 @@ import style from './CloseQuestion.module.css';
 type Props = {
   questionIndex: number;
   chosenAnswer: number;
-  rightAnswer: number;
   questionData: ClosedHomeworkQuestion | ClosedChallengeQuestion;
   options: Option[];
   isSubmitted: boolean;
@@ -34,7 +33,6 @@ export default function CloseQuestion({
   onChoose,
   questionData,
   chosenAnswer,
-  rightAnswer,
   isSubmitted,
 }: Props) {
   const parentRef = useRef<HTMLDivElement>(null);
@@ -94,7 +92,7 @@ export default function CloseQuestion({
             }${option.text}`}
             onClick={onClickHandler}
             isChecked={chosenAnswer === index}
-            isCorrect={rightAnswer === chosenAnswer}
+            isCorrect={chosenAnswer === questionData.question.answer - 1}
             index={index}
             optionText={option.text}
             explanationText={option.explanation}
