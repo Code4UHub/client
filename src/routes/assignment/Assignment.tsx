@@ -430,7 +430,7 @@ export default function Assignment({ assignment }: Props) {
   return (
     <div className={style.assignment}>
       <SectionHeader
-        title="Examen"
+        title={isChallenge(assignment) ? 'Desafío' : 'Tarea'}
         childType={isSavingProcess ? 'loading' : ''}
       >
         {isSavingProcess && <LoadingSpinner className={style.loading} />}
