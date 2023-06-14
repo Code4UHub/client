@@ -1,15 +1,14 @@
 import React from 'react';
-import { HEADERS } from 'components/StudentRequestTable/StudentRequestTable';
-import style from './StudentRequestSkeleton.module.css';
+import style from './TableSkeleton.module.css';
 
-type Props = {
-  skeletons: number;
+type RowProps = {
+  headers: number;
 };
 
-function RequestRow() {
+function RequestRow({ headers }: RowProps) {
   return (
     <tr className={style.request}>
-      {Array.from({ length: HEADERS.length }, (_val, index) => (
+      {Array.from({ length: headers }, (_val, index) => (
         <td
           className={style['td-skeleton']}
           key={index}
@@ -21,15 +20,23 @@ function RequestRow() {
   );
 }
 
-export default function StudentRequestSkeleton({ skeletons }: Props) {
+type Props = {
+  skeletons: number;
+  headers: number;
+};
+
+export default function TableSkeleton({ skeletons, headers }: Props) {
   return (
     <table className={style['table-skeleton']}>
       <thead>
-        <RequestRow />
+        <RequestRow headers={headers} />
       </thead>
       <tbody>
         {Array.from({ length: skeletons }, (_, index) => (
-          <RequestRow key={index} />
+          <RequestRow
+            headers={headers}
+            key={index}
+          />
         ))}
       </tbody>
     </table>

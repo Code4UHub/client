@@ -19,6 +19,7 @@ import {
   StudentAllHomeworksPromise,
   StudentClassHomeworksPromise,
 } from 'types/Homework/Homework';
+import { HomeworkResultPromise } from 'types/HomeworkResult/HomeworkResult';
 
 // TODO: Delete when backend has this information
 import { GroupGraphPromise } from 'types/GroupGraph/GroupGraphType';
@@ -127,6 +128,8 @@ const ENDPOINTS = {
     `${BASE_URL}/class/${class_id}/student/${student_id}/homeworks`,
   UPDATE_CHALLENGE_STATUS_CONTINUE: `${BASE_URL}/challenge/update_status_continue`,
   UPDATE_CHALLENGE_STATUS_FINISHED: `${BASE_URL}/challenge/update_status_start`,
+  HOMEWORK_RESULT: (hw_id: number) =>
+    `${BASE_URL}/homework/${hw_id}/student_scores`,
 };
 
 export const createStudent = async (user: {
@@ -991,6 +994,20 @@ export const updateChallengeStatusFinished = async (
       challenge_id,
       student_id,
     }),
+  });
+
+  return request.json();
+};
+
+// =========== GET HOMEWORK RESULTS ============
+export const getHomeworkResults = async (
+  auth_token: string,
+  homework_id: number
+): Promise<HomeworkResultPromise> => {
+  const request = await fetch(ENDPOINTS.HOMEWORK_RESULT(homework_id), {
+    headers: {
+      Authorization: `Bearer ${auth_token}`,
+    },
   });
 
   return request.json();
