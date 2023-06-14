@@ -1,6 +1,6 @@
 import React from 'react';
 
-import StudentRequestSkeleton from 'components/StudentRequestSkeleton/StudentRequestSkeleton';
+import TableSkeleton from 'components/TableSkeleton/TableSkeleton';
 import { Button } from 'components/Button/Button';
 import { SortButtons } from 'components/SortButtons/SortButtons';
 
@@ -98,7 +98,13 @@ export default function StudentRequestTable({
   sortedData,
   selectedRows,
 }: TableProps) {
-  if (isLoading) return <StudentRequestSkeleton skeletons={10} />;
+  if (isLoading)
+    return (
+      <TableSkeleton
+        headers={HEADERS.length}
+        skeletons={10}
+      />
+    );
   if (!isLoading && sortedData.length === 0)
     return (
       <h2 className={style['no-requests']}> Sin solicitudes pendientes</h2>
