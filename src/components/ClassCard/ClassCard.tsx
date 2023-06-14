@@ -51,6 +51,7 @@ export default function ClassCard({ classInfo }: Props) {
             <span>{classInfo.subject_name}</span>
           </Link>
         )}
+        <span>{classInfo.class_id}</span>
         {isStudent(classInfo) && (
           <span className={styles['teacher-name']}>
             {classInfo.teacher_name}
