@@ -50,8 +50,7 @@ import {
   HomeworkSubmitPromise,
 } from 'types/Submit/Submit';
 
-// const BASE_URL = http://ec2-3-140-188-143.us-east-2.compute.amazonaws.com:65534/v1
-const BASE_URL = 'http://10.147.20.218:65534/v1';
+const BASE_URL = 'http://10.50.70.236:9150/v1';
 
 const ENDPOINTS = {
   STUDENT_REGISTER: `${BASE_URL}/student/register`,
