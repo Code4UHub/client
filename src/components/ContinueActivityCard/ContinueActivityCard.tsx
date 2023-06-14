@@ -10,8 +10,6 @@ import GoToActivityCard from 'components/GoToActivityCard/GoToActivityCard';
 type Props = {
   className?: string;
 };
-
-// TODO: Set Correct Activity Data Type
 export default function ContinueActivityCard({ className }: Props) {
   const params = useParams();
   const user = useSelector((state: RootState) => state.user.currentUser);

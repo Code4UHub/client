@@ -228,8 +228,6 @@ export default function CreateHomework() {
           payload: { title: createHomeworkRules.title(homeworkRequest.title) },
         });
 
-        console.log(response);
-
         reduxDispatch(
           updateToast({
             title: response.status,

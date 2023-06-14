@@ -6,7 +6,6 @@ import { basicSetup } from 'codemirror';
 import { tomorrow } from 'thememirror';
 
 import RadioInput from 'components/RadioInput/RadioInput';
-// TODO: Move to Question
 import { Option } from 'types/Questions/CloseQuestion';
 import {
   ClosedChallengeQuestion,
@@ -38,7 +37,6 @@ export default function CloseQuestion({
   const parentRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<EditorView>();
 
-  // TODO replace carriage return with new line
   const [description, ...code] = questionData.question.description.split('\r');
 
   useEffect(() => {

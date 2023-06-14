@@ -33,6 +33,19 @@ export default function ModuleCard({ data }: Props) {
     return style.green;
   };
 
+  const moduleTotalPoints = data.challenge.reduce(
+    (currentPoints, challenge) => {
+      currentPoints.totalPoints += challenge.total_points;
+      currentPoints.points += challenge.student_challenge[0].score;
+
+      return currentPoints;
+    },
+    { totalPoints: 0, points: 0 }
+  );
+
+  const moduleProgress =
+    (moduleTotalPoints.points / moduleTotalPoints.totalPoints) * 100;
+
   return (
     <div className={style.container}>
       <Card className={data.is_active ? style['topic-card'] : style.closed}>
@@ -41,7 +54,7 @@ export default function ModuleCard({ data }: Props) {
         </span>
         {data.is_active && (
           <ProgressBar
-            percentage={data.score}
+            percentage={Number(moduleProgress.toFixed(2))}
             textPosition="up"
             textAdded="completado"
           />

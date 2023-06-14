@@ -16,11 +16,11 @@ import styles from './HomeworkQuestionListTable.module.css';
 const QUESTION_TYPE_LIST: ListItem[] = [
   {
     id: 'open',
-    value: 'open',
+    value: 'abierta',
   },
   {
     id: 'closed',
-    value: 'closed',
+    value: 'cerrada',
   },
 ];
 
@@ -117,7 +117,7 @@ export default function HomeworkQuestionListTable({
           onChange={(newType) =>
             setTableFilterOptions((options) => ({
               ...options,
-              type: newType ? (newType.value as 'open' | 'closed') : undefined,
+              type: newType ? (newType.id as 'open' | 'closed') : undefined,
             }))
           }
         />
