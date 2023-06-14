@@ -103,7 +103,7 @@ export default function HomeworkGrades() {
                   <td className={style.info}>{student_id}</td>
                   <td className={style.info}>{student_name}</td>
                   <td className={getScoreColor(score)}>{score}%</td>
-                  <td className={style.info}>{out_of_focus_time}</td>
+                  <td className={style.info}>{out_of_focus_time || 0}</td>
                 </tr>
               )
             )}
