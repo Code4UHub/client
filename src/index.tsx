@@ -44,6 +44,7 @@ import AssignmentWrapper from 'routes/assignment/AssignmentWrapper';
 import CreateHomework from 'routes/homework/createHomework/CreateHomework';
 import HomeworkPage from 'routes/class/homework/Homework';
 import Homework from 'routes/homework/Homework';
+import HomeworkGrades from 'routes/class/homeworkResult/homeworkResult';
 
 import { Toast } from 'components/Toast/Toast';
 import GlobalLoading from 'components/GlobalLoading/GlobalLoading';
@@ -158,6 +159,7 @@ function Index() {
                 },
                 { path: 'leaderboard', element: <Leaderboard /> },
                 { path: 'homework', element: <HomeworkPage /> },
+                { path: 'homework/:hw_id', element: <HomeworkGrades /> },
                 { path: 'graphs', element: <Group /> },
                 {
                   path: 'graphs/:graph_id',
