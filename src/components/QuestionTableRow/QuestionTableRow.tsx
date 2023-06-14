@@ -92,7 +92,7 @@ export default function QuestionTableRow({
           title={`${question_h_id}. ${question.title}`}
         >{`${question_h_id}. ${question.title}`}</td>
         <td title={title}>{title}</td>
-        <td>{type}</td>
+        <td>{type === 'open' ? 'abierta' : 'cerrada'}</td>
       </tr>
     </>
   );

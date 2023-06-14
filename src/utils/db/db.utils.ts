@@ -21,7 +21,6 @@ import {
 } from 'types/Homework/Homework';
 import { HomeworkResultPromise } from 'types/HomeworkResult/HomeworkResult';
 
-// TODO: Delete when backend has this information
 import { GroupGraphPromise } from 'types/GroupGraph/GroupGraphType';
 import {
   ModulePromise,
@@ -879,7 +878,8 @@ export const submitHomework = async (
     [key: number]: number | OpenQuestionSolution;
   },
   homework: HomeworkQuestions,
-  student_id: string
+  student_id: string,
+  homework_id: string
 ): Promise<HomeworkSubmitPromise> => {
   const homeworkAnswers = homework.homeworks.map((question, index) => {
     if (question.type === 'open') {
@@ -899,6 +899,7 @@ export const submitHomework = async (
     body: JSON.stringify({
       student_id,
       questions: [...homeworkAnswers],
+      homework_id,
     }),
   };
 
@@ -913,7 +914,8 @@ export const submitChallenge = async (
     [key: number]: number | OpenQuestionSolution;
   },
   challenge: ChallengeQuestions,
-  student_id: string
+  student_id: string,
+  challenge_id: string
 ): Promise<ChallengeSubmitPromise> => {
   const challengeAnswers = challenge.challenges.map((question, index) => {
     if (question.type === 'open') {
@@ -933,6 +935,7 @@ export const submitChallenge = async (
     body: JSON.stringify({
       student_id,
       questions: [...challengeAnswers],
+      challenge_id,
     }),
   };
 

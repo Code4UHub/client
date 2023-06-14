@@ -121,8 +121,6 @@ function isAssignmentPreviouslySubmitted(
   );
 }
 
-// TODO: Save Time, and time out of focus
-// TODO: Submit Process
 export default function Assignment({ assignment }: Props) {
   const questions = isChallenge(assignment)
     ? assignment.challenges
@@ -147,7 +145,10 @@ export default function Assignment({ assignment }: Props) {
 
   // Seconds on complete assignment
   const [seconds, setSeconds] = useState<number>(
-    formatAssignmentTimer(Number(assignment.start_date))
+    formatAssignmentTimer(
+      Number(assignment.start_date),
+      Number(assignment.endDate)
+    )
   );
 
   const [isSubmitted, setIsSubmitted] = useState<boolean>(
@@ -324,14 +325,16 @@ export default function Assignment({ assignment }: Props) {
           user?.authToken as string,
           answers as { [key: number]: number | OpenQuestionSolution },
           assignment,
-          user?.id as string
+          user?.id as string,
+          assignmentId as string
         );
       } else {
         submitResults = await submitHomework(
           user?.authToken as string,
           answers as { [key: number]: number | OpenQuestionSolution },
           assignment,
-          user?.id as string
+          user?.id as string,
+          assignmentId as string
         );
       }
 

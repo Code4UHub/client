@@ -4,7 +4,7 @@ import TableSkeleton from 'components/TableSkeleton/TableSkeleton';
 
 import { RootState } from 'store/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { setLoading, removeLoading } from 'store/loading/loadingSlice';
 
 import { HomeworkResult } from 'types/HomeworkResult/HomeworkResult';
@@ -23,7 +23,6 @@ const HEADERS = {
 export default function HomeworkGrades() {
   const user = useSelector((state: RootState) => state.user.currentUser);
   const params = useParams();
-  const location = useLocation();
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -35,7 +34,7 @@ export default function HomeworkGrades() {
       dispatch(setLoading());
       const response = await getHomeworkResults(
         user?.authToken as string,
-        parseInt(params.hw_id as string, 10)
+        parseInt(params.assignmentId as string, 10)
       );
       if (response.status === 'success') {
         setData(response.data as HomeworkResult[]);
@@ -69,9 +68,7 @@ export default function HomeworkGrades() {
   }
   return (
     <div className={style.container}>
-      <h2 className={style.title}>
-        {location.state?.title ?? 'No hay títutlo'}
-      </h2>
+      <h2 className={style.title}>Resultados de la Tarea</h2>
 
       <p className={style.explanation}>
         Tiempo fuera se refiere al tiempo que el estudiante estuvo fuera de la

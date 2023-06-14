@@ -3,9 +3,6 @@ import { Link } from 'react-router-dom';
 
 import { formatDate, formatDateString } from 'utils/format/formatDate';
 
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/store';
-
 import {
   Homework,
   StudentAllHomeworks,
@@ -74,17 +71,9 @@ function isTeacherAllHomeworks(
 }
 
 function HomeWorkItem({ homework }: HomeworkItemProps) {
-  const user = useSelector((state: RootState) => state.user.currentUser);
-
   return (
     <Link
-      to={
-        user?.role === 'teacher'
-          ? `/classes/${(homework as TeacherAllHomeworks).class_id}/homework/${
-              homework.homework_id
-            }`
-          : `/homework/${homework.homework_id}`
-      }
+      to={`/homework/${homework.homework_id}`}
       state={{ title: homework.title }}
       className={styles['item-container']}
     >

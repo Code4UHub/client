@@ -8,6 +8,7 @@ import {
   LoaderFunction,
   LoaderFunctionArgs,
   defer,
+  json,
 } from 'react-router-dom';
 
 import { store, persistor, RootState } from 'store/store';
@@ -159,7 +160,6 @@ function Index() {
                 },
                 { path: 'leaderboard', element: <Leaderboard /> },
                 { path: 'homework', element: <HomeworkPage /> },
-                { path: 'homework/:hw_id', element: <HomeworkGrades /> },
                 { path: 'graphs', element: <Group /> },
                 {
                   path: 'graphs/:graph_id',
@@ -222,10 +222,16 @@ function Index() {
         },
         {
           path: 'homework/:assignmentId',
-          element: <AssignmentWrapper />,
+          element:
+            user?.role === 'teacher' ? (
+              <HomeworkGrades />
+            ) : (
+              <AssignmentWrapper />
+            ),
           loader: async ({ params }) => {
             if (!user) return redirect('/auth');
-            if (user.role !== 'student') throw new Error();
+            if (user.role !== 'student')
+              return json({ status: 'success', data: 'ok' }, { status: 200 });
 
             const assignmentPromise = getQuestionFromHomework(
               user.authToken,

@@ -26,7 +26,6 @@ function checkTitle(title: string) {
   return generalResults;
 }
 
-// TODO: Remove function (it will be used somewhere else)
 function checkClass(class_id: string | { id: string; value: string }) {
   if (typeof class_id !== 'string') return correctState;
 

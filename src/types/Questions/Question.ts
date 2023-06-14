@@ -72,6 +72,7 @@ export interface ClosedHomeworkQuestion extends HomeworkQuestion {
 export type Questions = {
   start_date: string;
   title: string;
+  endDate?: string;
 };
 
 export type HomeworkQuestionList = (
