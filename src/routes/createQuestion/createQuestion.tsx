@@ -105,7 +105,7 @@ export default function CreateQuestion() {
         value: title,
       }));
     }
-    // TODO: Connect with db
+
     return [
       { id: '1', value: 'Fácil' },
       { id: '2', value: 'Medio' },

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { authRules } from 'utils/inputRules/authRules';
-import { inputRules } from 'utils/inputRules/groupRules';
+import { inputRules } from 'utils/inputRules/createClassRules';
 import { questionOptionRules } from 'utils/inputRules/questionOptionRules';
 import { questionRules } from 'utils/inputRules/questionRules';
 import { correctState } from 'utils/inputRules/generalRules';

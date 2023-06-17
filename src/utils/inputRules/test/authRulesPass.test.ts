@@ -113,7 +113,7 @@ describe('Password validation', () => {
         ).toBe(getSizeError('max', idConfirmation));
       });
     });
-    // AQUI ME QUEDE -------------------
+
     describe('Password under min length', () => {
       test('signup password', () => {
         expect(runGeneralRules(idSignUp, '$Money', '')).toBe(
