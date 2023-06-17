@@ -1,6 +1,6 @@
 {
   "name": "code4u",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@codemirror/autocomplete": "^6.5.1",

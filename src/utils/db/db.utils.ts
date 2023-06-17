@@ -50,7 +50,7 @@ import {
   HomeworkSubmitPromise,
 } from 'types/Submit/Submit';
 
-const BASE_URL = 'http://10.50.70.236:9150/v1';
+const BASE_URL = process.env.REACT_APP_API_URL;
 
 const ENDPOINTS = {
   STUDENT_REGISTER: `${BASE_URL}/student/register`,

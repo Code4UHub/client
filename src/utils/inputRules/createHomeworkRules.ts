@@ -9,13 +9,12 @@ const inputsMinLength = {
   title: 0,
   class_id: 0,
 };
-
-const inputsMaxLength = {
+export const inputsMaxLength = {
   title: 50,
   class_id: Number.MAX_VALUE,
 };
 
-function checkTitle(title: string) {
+export function checkTitle(title: string) {
   const generalResults = generalRules(
     title,
     'title',
@@ -26,7 +25,7 @@ function checkTitle(title: string) {
   return generalResults;
 }
 
-function checkClass(class_id: string | { id: string; value: string }) {
+export function checkClass(class_id: string | { id: string; value: string }) {
   if (typeof class_id !== 'string') return correctState;
 
   const generalResults = generalRules(
@@ -43,7 +42,7 @@ function checkClass(class_id: string | { id: string; value: string }) {
   return generalResults;
 }
 
-function checkDeadline(deadline: string) {
+export function checkDeadline(deadline: string) {
   if (!deadline) return DateError.empty;
 
   const timestamp = Date.now();
@@ -63,7 +62,7 @@ function checkDeadline(deadline: string) {
   return correctState;
 }
 
-function numberOfQuestions(questions: number) {
+export function numberOfQuestions(questions: number) {
   if (questions === undefined) return NumberError.empty;
 
   if (questions < 0) return NumberError.noNegatives;

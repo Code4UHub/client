@@ -19,7 +19,7 @@ type InputRule = {
   validate: Function;
 };
 
-function isValidSubject(value: string | { id: string; name: string }) {
+export function isValidSubject(value: string | { id: string; name: string }) {
   if (typeof value === 'string') {
     const trimmedValue = value.trim();
     if (trimmedValue.length === 0) return SubjectError.empty;
@@ -32,20 +32,20 @@ function isValidSubject(value: string | { id: string; name: string }) {
   return correctState;
 }
 
-function isValidClasscode(value: string) {
+export function isValidClasscode(value: string) {
   const splittedString = value.split(' ');
   if (splittedString.length > 1) return ClassCodeError.whitespace;
 
   return correctState;
 }
 
-function isValidStartTime(value: string) {
+export function isValidStartTime(value: string) {
   if (!value) return TimeError.empty;
 
   return correctState;
 }
 
-function isValidEndTime(value: string, startTime: string) {
+export function isValidEndTime(value: string, startTime: string) {
   if (!value) return TimeError.invalid;
 
   if (!startTime) return TimeError.noStartTime;
@@ -63,7 +63,7 @@ function isValidEndTime(value: string, startTime: string) {
   return correctState;
 }
 
-function isEndDateValid(value: string) {
+export function isEndDateValid(value: string) {
   if (!value) return DateError.empty;
 
   const timestamp = Date.now();
