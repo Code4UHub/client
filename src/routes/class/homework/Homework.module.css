@@ -1,0 +1,62 @@
+.container .homework-list {
+  max-height: 100%;
+  padding-left: 2.4rem;
+  padding-right: 2.4rem;
+}
+
+.homework-list hr {
+  border-color: var(--sec-blue-color);
+}
+
+.create-homework-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2.4rem;
+  margin-right: 3.6rem;
+  margin-bottom: 2.4rem;
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.difficulty-selector-title {
+  display: block;
+  text-align: center;
+  font-size: var(--fs-big-text);
+  font-weight: 500;
+  margin-bottom: 2.4rem;
+}
+
+.difficulty-selector-container {
+  display: flex;
+  justify-content: center;
+  column-gap: 1.2rem;
+  margin-bottom: 2.4rem;
+}
+
+.difficulty-btn {
+  display: block;
+  padding: 1.2rem 3.6rem;
+  border-radius: 10px;
+  color: var(--main-blue-color);
+  font-size: var(--fs-mid-small-text);
+  outline: 1px solid var(--main-blue-color);
+  transition: background-color 0.23s ease-in-out, color 0.23s ease-in-out,
+    filter 0.23s ease-in-out;
+}
+
+.difficulty-btn:hover,
+.difficulty-btn:focus {
+  outline: none;
+  background-color: var(--sec-blue-color);
+  color: var(--white-color);
+}
+
+.difficulty-btn:active {
+  outline: none;
+  filter: brightness(1.4);
+}

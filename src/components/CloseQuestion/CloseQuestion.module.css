@@ -1,0 +1,43 @@
+.close-question h2 {
+  font-weight: 400;
+  font-size: var(--fs-mid-text);
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: var(--fs-big-text);
+  margin-bottom: 1.6rem;
+  font-weight: 500;
+}
+
+.description {
+  font-family: 'Montserrat', sans-serif;
+  font-size: var(--fs-small-text);
+  margin-bottom: 1.2rem;
+}
+
+.close-question .options {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.code-editor {
+  font-size: var(--fs-small-text);
+  max-height: 25rem;
+  overflow-y: auto;
+  background-color: var(--white-color);
+  margin-bottom: 1.6rem;
+}
+
+.code-editor :global(.cm-activeLineGutter) {
+  background-color: var(--white-color);
+}
+
+.code-editor :global(.cm-activeLine) {
+  background-color: var(--white-color);
+}
+
+.code-editor :global(.cm-line)::selection,
+.code-editor :global(.cm-line) span::selection {
+  background-color: #d7d4f0 !important;
+}

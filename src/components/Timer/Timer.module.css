@@ -1,0 +1,21 @@
+div .timer {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  flex-direction: column;
+  margin: 1rem 0;
+}
+
+div .timer :hover {
+  cursor: pointer;
+}
+
+.time {
+  font-size: var(--fs-mid-text);
+}
+
+.timer-action {
+  font-style: italic;
+  text-decoration: underline;
+}

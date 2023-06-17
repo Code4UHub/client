@@ -1,0 +1,11 @@
+div .logo-container {
+  position: absolute;
+  left: 5rem;
+  top: 5rem;
+  width: 20rem;
+  z-index: 2;
+}
+
+div .logo-container img {
+  width: 100%;
+}

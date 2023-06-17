@@ -1,0 +1,55 @@
+.assignment {
+  width: 100%;
+}
+
+div .assignment {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+div .assignment-info {
+  display: block;
+  justify-content: space-between;
+  align-content: center;
+  width: 100%;
+}
+
+div .assignment-button-controllers {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.select-question-container {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 1rem;
+  scroll-behavior: smooth;
+}
+
+.question-container {
+  background-color: var(--light-gray);
+  margin-top: 2rem;
+  border-radius: 1rem;
+  padding: 4rem 8rem;
+  display: flex;
+  flex-direction: column;
+}
+
+div .code {
+  padding: 1.2rem;
+}
+
+.loading {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-top: 0.2rem solid var(--dark-gray);
+}
+
+@media (max-width: 40em) {
+  .question-container {
+    padding: 2rem;
+  }
+}

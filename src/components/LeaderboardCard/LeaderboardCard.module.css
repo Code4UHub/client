@@ -1,0 +1,86 @@
+
+.card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 5rem;
+}
+
+.active {
+    border-left: 1rem solid var(--light-blue-color);
+}
+
+.card:hover {
+    transform: scale(1);
+}
+
+.podium {
+    height: 10rem;
+    width: 10rem;
+}
+
+.position {
+    color: #6F6A6A;
+    font-size: 3rem;
+    font-weight: 500;
+    text-align: center;
+    height: 10rem;
+    width: 10rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.first {
+    color: #FEA713;
+}
+
+.second {
+    color: #a19e99;
+}
+
+.third {
+    color: #C0895D;
+}
+
+.info {
+    color: #6F6A6A;
+}
+
+.first, .second, .third, .info {
+    font-size: var(--fs-mid-text);
+    font-weight: 500;
+}
+
+@media (max-width: 60em) {
+    .card {
+        padding: 2rem 3rem;
+    }
+}
+
+@media (max-width: 45em) {
+    .card {
+        padding: 2rem 2rem;
+    }
+}
+
+@media (max-width: 30em) {
+    .card {
+        padding: 2rem 1rem;
+    }
+    .podium {
+        height: 7rem;
+        width: 7rem;
+    }
+    .position {
+        height: 7rem;
+        width: 7rem;
+    }
+    .first, .second, .third, .info {
+        font-size: var(--fs-small-text);
+        text-align: center;
+    }
+}

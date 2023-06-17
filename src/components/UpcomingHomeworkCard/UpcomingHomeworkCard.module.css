@@ -1,0 +1,32 @@
+.container {
+  padding: 2.4rem 4.8rem;
+  border-radius: 1.2rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2.4rem;
+  padding: 0 1.2rem;
+}
+
+.section-header h2 {
+  font-size: var(--fs-big-text);
+  font-weight: 400;
+}
+
+.section-header a {
+  font-size: var(--fs-small-small-text);
+  color: var(--light-blue-color);
+}
+
+.section-header a:hover {
+  text-decoration: underline;
+}
+
+.card-skeleton {
+  min-height: 35rem;
+  max-height: 35rem;
+  overflow: hidden;
+}

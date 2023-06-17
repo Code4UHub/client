@@ -1,0 +1,66 @@
+.card {
+  height: 18rem;
+  display: flex;
+  overflow: hidden;
+  padding: 0;
+}
+
+.card span {
+  display: block;
+}
+
+.color-bar {
+  width: 1.6rem;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.card-container {
+  width: calc(100% - 1.6rem);
+  padding: 2.4rem 1.2rem;
+  font-size: var(--fs-xsmall-text);
+  color: var(--sec-blue-color);
+}
+
+.class-link {
+  font-size: var(--fs-mid-text);
+  color: var(--light-blue-color);
+  display: block;
+  margin-bottom: 1.2rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.class-link span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.class-link:hover {
+  text-decoration: underline;
+}
+
+.teacher-name {
+  margin-bottom: 0.4rem;
+}
+
+.card-container .pending-tag {
+  display: inline-block;
+  background-color: #f7cb73;
+  border-radius: 100px;
+  padding: 0.15rem 0.8rem;
+  font-size: var(--fs-xsmall-text);
+  margin-bottom: 0.8rem;
+  visibility: hidden;
+  color: var(--sec-blue-color);
+}
+
+.class-link-pending {
+  cursor: not-allowed;
+}
+
+.card-container.pending .pending-tag {
+  visibility: visible;
+}

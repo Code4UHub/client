@@ -1,0 +1,70 @@
+.container {
+    padding-top: 2.4rem;
+    padding-bottom: 4.8rem;
+    border-radius: 1.2rem;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+    margin-bottom: 2.4rem;
+}
+
+.header-container h2 {
+    font-size: var(--fs-mid-text);
+    font-weight: 500;
+    color: var(--light-blue-color);
+}
+
+.header-container a {
+    font-size: var(--fs-small-text);
+    font-weight: 400;
+    color: var(--light-blue-color);
+}
+
+.header-container a:hover {
+    text-decoration: underline;
+}
+
+.carousel {
+    max-width: 40rem;
+    margin: 0 auto;
+}
+
+.progress-bar-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.progress-bar {
+    max-width: 15rem;
+    margin-bottom: 1.2rem;
+}
+
+.progress-bar span {
+    font-size: var(--fs-sub-title);
+    color: #3e98c7;
+}
+
+.students {
+    display: none;
+}
+
+.progress-bar-content:hover .percentage {
+    display: none;
+}
+
+.progress-bar-content:hover .students {
+    display: block;
+}
+
+.module-name {
+    font-size: var(--fs-mid-small-text);
+    font-weight: 500;
+    text-align: center;
+}
