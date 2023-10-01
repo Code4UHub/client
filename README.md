@@ -3,10 +3,22 @@
 
 Code4U is an online platform for learning how to code and programming concepts in Python. It features an onlide code editor and compiler as well as a Teacher and Student view. The purpose of this platform is to help lower the entrance barrier for those who want to get into coding.
 
+## Teacher View
+As a teacher, you can have control over your classes by having a request page for each class, enabling/disabling learning modules, and also keep track of different statistics from your students
+
+https://github.com/Code4UHub/client/assets/60989884/dfd2b2de-8992-4c26-8e52-e33c9e0ae252
+
+https://github.com/Code4UHub/client/assets/60989884/ce4feeae-98fb-44a0-9f4b-da4552102332
+
+https://github.com/Code4UHub/client/assets/60989884/a523a62d-c61e-442f-b3b6-12b18d681c80
+
+
+![Code4U Create Homework](images/CreateHomework.png)
+
+## Student View
 ![Code4U Dashboard](images/Dashboard.png)
 ![Code4U Student Dashboard](images/StudentDashboard.png)
 ![Code4U Assignment](images/Assignment.png)
-![Code4U Create Homework](images/CreateHomework.png)
 
 ## Usage
 
